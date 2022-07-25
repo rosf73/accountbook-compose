@@ -1,1 +1,4 @@
-# android-accountbook-15
+# Account Book App
+### Compose를 적극 활용하여 지출 내역을 관리하는 앱을 만들어 보자!
+- 로컬 DB를 이용하여 사용자의 가계 정보를 저장하자
+- 개인 프로젝트지만 개발 과정과 내역을 잘 기록하자
