@@ -16,6 +16,11 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tablayout_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="@color/purple"
+        app:tabTextColor="@color/white_05"
+        app:tabIconTint="@color/color_selected_tab"
+        app:tabSelectedTextColor="@color/white"
+        app:tabIndicatorHeight="0dp"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>
