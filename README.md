@@ -1,4 +1,38 @@
 # Account Book App
-### Compose를 적극 활용하여 지출 내역을 관리하는 앱을 만들어 보자!
-- 로컬 DB를 이용하여 사용자의 가계 정보를 저장하자
-- 개인 프로젝트지만 개발 과정과 내역을 잘 기록하자
+
+<br/><br/><br/>
+
+## 1 나는 이런 서비스를 만들거에요
+나의 수입과 지출 내역을 최대한 한 눈에 관리할 수 있도록 화면을 구성할 거에요.<br/>
+캘린더로 일 별 내역을 볼 수도 있고 통계 그래프도 제공돼요.
+
+<br/><br/><br/>
+
+## 2 이번에 도전해 볼 것들
+- [의존성 주입 라이브러리](https://developer.android.com/training/dependency-injection/hilt-android)를 적용해 보자!
+- [Jetpack Compose](https://github.com/android/compose-samples)를 적극적으로 활용해 보자!
+- Compose와 기본 Activity를 연결하는 방법을 공부하여 적용해 보자!
+- SQLiteOpenHelper를 이용해서 로컬 DB를 구축해보자!
+
+<br/><br/><br/>
+
+## 3 나의 앱은 이런 구조를 가지고 있어요
+### - DB
+  - 결제수단 (payment_method)
+  - 카테고리 (category)
+  - 히스토리 (history)
+  <img width="563" alt="image" src="https://user-images.githubusercontent.com/47631768/180905406-24bfb504-73fb-475b-b2c1-35965268f335.png">
+
+### - Features
+  - Main
+  - History
+    - Read
+    - Create / Update
+    - Delete
+  - Calendar
+  - Statistics
+  - Setting
+    - Payment Methods
+    - Categories
+
+<br/><br/><br/>
