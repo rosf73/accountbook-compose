@@ -1,45 +1,46 @@
 package com.woowacamp.android_accountbook_15.ui
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.woowacamp.android_accountbook_15.ui.theme.Androidaccountbook15Theme
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.google.android.material.tabs.TabLayoutMediator
+import com.woowacamp.android_accountbook_15.R
+import com.woowacamp.android_accountbook_15.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
+    private var _binding: ActivityMainBinding? = null
+    private val binding: ActivityMainBinding get() = requireNotNull(_binding)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            Androidaccountbook15Theme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Android")
-                }
-            }
-        }
+        _binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        initNavigation()
     }
-}
 
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
+    private fun initNavigation() {
+        val tabTitleArray = arrayOf(
+            getString(R.string.history_tab),
+            getString(R.string.calendar_tab),
+            getString(R.string.graph_tab),
+            getString(R.string.setting_tab)
+        )
+        val tabIconArray = arrayOf(
+            R.drawable.ic_history,
+            R.drawable.ic_calendar,
+            R.drawable.ic_graph,
+            R.drawable.ic_setting
+        )
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    Androidaccountbook15Theme {
-        Greeting("Android")
+        binding.viewpagerMain.adapter = MainViewPagerAdapter(supportFragmentManager, lifecycle)
+
+        TabLayoutMediator(binding.tablayoutMain, binding.viewpagerMain) { tab, pos ->
+            tab.text = tabTitleArray[pos]
+            tab.icon = ContextCompat.getDrawable(this, tabIconArray[pos])
+        }.attach()
     }
 }
