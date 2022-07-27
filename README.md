@@ -11,8 +11,8 @@
 ## 2 이번에 도전해 볼 것들
 - [의존성 주입 라이브러리](https://developer.android.com/training/dependency-injection/hilt-android)를 적용해 보자!
 - [Jetpack Compose](https://github.com/android/compose-samples)를 적극적으로 활용해 보자!
-- Compose와 기본 Activity를 연결하는 방법을 공부하여 적용해 보자!
-- SQLiteOpenHelper를 이용해서 로컬 DB를 구축해보자!
+- [Compose](https://developer.android.com/reference/kotlin/androidx/compose/ui/platform/ComposeView)와 [기본 Activity](https://foso.github.io/Jetpack-Compose-Playground/viewinterop/androidview/)를 연결하는 방법을 공부하여 적용해 보자!
+- [SQLiteOpenHelper](https://developer.android.com/training/data-storage/sqlite)를 이용해서 로컬 DB를 구축해보자!
 
 <br/><br/><br/>
 
@@ -30,9 +30,10 @@
     - Create / Update
     - Delete
   - Calendar
-  - Statistics
+  - Graph
   - Setting
     - Payment Methods
     - Categories
+  - Model / DAO / Repository
 
 <br/><br/><br/>
