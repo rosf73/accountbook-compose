@@ -12,6 +12,12 @@ android {
         enabled = true
     }
 
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+    def database_name = properties.getProperty("DATABASE_NAME")
+    def database_version = properties.getProperty("DATABASE_VERSION")
+
     defaultConfig {
         applicationId "com.woowacamp.android_accountbook_15"
         minSdk 21
@@ -23,6 +29,9 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        buildConfigField "String", "DATABASE_NAME", database_name
+        buildConfigField "int", "DATABASE_VERSION", database_version
     }
 
     buildTypes {
