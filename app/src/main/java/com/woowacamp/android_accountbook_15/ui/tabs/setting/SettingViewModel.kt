@@ -29,6 +29,14 @@ class SettingViewModel @Inject constructor(
         val paymentMethods = repository.getAllPaymentMethod().getOrThrow()
         _state.value = SettingViewState(paymentMethods)
     }
+
+    fun insertPaymentMethod(name: String) {
+
+    }
+
+    fun insertExpensesCategory(name: String, color: String) {
+
+    }
 }
 
 data class SettingViewState(
