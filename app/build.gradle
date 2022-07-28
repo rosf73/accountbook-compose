@@ -66,6 +66,9 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
+    // KTX
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$viewmodel_ktx_version"
+
     // Navigation
     implementation "androidx.viewpager2:viewpager2:$viewpager2_version"
     implementation "com.google.android.material:material:$material_version"
