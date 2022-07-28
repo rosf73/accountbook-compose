@@ -1,5 +1,6 @@
 package com.woowacamp.android_accountbook_15.ui.components
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
@@ -25,27 +26,29 @@ fun Header(
     rightIconDescription: String = "",
     rightCallback: (() -> Unit)? = null
 ) {
-    Row(
-        modifier = modifier
-            .padding(16.dp)
-    ) {
-        leftIcon?.let {
-            IconButton(onClick = { leftCallback!!() }) {
-                Icon(imageVector = leftIcon, contentDescription = leftIconDescription)
-            }
-        }
-        Text(
-            text = title,
-            textAlign = TextAlign.Center,
-            fontSize = 18.sp,
+    Column {
+        Row(
             modifier = modifier
-                .weight(1f)
-        )
-        rightIcon?.let {
-            IconButton(onClick = { rightCallback!!() }) {
-                Icon(imageVector = rightIcon, contentDescription = rightIconDescription)
+                .padding(16.dp)
+        ) {
+            leftIcon?.let {
+                IconButton(onClick = { leftCallback!!() }) {
+                    Icon(imageVector = leftIcon, contentDescription = leftIconDescription)
+                }
+            }
+            Text(
+                text = title,
+                textAlign = TextAlign.Center,
+                fontSize = 18.sp,
+                modifier = modifier
+                    .weight(1f)
+            )
+            rightIcon?.let {
+                IconButton(onClick = { rightCallback!!() }) {
+                    Icon(imageVector = rightIcon, contentDescription = rightIconDescription)
+                }
             }
         }
+        Divider(color = Purple, thickness = 1.dp)
     }
-    Divider(color = Purple, thickness = 1.dp)
 }
