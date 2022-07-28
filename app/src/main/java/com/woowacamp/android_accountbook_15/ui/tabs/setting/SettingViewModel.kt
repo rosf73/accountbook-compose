@@ -31,10 +31,12 @@ class SettingViewModel @Inject constructor(
     }
 
     fun insertPaymentMethod(name: String) {
-
+        repository.insertPaymentMethod(name)
+        val paymentMethods = repository.getAllPaymentMethod().getOrThrow()
+        _state.value = SettingViewState(paymentMethods)
     }
 
-    fun insertExpensesCategory(name: String, color: String) {
+    fun insertExpensesCategory(name: String, color: Long) {
 
     }
 }

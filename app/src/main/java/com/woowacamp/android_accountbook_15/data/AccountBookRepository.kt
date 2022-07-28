@@ -16,4 +16,7 @@ class AccountBookRepository @Inject constructor(
 
     fun getAllPaymentMethod(): Result<List<PaymentMethod>>
         = runCatching { dataSource.getAllPaymentMethod() }
+
+    fun insertPaymentMethod(name: String): Result<Long>
+        = runCatching { dataSource.addPaymentMethod(name) }
 }

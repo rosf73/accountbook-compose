@@ -91,7 +91,7 @@ class AccountBookDataSource @Inject constructor(
             val histories = mutableListOf<History>()
             with(cursor) {
                 while (moveToNext()) {
-                    val id = getLong(getColumnIndexOrThrow("id"))
+                    val id = getLong(getColumnIndexOrThrow(BaseColumns._ID))
                     val type = getInt(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_TYPE))
                     val content = getString(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_CONTENT))
                     val date = getString(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_DATE))
@@ -101,7 +101,7 @@ class AccountBookDataSource @Inject constructor(
                     val categoryId = getLong(getColumnIndexOrThrow("category_id"))
                     val categoryType = getInt(getColumnIndexOrThrow("category_type"))
                     val categoryName = getString(getColumnIndexOrThrow("category_name"))
-                    val categoryColor = getString(getColumnIndexOrThrow("category_color"))
+                    val categoryColor = getLong(getColumnIndexOrThrow("category_color"))
                     histories.add(
                         History(
                             id, type, content, date, amount,
@@ -142,7 +142,7 @@ class AccountBookDataSource @Inject constructor(
             val payments = mutableListOf<PaymentMethod>()
             with(cursor) {
                 while (moveToNext()) {
-                    val id = getLong(getColumnIndexOrThrow("id"))
+                    val id = getLong(getColumnIndexOrThrow(BaseColumns._ID))
                     val name = getString(getColumnIndexOrThrow(PaymentMethodColumns.COLUMN_NAME_NAME))
                     payments.add(
                         PaymentMethod(id, name)
@@ -184,10 +184,10 @@ class AccountBookDataSource @Inject constructor(
             val categories = mutableListOf<Category>()
             with(cursor) {
                 while (moveToNext()) {
-                    val id = getLong(getColumnIndexOrThrow("id"))
+                    val id = getLong(getColumnIndexOrThrow(BaseColumns._ID))
                     val type = getInt(getColumnIndexOrThrow(CategoryColumns.COLUMN_NAME_TYPE))
                     val name = getString(getColumnIndexOrThrow(CategoryColumns.COLUMN_NAME_NAME))
-                    val color = getString(getColumnIndexOrThrow(CategoryColumns.COLUMN_NAME_COLOR))
+                    val color = getLong(getColumnIndexOrThrow(CategoryColumns.COLUMN_NAME_COLOR))
                     categories.add(
                         Category(id, type, name, color)
                     )
