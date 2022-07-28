@@ -13,7 +13,7 @@ import com.woowacamp.android_accountbook_15.data.utils.SQL_SELECT_ALL_HISTORY
 import javax.inject.Inject
 
 class AccountBookDataSource @Inject constructor(
-    dbHelper: SQLiteOpenHelper
+    dbHelper: AccountBookHelper
 ) {
     
     private val writableDB = dbHelper.writableDatabase
