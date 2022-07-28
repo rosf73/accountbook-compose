@@ -1,9 +1,7 @@
 package com.woowacamp.android_accountbook_15.ui.tabs.setting
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
@@ -11,8 +9,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterEnd
+import androidx.compose.ui.Alignment.Companion.CenterStart
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -21,9 +22,7 @@ import com.woowacamp.android_accountbook_15.R
 import com.woowacamp.android_accountbook_15.data.model.Category
 import com.woowacamp.android_accountbook_15.data.model.PaymentMethod
 import com.woowacamp.android_accountbook_15.ui.components.Header
-import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
-import com.woowacamp.android_accountbook_15.ui.theme.Purple
-import com.woowacamp.android_accountbook_15.ui.theme.Purple04
+import com.woowacamp.android_accountbook_15.ui.theme.*
 
 @Composable
 fun SettingScreen(
@@ -44,11 +43,13 @@ fun SettingScreen(
         )
         CardType.EXPENSES_CATEGORY -> AddScreen(
             title = "지출 카테고리 추가",
+            colors = expensesColors,
             onAddClick = { text, color -> color?.let { viewModel.insertExpensesCategory(text, color) } },
             onBackClick = { setScreenState(CardType.SETTING) }
         )
         CardType.INCOME_CATEGORY -> AddScreen(
             title = "수입 카테고리 추가",
+            colors = incomeColors,
             onAddClick = { text, color -> color?.let { viewModel.insertExpensesCategory(text, color) } },
             onBackClick = { setScreenState(CardType.SETTING) }
         )
@@ -135,15 +136,24 @@ private fun CategoryCard(
 @Composable
 private fun SettingItem(
     name: String,
-    color: String? = null
+    color: Long? = null
 ) {
-    Row(modifier = Modifier.padding(0.dp, 11.dp)) {
+    Box(modifier = Modifier.padding(0.dp, 11.dp)) {
        Text(
+           modifier = Modifier.align(CenterStart),
            text = name,
            fontSize = 14.sp,
            fontWeight = FontWeight(700)
        )
-       color?.let { Text(text = name) }
+       color?.let {
+           Surface(
+               modifier = Modifier
+                   .background(Color(color))
+                   .align(CenterEnd)
+           ) {
+               Text(text = name)
+           }
+       }
     }
     Divider(color = Purple04, thickness = 1.dp)
 }
