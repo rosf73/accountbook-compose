@@ -29,7 +29,7 @@ import com.woowacamp.android_accountbook_15.ui.theme.Purple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple04
 
 @Composable
-fun SettingView(
+fun SettingScreen(
     viewModel: SettingViewModel
 ) {
     val state by viewModel.state.collectAsState()

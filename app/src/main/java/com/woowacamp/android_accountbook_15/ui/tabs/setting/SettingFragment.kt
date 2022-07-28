@@ -31,7 +31,7 @@ class SettingFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.composeContainer.setContent {
             AndroidAccountBook15Theme {
-                SettingView(viewModel)
+                SettingScreen(viewModel)
             }
         }
     }
