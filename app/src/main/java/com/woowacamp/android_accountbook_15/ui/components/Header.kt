@@ -1,9 +1,6 @@
 package com.woowacamp.android_accountbook_15.ui.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.TabRowDefaults.Divider
@@ -30,15 +27,16 @@ fun Header(
     rightCallback: (() -> Unit)? = null
 ) {
     Column {
-        Row(
+        Box(
             modifier = modifier
                 .padding(16.dp)
+                .fillMaxWidth()
         ) {
             leftIcon?.let {
                 IconButton(
                     modifier = Modifier.then(Modifier
                         .size(14.dp)
-                        .align(Alignment.CenterVertically)),
+                        .align(Alignment.CenterStart)),
                     onClick = { leftCallback?.let { it() } }
                 ) {
                     Icon(painter = leftIcon, contentDescription = leftIconDescription)
@@ -49,13 +47,13 @@ fun Header(
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,
                 modifier = modifier
-                    .weight(1f)
+                    .align(Alignment.Center)
             )
             rightIcon?.let {
                 IconButton(
                     modifier = Modifier.then(Modifier
                         .size(14.dp)
-                        .align(Alignment.CenterVertically)),
+                        .align(Alignment.CenterEnd)),
                     onClick = { rightCallback?.let { it() } }
                 ) {
                     Icon(painter = rightIcon, contentDescription = rightIconDescription)
