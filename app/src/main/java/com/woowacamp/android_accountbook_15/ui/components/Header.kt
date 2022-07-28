@@ -1,14 +1,14 @@
 package com.woowacamp.android_accountbook_15.ui.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -19,21 +19,27 @@ import com.woowacamp.android_accountbook_15.ui.theme.Purple
 fun Header(
     modifier: Modifier = Modifier,
     title: String,
-    leftIcon: ImageVector? = null,
+    leftIcon: Painter? = null,
     leftIconDescription: String = "",
     leftCallback: (() -> Unit)? = null,
-    rightIcon: ImageVector? = null,
+    rightIcon: Painter? = null,
     rightIconDescription: String = "",
     rightCallback: (() -> Unit)? = null
 ) {
     Column {
-        Row(
+        Box(
             modifier = modifier
                 .padding(16.dp)
+                .fillMaxWidth()
         ) {
             leftIcon?.let {
-                IconButton(onClick = { leftCallback!!() }) {
-                    Icon(imageVector = leftIcon, contentDescription = leftIconDescription)
+                IconButton(
+                    modifier = Modifier.then(Modifier
+                        .size(14.dp)
+                        .align(Alignment.CenterStart)),
+                    onClick = { leftCallback?.let { it() } }
+                ) {
+                    Icon(painter = leftIcon, contentDescription = leftIconDescription)
                 }
             }
             Text(
@@ -41,11 +47,16 @@ fun Header(
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,
                 modifier = modifier
-                    .weight(1f)
+                    .align(Alignment.Center)
             )
             rightIcon?.let {
-                IconButton(onClick = { rightCallback!!() }) {
-                    Icon(imageVector = rightIcon, contentDescription = rightIconDescription)
+                IconButton(
+                    modifier = Modifier.then(Modifier
+                        .size(14.dp)
+                        .align(Alignment.CenterEnd)),
+                    onClick = { rightCallback?.let { it() } }
+                ) {
+                    Icon(painter = rightIcon, contentDescription = rightIconDescription)
                 }
             }
         }
