@@ -82,6 +82,7 @@ class AccountBookDataSource @Inject constructor(
     }
 
     fun getAllHistory(
+        year: Int,
         month: Int
     ): List<History> 
         = readableDB.run {
