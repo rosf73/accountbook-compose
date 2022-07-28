@@ -8,13 +8,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,14 +33,15 @@ fun SettingScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-    LazyColumn {
-        item {
-            Header(title = "설정")
-            SettingCard("결제 수단", CardType.PAYMENT_METHOD, state)
-            Divider(color = Purple, thickness = 1.dp)
-            SettingCard("지출 카테고리", CardType.EXPENSES_CATEGORY, state)
-            Divider(color = Purple, thickness = 1.dp)
-            SettingCard("수입 카테고리", CardType.INCOME_CATEGORY, state)
+    Scaffold(
+        topBar = { Header(title = "설정") }
+    ) {
+        LazyColumn {
+            item {
+                SettingCard("결제 수단", CardType.PAYMENT_METHOD, state)
+                SettingCard("지출 카테고리", CardType.EXPENSES_CATEGORY, state)
+                SettingCard("수입 카테고리", CardType.INCOME_CATEGORY, state)
+            }
         }
     }
 }
@@ -69,6 +69,7 @@ fun SettingCard(
         }
         BottomItem(title)
     }
+    Divider(color = Purple, thickness = 1.dp)
 }
 
 @Composable
@@ -119,7 +120,9 @@ private fun BottomItem(title: String) {
             fontWeight = FontWeight(700)
         )
         IconButton(
-            modifier = Modifier.then(Modifier.size(14.dp)),
+            modifier = Modifier.then(Modifier
+                .size(14.dp)
+                .align(CenterVertically)),
             onClick = { /*TODO*/ }
         ) {
             Icon(
