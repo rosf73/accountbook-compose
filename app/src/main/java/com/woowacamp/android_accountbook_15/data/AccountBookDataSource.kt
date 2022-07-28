@@ -157,7 +157,7 @@ class AccountBookDataSource @Inject constructor(
     fun addCategory(
         type: Int,
         name: String,
-        color: String
+        color: Long
     ): Long
         = writableDB.run {
             val values = ContentValues().apply {

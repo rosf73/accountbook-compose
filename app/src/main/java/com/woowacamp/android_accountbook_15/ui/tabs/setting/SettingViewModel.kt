@@ -17,32 +17,34 @@ class SettingViewModel @Inject constructor(
     private val _state = MutableStateFlow(SettingViewState())
     val state: StateFlow<SettingViewState> get() = _state
 
-    private val _paymentMethods = MutableStateFlow(repository.getAllPaymentMethod().getOrThrow())
-    val paymentMethods: StateFlow<List<PaymentMethod>> get() = _paymentMethods
-
     init {
         val paymentMethods = repository.getAllPaymentMethod().getOrThrow()
-        _state.value = SettingViewState(paymentMethods)
-    }
-
-    fun getSettingStates() {
-        val paymentMethods = repository.getAllPaymentMethod().getOrThrow()
-        _state.value = SettingViewState(paymentMethods)
+        val expensesCategories = repository.getAllExpensesCategory().getOrThrow()
+        val incomeCategories = repository.getAllIncomeCategory().getOrThrow()
+        _state.value = SettingViewState(paymentMethods, expensesCategories, incomeCategories)
     }
 
     fun insertPaymentMethod(name: String) {
         repository.insertPaymentMethod(name)
         val paymentMethods = repository.getAllPaymentMethod().getOrThrow()
-        _state.value = SettingViewState(paymentMethods)
+        _state.value.paymentMethods = paymentMethods
     }
 
     fun insertExpensesCategory(name: String, color: Long) {
+        repository.insertCategory(0, name, color)
+        val expensesCategories = repository.getAllExpensesCategory().getOrThrow()
+        _state.value.expensesCategories = expensesCategories
+    }
 
+    fun insertIncomeCategory(name: String, color: Long) {
+        repository.insertCategory(1, name, color)
+        val incomeCategories = repository.getAllIncomeCategory().getOrThrow()
+        _state.value.incomeCategories = incomeCategories
     }
 }
 
 data class SettingViewState(
-    val paymentMethods: List<PaymentMethod> = emptyList(),
-    val incomeCategories: List<Category> = emptyList(),
-    val expensesCategories: List<Category> = emptyList()
+    var paymentMethods: List<PaymentMethod> = emptyList(),
+    var incomeCategories: List<Category> = emptyList(),
+    var expensesCategories: List<Category> = emptyList()
 )

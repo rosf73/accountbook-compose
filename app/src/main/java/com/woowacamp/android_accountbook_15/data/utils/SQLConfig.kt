@@ -36,7 +36,7 @@ const val SQL_CREATE_CATEGORY =
             "${BaseColumns._ID} INTEGER PRIMARY KEY," +
             "${CategoryColumns.COLUMN_NAME_TYPE} INTEGER," +
             "${CategoryColumns.COLUMN_NAME_NAME} TEXT," +
-            "${CategoryColumns.COLUMN_NAME_COLOR} TEXT)"
+            "${CategoryColumns.COLUMN_NAME_COLOR} INTEGER)"
 
 /**
  * Drop Table

@@ -50,7 +50,7 @@ fun SettingScreen(
         CardType.INCOME_CATEGORY -> AddScreen(
             title = "수입 카테고리 추가",
             colors = incomeColors,
-            onAddClick = { text, color -> color?.let { viewModel.insertExpensesCategory(text, color) } },
+            onAddClick = { text, color -> color?.let { viewModel.insertIncomeCategory(text, color) } },
             onBackClick = { setScreenState(CardType.SETTING) }
         )
     }
@@ -138,7 +138,11 @@ private fun SettingItem(
     name: String,
     color: Long? = null
 ) {
-    Box(modifier = Modifier.padding(0.dp, 11.dp)) {
+    Box(
+        modifier = Modifier
+            .padding(0.dp, 11.dp)
+            .fillMaxWidth()
+    ) {
        Text(
            modifier = Modifier.align(CenterStart),
            text = name,
@@ -146,10 +150,10 @@ private fun SettingItem(
            fontWeight = FontWeight(700)
        )
        color?.let {
-           Surface(
+           Box(
                modifier = Modifier
                    .background(Color(color))
-                   .align(CenterEnd)
+                   .align(CenterEnd),
            ) {
                Text(text = name)
            }
