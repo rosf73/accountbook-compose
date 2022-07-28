@@ -56,7 +56,7 @@ class CategoryDAO @Inject constructor (
         }
     }
 
-    suspend fun readAllCategory(): List<Category> {
+    suspend fun readAllCategories(): List<Category> {
         return withContext(Dispatchers.IO) {
             val db = readableDatabase
 

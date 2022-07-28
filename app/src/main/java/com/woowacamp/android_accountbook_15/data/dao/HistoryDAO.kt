@@ -123,7 +123,7 @@ class HistoryDAO @Inject constructor (
         }
     }
 
-    suspend fun readAllHistory(): List<History> {
+    suspend fun readAllHistories(): List<History> {
         return withContext(Dispatchers.IO) {
             val db = readableDatabase
 
