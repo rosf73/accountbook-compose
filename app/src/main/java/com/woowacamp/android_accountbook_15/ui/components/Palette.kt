@@ -2,10 +2,9 @@ package com.woowacamp.android_accountbook_15.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
@@ -35,7 +34,7 @@ fun Palette(
         modifier = modifier.selectableGroup()
     ) {
         items(colors) { color ->
-            Color(color, selectedColor) {
+            ColorBox(Modifier.size(24.dp).aspectRatio(1f), color, selectedColor) {
                 setSelectedColor(color)
             }
         }
@@ -44,20 +43,24 @@ fun Palette(
 }
 
 @Composable
-fun Color(
+fun ColorBox(
+    modifier: Modifier,
     color: Long,
     selectedColor: Long,
     onColorSelect: () -> Unit
 ) {
+    val boxModifier = if (color == selectedColor) {
+        modifier.padding(4.dp)
+    } else {
+        modifier.padding(8.dp)
+    }
     Box(
-        modifier = Modifier
-            .width(24.dp)
-            .height(24.dp)
+        modifier = boxModifier
             .background(Color(color))
             .selectable(
                 selected = color == selectedColor,
                 role = Role.RadioButton,
                 onClick = onColorSelect
-            )
+            ),
     )
 }
