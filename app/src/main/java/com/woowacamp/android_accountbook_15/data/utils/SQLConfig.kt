@@ -29,14 +29,14 @@ const val SQL_CREATE_HISTORY =
 const val SQL_CREATE_PAYMENT_METHOD =
     "CREATE TABLE ${PaymentMethodColumns.TABLE_NAME} (" +
             "${BaseColumns._ID} INTEGER PRIMARY KEY," +
-            "${PaymentMethodColumns.COLUMN_NAME_NAME} TEXT)"
+            "${PaymentMethodColumns.COLUMN_NAME_NAME} TEXT UNIQUE)"
 
 const val SQL_CREATE_CATEGORY =
     "CREATE TABLE ${CategoryColumns.TABLE_NAME} (" +
             "${BaseColumns._ID} INTEGER PRIMARY KEY," +
             "${CategoryColumns.COLUMN_NAME_TYPE} INTEGER," +
-            "${CategoryColumns.COLUMN_NAME_NAME} TEXT," +
-            "${CategoryColumns.COLUMN_NAME_COLOR} INTEGER)"
+            "${CategoryColumns.COLUMN_NAME_NAME} TEXT UNIQUE," +
+            "${CategoryColumns.COLUMN_NAME_COLOR} INTEGER UNIQUE)"
 
 /**
  * Drop Table
