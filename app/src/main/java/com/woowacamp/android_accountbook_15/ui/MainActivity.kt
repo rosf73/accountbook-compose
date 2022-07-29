@@ -43,4 +43,12 @@ class MainActivity : AppCompatActivity() {
             tab.icon = ContextCompat.getDrawable(this, tabIconArray[pos])
         }.attach()
     }
+
+    override fun onBackPressed() {
+        if (binding.viewpagerMain.currentItem > 0) {
+            binding.viewpagerMain.currentItem = 0
+        } else {
+            super.onBackPressed()
+        }
+    }
 }
