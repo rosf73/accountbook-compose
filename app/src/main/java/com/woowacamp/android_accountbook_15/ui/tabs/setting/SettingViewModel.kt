@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.woowacamp.android_accountbook_15.data.AccountBookRepository
 import com.woowacamp.android_accountbook_15.data.model.Category
 import com.woowacamp.android_accountbook_15.data.model.PaymentMethod
+import com.woowacamp.android_accountbook_15.utils.createToast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,19 +26,31 @@ class SettingViewModel @Inject constructor(
     }
 
     fun insertPaymentMethod(name: String) {
-        repository.insertPaymentMethod(name)
+        val res = repository.insertPaymentMethod(name).getOrNull()
+        if (res == null) {
+            createToast("이미 등록된 결제 수단입니다")
+            return
+        }
         val paymentMethods = repository.getAllPaymentMethod().getOrThrow()
         _state.value.paymentMethods = paymentMethods
     }
 
     fun insertExpensesCategory(name: String, color: Long) {
-        repository.insertCategory(0, name, color)
+        val res = repository.insertCategory(0, name, color).getOrNull()
+        if (res == null) {
+            createToast("이미 등록된 지출 카테고리입니다")
+            return
+        }
         val expensesCategories = repository.getAllExpensesCategory().getOrThrow()
         _state.value.expensesCategories = expensesCategories
     }
 
     fun insertIncomeCategory(name: String, color: Long) {
-        repository.insertCategory(1, name, color)
+        val res = repository.insertCategory(1, name, color).getOrNull()
+        if (res == null) {
+            createToast("이미 등록된 수입 카테고리입니다")
+            return
+        }
         val incomeCategories = repository.getAllIncomeCategory().getOrThrow()
         _state.value.incomeCategories = incomeCategories
     }

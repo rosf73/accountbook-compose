@@ -1,6 +1,7 @@
 package com.woowacamp.android_accountbook_15.data
 
 import android.content.ContentValues
+import android.database.sqlite.SQLiteDatabase.CONFLICT_IGNORE
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import com.woowacamp.android_accountbook_15.data.model.Category
@@ -121,7 +122,7 @@ class AccountBookDataSource @Inject constructor(
                 put(PaymentMethodColumns.COLUMN_NAME_NAME, name)
             }
 
-            insert(PaymentMethodColumns.TABLE_NAME, null, values)
+            insertOrThrow(PaymentMethodColumns.TABLE_NAME, null, values)
         }
     
     fun getAllPaymentMethod(): List<PaymentMethod> 
@@ -163,7 +164,7 @@ class AccountBookDataSource @Inject constructor(
                 put(CategoryColumns.COLUMN_NAME_COLOR, color)
             }
     
-            insert(CategoryColumns.TABLE_NAME, null, values)
+            insertOrThrow(CategoryColumns.TABLE_NAME, null, values)
         }
 
     fun getAllExpensesCategory(): List<Category>
