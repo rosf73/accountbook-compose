@@ -1,10 +1,12 @@
 package com.woowacamp.android_accountbook_15.ui.tabs.setting
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -13,6 +15,7 @@ import androidx.compose.ui.Alignment.Companion.CenterEnd
 import androidx.compose.ui.Alignment.Companion.CenterStart
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -150,13 +153,13 @@ private fun SettingItem(
            fontWeight = FontWeight(700)
        )
        color?.let {
-           Box(
-               modifier = Modifier
-                   .background(Color(color))
-                   .align(CenterEnd),
-           ) {
-               Text(text = name)
-           }
+           Text(modifier = Modifier
+               .align(CenterEnd)
+               .clip(RoundedCornerShape(14.dp))
+               .background(Color(color))
+               .padding(8.dp, 4.dp),
+               text = name,
+               color = White)
        }
     }
     Divider(color = Purple04, thickness = 1.dp)
