@@ -45,6 +45,6 @@ class SettingViewModel @Inject constructor(
 
 data class SettingViewState(
     var paymentMethods: List<PaymentMethod> = emptyList(),
-    var incomeCategories: List<Category> = emptyList(),
-    var expensesCategories: List<Category> = emptyList()
+    var expensesCategories: List<Category> = emptyList(),
+    var incomeCategories: List<Category> = emptyList()
 )

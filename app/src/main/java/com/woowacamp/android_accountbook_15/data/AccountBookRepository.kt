@@ -22,10 +22,10 @@ class AccountBookRepository @Inject constructor(
         = runCatching { dataSource.addPaymentMethod(name) }
 
     fun getAllExpensesCategory(): Result<List<Category>>
-        = runCatching { dataSource.getAllCategory() }
+        = runCatching { dataSource.getAllExpensesCategory() }
 
     fun getAllIncomeCategory(): Result<List<Category>>
-            = runCatching { dataSource.getAllCategory() }
+            = runCatching { dataSource.getAllIncomeCategory() }
 
     fun insertCategory(type: Int, name: String, color: Long): Result<Long>
         = runCatching { dataSource.addCategory(type, name, color) }

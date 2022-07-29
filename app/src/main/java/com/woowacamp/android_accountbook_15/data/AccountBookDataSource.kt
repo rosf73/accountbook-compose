@@ -3,13 +3,10 @@ package com.woowacamp.android_accountbook_15.data
 import android.content.ContentValues
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
-import com.woowacamp.android_accountbook_15.data.utils.HistoryColumns
 import com.woowacamp.android_accountbook_15.data.model.Category
 import com.woowacamp.android_accountbook_15.data.model.History
 import com.woowacamp.android_accountbook_15.data.model.PaymentMethod
-import com.woowacamp.android_accountbook_15.data.utils.CategoryColumns
-import com.woowacamp.android_accountbook_15.data.utils.PaymentMethodColumns
-import com.woowacamp.android_accountbook_15.data.utils.SQL_SELECT_ALL_HISTORY
+import com.woowacamp.android_accountbook_15.data.utils.*
 import javax.inject.Inject
 
 class AccountBookDataSource @Inject constructor(
@@ -169,13 +166,42 @@ class AccountBookDataSource @Inject constructor(
             insert(CategoryColumns.TABLE_NAME, null, values)
         }
 
-    fun getAllCategory(): List<Category>
+    fun getAllExpensesCategory(): List<Category>
         = readableDB.run {
             val cursor = query(
                 CategoryColumns.TABLE_NAME,
                 null,
+                "${CategoryColumns.COLUMN_NAME_TYPE} = ?",
+                arrayOf("0"),
                 null,
                 null,
+                null
+            )
+
+            val categories = mutableListOf<Category>()
+            with(cursor) {
+                while (moveToNext()) {
+                    val id = getLong(getColumnIndexOrThrow(BaseColumns._ID))
+                    val type = getInt(getColumnIndexOrThrow(CategoryColumns.COLUMN_NAME_TYPE))
+                    val name = getString(getColumnIndexOrThrow(CategoryColumns.COLUMN_NAME_NAME))
+                    val color = getLong(getColumnIndexOrThrow(CategoryColumns.COLUMN_NAME_COLOR))
+                    categories.add(
+                        Category(id, type, name, color)
+                    )
+                }
+            }
+            cursor.close()
+
+            categories
+        }
+
+    fun getAllIncomeCategory(): List<Category>
+            = readableDB.run {
+            val cursor = query(
+                CategoryColumns.TABLE_NAME,
+                null,
+                "${CategoryColumns.COLUMN_NAME_TYPE} = ?",
+                arrayOf("1"),
                 null,
                 null,
                 null
