@@ -18,8 +18,8 @@ class SettingViewModel @Inject constructor(
     private val _state = MutableStateFlow(SettingViewState())
     val state: StateFlow<SettingViewState> get() = _state
 
-    private val paymentId = MutableStateFlow(-1L)
-    private val categoryId = MutableStateFlow(-1L)
+    val payment = MutableStateFlow<PaymentMethod?>(null)
+    val category = MutableStateFlow<Category?>(null)
 
     init {
         val paymentMethods = repository.getAllPaymentMethod().getOrThrow()
@@ -27,9 +27,6 @@ class SettingViewModel @Inject constructor(
         val incomeCategories = repository.getAllIncomeCategory().getOrThrow()
         _state.value = SettingViewState(paymentMethods, expensesCategories, incomeCategories)
     }
-
-    fun setPaymentId(id: Long) { paymentId.value = id }
-    fun setCategoryId(id: Long) { categoryId.value = id }
 
     fun insertPaymentMethod(name: String) {
         val res = repository.insertPaymentMethod(name).getOrNull()
@@ -62,25 +59,33 @@ class SettingViewModel @Inject constructor(
     }
 
     fun updatePaymentMethod(name: String) {
-        val res = repository.updatePaymentMethod(paymentId.value, name).getOrNull()
-        if (res == null) {
-            createToast("이미 등록된 결제 수단입니다")
-            return
+        payment.value?.let {
+            val res = repository.updatePaymentMethod(it.id, name).getOrNull()
+            if (res == null) {
+                createToast("이미 등록된 결제 수단입니다")
+                payment.value = null
+                return
+            }
+            val paymentMethods = repository.getAllPaymentMethod().getOrThrow()
+            _state.value.paymentMethods = paymentMethods
         }
-        val paymentMethods = repository.getAllPaymentMethod().getOrThrow()
-        _state.value.paymentMethods = paymentMethods
+        payment.value = null
     }
 
     fun updateCategory(name: String, color: Long) {
-        val res = repository.updateCategory(categoryId.value, name, color).getOrNull()
-        if (res == null) {
-            createToast("이미 등록된 카테고리입니다")
-            return
+        category.value?.let {
+            val res = repository.updateCategory(it.id, name, color).getOrNull()
+            if (res == null) {
+                createToast("이미 등록된 카테고리입니다")
+                category.value = null
+                return
+            }
+            val expensesCategories = repository.getAllExpensesCategory().getOrThrow()
+            val incomeCategories = repository.getAllIncomeCategory().getOrThrow()
+            _state.value.expensesCategories = expensesCategories
+            _state.value.incomeCategories = incomeCategories
         }
-        val expensesCategories = repository.getAllExpensesCategory().getOrThrow()
-        val incomeCategories = repository.getAllIncomeCategory().getOrThrow()
-        _state.value.expensesCategories = expensesCategories
-        _state.value.incomeCategories = incomeCategories
+        category.value = null
     }
 }
 
