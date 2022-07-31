@@ -14,6 +14,8 @@ fun HistoryScreen(
     viewModel: HistoryViewModel
 ) {
     val (screenState, setScreenState) = remember { mutableStateOf(ScreenType.HISTORY) }
+    val (isCheckedIncome, setIsCheckedIncome) = remember { mutableStateOf(true) }
+    val (isCheckedExpenses, setIsCheckedExpenses) = remember { mutableStateOf(true) }
 
     val year by viewModel.currentYear.collectAsState()
     val month by viewModel.currentMonth.collectAsState()
@@ -37,10 +39,12 @@ fun HistoryScreen(
             }
         )
         ScreenType.ADD_HISTORY -> EditScreen(
+            isCheckedIncome = isCheckedIncome,
             onAddClick = {  },
             onBackClick = { setScreenState(ScreenType.HISTORY) }
         )
         ScreenType.UPDATE_HISTORY -> EditScreen(
+            isCheckedIncome = isCheckedIncome,
             onAddClick = {  },
             onBackClick = { setScreenState(ScreenType.HISTORY) }
         )
