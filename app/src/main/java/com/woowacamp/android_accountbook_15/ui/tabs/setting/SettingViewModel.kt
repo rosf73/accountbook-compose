@@ -54,6 +54,28 @@ class SettingViewModel @Inject constructor(
         val incomeCategories = repository.getAllIncomeCategory().getOrThrow()
         _state.value.incomeCategories = incomeCategories
     }
+
+    fun updatePaymentMethod(id: Long, name: String) {
+        val res = repository.updatePaymentMethod(id, name).getOrNull()
+        if (res == null) {
+            createToast("이미 등록된 결제 수단입니다")
+            return
+        }
+        val paymentMethods = repository.getAllPaymentMethod().getOrThrow()
+        _state.value.paymentMethods = paymentMethods
+    }
+
+    fun updateCategory(id: Long, name: String, color: Long) {
+        val res = repository.updateCategory(id, name, color).getOrNull()
+        if (res == null) {
+            createToast("이미 등록된 카테고리입니다")
+            return
+        }
+        val expensesCategories = repository.getAllExpensesCategory().getOrThrow()
+        val incomeCategories = repository.getAllIncomeCategory().getOrThrow()
+        _state.value.expensesCategories = expensesCategories
+        _state.value.incomeCategories = incomeCategories
+    }
 }
 
 data class SettingViewState(
