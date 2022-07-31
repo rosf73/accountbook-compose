@@ -22,7 +22,7 @@
   - 결제수단 (payment_method)
   - 카테고리 (category)
   - 히스토리 (history)
-  <img width="563" alt="image" src="https://user-images.githubusercontent.com/47631768/180905406-24bfb504-73fb-475b-b2c1-35965268f335.png">
+  <img width="557" alt="image" src="https://user-images.githubusercontent.com/47631768/182009464-0b91bcc8-6bf6-44f0-a5fa-a1852f81c5cd.png">
 
 ### - Features
   - Main
