@@ -10,7 +10,7 @@ fun getTodayMonthAndYear(): String {
 }
 
 fun getTodayMonthAndYear(year: Int, month: Int): String {
-    return "${year}년 ${month}월"
+    return "$year-${if (month < 10) "0$month" else month}"
 }
 
 fun getTodayMonth(): Int {

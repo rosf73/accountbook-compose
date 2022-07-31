@@ -15,8 +15,14 @@ class HistoryViewModel @Inject constructor(
     private val repository: AccountBookRepository
 ): ViewModel() {
 
-    private val _histories = MutableStateFlow(
-        repository.getMonthlyHistories(getTodayYear(), getTodayMonth()).getOrThrow()
-    )
-    val histories: StateFlow<List<History>> get() = _histories
+    private val _monthlyHistories = MutableStateFlow(mapOf<String, List<History>>())
+    val monthlyHistories: StateFlow<Map<String, List<History>>> get() = _monthlyHistories
+
+    init {
+        getMonthlyHistories(getTodayYear(), getTodayMonth())
+    }
+
+    fun getMonthlyHistories(year: Int, month: Int) {
+        _monthlyHistories.value = repository.getMonthlyHistories(year, month).getOrThrow()
+    }
 }
