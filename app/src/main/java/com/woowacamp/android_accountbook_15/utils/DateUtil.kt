@@ -1,17 +1,11 @@
 package com.woowacamp.android_accountbook_15.utils
 
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun getTodayMonthAndYear(): String {
-    val today = Calendar.getInstance().time
-    return SimpleDateFormat("yyyy년 MM월", Locale.KOREA).format(today)
-}
+fun getMonthAndYearKorean(year: Int, month: Int): String = "${year}년 ${if (month < 10) "0$month" else month}월"
 
-fun getTodayMonthAndYear(year: Int, month: Int): String {
-    return "$year-${if (month < 10) "0$month" else month}"
-}
+fun getMonthAndYearHyphen(year: Int, month: Int): String = "$year-${if (month < 10) "0$month" else month}"
 
 fun getTodayMonth(): Int {
     val today = Calendar.getInstance().time

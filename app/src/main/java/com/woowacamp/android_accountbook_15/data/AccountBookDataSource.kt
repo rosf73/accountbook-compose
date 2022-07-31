@@ -1,16 +1,12 @@
 package com.woowacamp.android_accountbook_15.data
 
 import android.content.ContentValues
-import android.database.sqlite.SQLiteDatabase.CONFLICT_IGNORE
-import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import com.woowacamp.android_accountbook_15.data.model.Category
 import com.woowacamp.android_accountbook_15.data.model.History
 import com.woowacamp.android_accountbook_15.data.model.PaymentMethod
 import com.woowacamp.android_accountbook_15.data.utils.*
-import com.woowacamp.android_accountbook_15.utils.getTodayMonth
-import com.woowacamp.android_accountbook_15.utils.getTodayMonthAndYear
-import com.woowacamp.android_accountbook_15.utils.getTodayYear
+import com.woowacamp.android_accountbook_15.utils.getMonthAndYearHyphen
 import javax.inject.Inject
 
 class AccountBookDataSource @Inject constructor(
@@ -87,7 +83,7 @@ class AccountBookDataSource @Inject constructor(
         month: Int
     ): Map<String, List<History>>
         = readableDB.run {
-            val cursor = rawQuery(SQL_SELECT_ALL_HISTORY, arrayOf(getTodayMonthAndYear(year, month)))
+            val cursor = rawQuery(SQL_SELECT_ALL_HISTORY, arrayOf(getMonthAndYearHyphen(year, month)))
 
             mutableMapOf<String, MutableList<History>>().apply {
                 with(cursor) {

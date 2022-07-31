@@ -18,8 +18,11 @@ class HistoryViewModel @Inject constructor(
     private val _monthlyHistories = MutableStateFlow(mapOf<String, List<History>>())
     val monthlyHistories: StateFlow<Map<String, List<History>>> get() = _monthlyHistories
 
+    val currentYear = MutableStateFlow(getTodayYear())
+    val currentMonth = MutableStateFlow(getTodayMonth())
+
     init {
-        getMonthlyHistories(getTodayYear(), getTodayMonth())
+        getMonthlyHistories(currentYear.value, currentMonth.value)
     }
 
     fun getMonthlyHistories(year: Int, month: Int) {
