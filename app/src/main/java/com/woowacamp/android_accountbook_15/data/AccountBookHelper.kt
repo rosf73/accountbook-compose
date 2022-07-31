@@ -20,6 +20,20 @@ class AccountBookHelper @Inject constructor (
             execSQL(SQL_CREATE_HISTORY)
             execSQL(SQL_CREATE_PAYMENT_METHOD)
             execSQL(SQL_CREATE_CATEGORY)
+
+            /* 기본 데이터 세팅 */
+            execSQL(SQL_INSERT_PAYMENT_METHOD_1)
+            execSQL(SQL_INSERT_PAYMENT_METHOD_2)
+            execSQL(SQL_INSERT_EXPENSES_CATEGORY_1)
+            execSQL(SQL_INSERT_EXPENSES_CATEGORY_2)
+            execSQL(SQL_INSERT_EXPENSES_CATEGORY_3)
+            execSQL(SQL_INSERT_EXPENSES_CATEGORY_4)
+            execSQL(SQL_INSERT_EXPENSES_CATEGORY_5)
+            execSQL(SQL_INSERT_EXPENSES_CATEGORY_6)
+            execSQL(SQL_INSERT_EXPENSES_CATEGORY_7)
+            execSQL(SQL_INSERT_INCOME_CATEGORY_1)
+            execSQL(SQL_INSERT_INCOME_CATEGORY_2)
+            execSQL(SQL_INSERT_INCOME_CATEGORY_3)
         }
     }
 
