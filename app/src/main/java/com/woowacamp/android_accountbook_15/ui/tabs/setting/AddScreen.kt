@@ -24,12 +24,14 @@ import com.woowacamp.android_accountbook_15.ui.theme.Yellow
 @Composable
 fun AddScreen(
     title: String,
+    writtenName: String? = null,
+    selectedColor: Long? = null,
     colors: List<Long>? = null,
     onAddClick: (String, Long?) -> Unit,
     onBackClick: () -> Unit
 ) {
-    val (name, setName) = remember { mutableStateOf("") }
-    val (color, setColor) = remember { mutableStateOf(0xFFFFFFFF) }
+    val (name, setName) = remember { mutableStateOf(writtenName ?: "") }
+    val (color, setColor) = remember { mutableStateOf(selectedColor) }
 
     Scaffold(
         topBar = {
@@ -46,8 +48,9 @@ fun AddScreen(
 
         AddScreen(
             modifier = Modifier.fillMaxWidth(),
-            colors = colors,
             text = name,
+            selectedColor = color,
+            colors = colors,
             onColorSelect = { color -> setColor(color) },
             onTextChanged = { text -> setName(text) },
             onAddClick = {
@@ -61,8 +64,9 @@ fun AddScreen(
 @Composable
 private fun AddScreen(
     modifier: Modifier,
-    colors: List<Long>?,
     text: String,
+    selectedColor: Long? = null,
+    colors: List<Long>?,
     onColorSelect: (Long) -> Unit,
     onTextChanged: (String) -> Unit,
     onAddClick: () -> Unit
@@ -102,6 +106,7 @@ private fun AddScreen(
                 Divider(color = Purple04, thickness = 1.dp)
                 Palette(
                     modifier = modifier.padding(16.dp),
+                    initColor = selectedColor,
                     colors = colors,
                     onColorSelect = onColorSelect)
             }
@@ -113,7 +118,8 @@ private fun AddScreen(
                 .padding(20.dp),
             onClick = onAddClick,
             colors = ButtonDefaults.buttonColors(backgroundColor = Yellow),
-            contentPadding = PaddingValues(16.dp)
+            contentPadding = PaddingValues(16.dp),
+            enabled = text.isNotBlank()
         ) {
             Text(text = "등록하기", color = White)
         }
