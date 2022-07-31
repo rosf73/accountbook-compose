@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.woowacamp.android_accountbook_15.R
 import com.woowacamp.android_accountbook_15.ui.components.Header
+import com.woowacamp.android_accountbook_15.ui.components.InputItem
 import com.woowacamp.android_accountbook_15.ui.components.Palette
 import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple04
@@ -80,21 +81,11 @@ private fun EditScreen(
             .align(Alignment.TopCenter)
             .padding(16.dp)
         ) {
-            Row(
-                modifier = modifier.padding(4.dp)
-            ) {
-                Text(
-                    modifier = Modifier.align(CenterVertically),
-                    text = "이름")
-                TextField(
-                    modifier = Modifier.weight(1f),
-                    value = text,
-                    onValueChange = onTextChanged,
-                    placeholder = {
-                        Text(text = "입력하세요", color = LightPurple)
-                    })
-            }
-            Divider(color = Purple04, thickness = 1.dp)
+            InputItem(
+                modifier = modifier.padding(4.dp),
+                title = "이름",
+                value = text,
+                onTextChanged = onTextChanged)
 
             colors?.let {
                 Text(
