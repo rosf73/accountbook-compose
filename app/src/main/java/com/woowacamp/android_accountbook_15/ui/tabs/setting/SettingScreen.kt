@@ -58,9 +58,7 @@ private fun SettingScreen(
     val state by viewModel.state.collectAsState()
 
     Scaffold(
-        topBar = {
-            Header(title = "설정")
-        }
+        topBar = { Header(title = "설정") }
     ) {
         LazyColumn {
             item {
