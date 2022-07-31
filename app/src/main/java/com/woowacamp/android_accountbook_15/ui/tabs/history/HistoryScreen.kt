@@ -1,6 +1,5 @@
 package com.woowacamp.android_accountbook_15.ui.tabs.history
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.res.painterResource
@@ -14,27 +13,36 @@ import com.woowacamp.android_accountbook_15.utils.getMonthAndYearKorean
 fun HistoryScreen(
     viewModel: HistoryViewModel
 ) {
-    val (modifyState, setModifyState) = remember { mutableStateOf(false) }
+    val (screenState, setScreenState) = remember { mutableStateOf(ScreenType.HISTORY) }
+
     val year by viewModel.currentYear.collectAsState()
     val month by viewModel.currentMonth.collectAsState()
 
-    if (modifyState) {
-        ModifyScreen {
-            setModifyState(false)
-        }
-    } else {
-        HistoryScreen(
+    when (screenState) {
+        ScreenType.HISTORY -> HistoryScreen(
             title = getMonthAndYearKorean(year, month),
             histories = viewModel.monthlyHistories.collectAsState().value,
-            onChangeModifyState = { setModifyState(true) },
+            onAddClick = { setScreenState(ScreenType.ADD_HISTORY) },
             onClickLeft = {
-                viewModel.currentYear.value = if (month-1 > 0) year else year-1
-                viewModel.currentMonth.value = if (month-1 > 0) month-1 else 12
+                viewModel.setCurrentDate(
+                    if (month-1 > 0) year else year-1,
+                    if (month-1 > 0) month-1 else 12
+                )
             },
             onClickRight = {
-                viewModel.currentYear.value = if (month+1 > 12) year+1 else year
-                viewModel.currentMonth.value = if (month+1 > 12) 1 else month+1
+                viewModel.setCurrentDate(
+                    if (month+1 > 12) year+1 else year,
+                    if (month+1 > 12) 1 else month+1
+                )
             }
+        )
+        ScreenType.ADD_HISTORY -> EditScreen(
+            onAddClick = {  },
+            onBackClick = { setScreenState(ScreenType.HISTORY) }
+        )
+        ScreenType.UPDATE_HISTORY -> EditScreen(
+            onAddClick = {  },
+            onBackClick = { setScreenState(ScreenType.HISTORY) }
         )
     }
 }
@@ -43,7 +51,7 @@ fun HistoryScreen(
 private fun HistoryScreen(
     title: String,
     histories: Map<String, List<History>>,
-    onChangeModifyState: () -> Unit,
+    onAddClick: () -> Unit,
     onClickLeft: () -> Unit,
     onClickRight: () -> Unit
 ) {
@@ -58,28 +66,13 @@ private fun HistoryScreen(
             )
         },
         floatingActionButton = {
-            FloatingButton(onClick = onChangeModifyState)
+            FloatingButton(onClick = onAddClick)
         }
     ) {
 
     }
 }
 
-@Composable
-private fun ModifyScreen(
-    onChangeModifyState: () -> Unit
-) {
-    Scaffold(
-        topBar = {
-            Header(
-                title = "내역 등록",
-                leftIcon = painterResource(R.drawable.ic_back),
-                leftCallback = onChangeModifyState
-            )
-        }
-    ) {
-        BackHandler {
-            onChangeModifyState()
-        }
-    }
+enum class ScreenType {
+    HISTORY, ADD_HISTORY, UPDATE_HISTORY
 }
