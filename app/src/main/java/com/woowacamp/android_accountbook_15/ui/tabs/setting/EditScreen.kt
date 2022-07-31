@@ -22,7 +22,7 @@ import com.woowacamp.android_accountbook_15.ui.theme.White
 import com.woowacamp.android_accountbook_15.ui.theme.Yellow
 
 @Composable
-fun AddScreen(
+fun EditScreen(
     title: String,
     writtenName: String? = null,
     selectedColor: Long? = null,
@@ -46,7 +46,7 @@ fun AddScreen(
             onBackClick()
         }
 
-        AddScreen(
+        EditScreen(
             modifier = Modifier.fillMaxWidth(),
             text = name,
             selectedColor = color,
@@ -62,7 +62,7 @@ fun AddScreen(
 }
 
 @Composable
-private fun AddScreen(
+private fun EditScreen(
     modifier: Modifier,
     text: String,
     selectedColor: Long? = null,

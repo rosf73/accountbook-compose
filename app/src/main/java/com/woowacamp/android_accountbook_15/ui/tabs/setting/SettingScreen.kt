@@ -14,34 +14,33 @@ fun SettingScreen(
 
     when (screenState) {
         ScreenType.SETTING -> SettingScreen(viewModel) { type -> setScreenState(type) }
-        ScreenType.ADD_PAYMENT -> AddScreen(
+        ScreenType.ADD_PAYMENT -> EditScreen(
             title = "결제 수단 추가",
             onAddClick = { text, _ -> viewModel.insertPaymentMethod(text) },
             onBackClick = { setScreenState(ScreenType.SETTING) })
-        ScreenType.UPDATE_PAYMENT -> AddScreen(
+        ScreenType.UPDATE_PAYMENT -> EditScreen(
             title = "결제 수단 수정",
             writtenName = viewModel.payment.collectAsState().value?.name,
             onAddClick = { text, _ -> viewModel.updatePaymentMethod(text) }, // viewModel의 paymentId 변경 필요
             onBackClick = { setScreenState(ScreenType.SETTING) })
-        ScreenType.ADD_EXPENSES -> AddScreen(
+        ScreenType.ADD_EXPENSES -> EditScreen(
             title = "지출 카테고리 추가",
             colors = expensesColors,
             onAddClick = { text, color -> viewModel.insertExpensesCategory(text, color!!) },
             onBackClick = { setScreenState(ScreenType.SETTING) })
-        ScreenType.UPDATE_EXPENSES -> AddScreen(
+        ScreenType.UPDATE_EXPENSES -> EditScreen(
             title = "지출 카테고리 수정",
             writtenName = viewModel.category.collectAsState().value?.name,
             selectedColor = viewModel.category.collectAsState().value?.color,
             colors = expensesColors,
             onAddClick = { text, color -> viewModel.updateCategory(text, color!!) },
             onBackClick = { setScreenState(ScreenType.SETTING) })
-        ScreenType.ADD_INCOME -> AddScreen(
+        ScreenType.ADD_INCOME -> EditScreen(
             title = "수입 카테고리 추가",
-            writtenName = viewModel.payment.collectAsState().value?.name,
             colors = incomeColors,
             onAddClick = { text, color -> viewModel.insertIncomeCategory(text, color!!) },
             onBackClick = { setScreenState(ScreenType.SETTING) })
-        ScreenType.UPDATE_INCOME -> AddScreen(
+        ScreenType.UPDATE_INCOME -> EditScreen(
             title = "지출 카테고리 수정",
             writtenName = viewModel.category.collectAsState().value?.name,
             selectedColor = viewModel.category.collectAsState().value?.color,
