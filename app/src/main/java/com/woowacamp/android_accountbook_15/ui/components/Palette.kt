@@ -23,10 +23,11 @@ import com.woowacamp.android_accountbook_15.ui.theme.Purple
 @Composable
 fun Palette(
     modifier: Modifier,
+    initColor: Long? = null,
     colors: List<Long>,
     onColorSelect: (Long) -> Unit
 ) {
-    val (selectedColor, setSelectedColor) = remember { mutableStateOf(colors[0]) }
+    val (selectedColor, setSelectedColor) = remember { mutableStateOf(initColor ?: colors[0]) }
     onColorSelect(selectedColor)
 
     LazyVerticalGrid(

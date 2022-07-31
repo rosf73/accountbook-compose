@@ -1,29 +1,8 @@
 package com.woowacamp.android_accountbook_15.ui.tabs.setting
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterEnd
-import androidx.compose.ui.Alignment.Companion.CenterStart
-import androidx.compose.ui.Alignment.Companion.CenterVertically
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.woowacamp.android_accountbook_15.R
-import com.woowacamp.android_accountbook_15.data.model.Category
-import com.woowacamp.android_accountbook_15.data.model.PaymentMethod
 import com.woowacamp.android_accountbook_15.ui.components.Header
 import com.woowacamp.android_accountbook_15.ui.theme.*
 
@@ -31,167 +10,98 @@ import com.woowacamp.android_accountbook_15.ui.theme.*
 fun SettingScreen(
     viewModel: SettingViewModel
 ) {
-    val (screenState, setScreenState) = remember { mutableStateOf(CardType.SETTING) }
-
-    val state by viewModel.state.collectAsState()
+    val (screenState, setScreenState) = remember { mutableStateOf(ScreenType.SETTING) }
 
     when (screenState) {
-        CardType.SETTING -> SettingScreen(state) { type ->
-            setScreenState(type)
-        }
-        CardType.PAYMENT_METHOD -> AddScreen(
+        ScreenType.SETTING -> SettingScreen(viewModel) { type -> setScreenState(type) }
+        ScreenType.ADD_PAYMENT -> EditScreen(
             title = "결제 수단 추가",
             onAddClick = { text, _ -> viewModel.insertPaymentMethod(text) },
-            onBackClick = { setScreenState(CardType.SETTING) }
-        )
-        CardType.EXPENSES_CATEGORY -> AddScreen(
+            onBackClick = { setScreenState(ScreenType.SETTING) })
+        ScreenType.UPDATE_PAYMENT -> EditScreen(
+            title = "결제 수단 수정",
+            writtenName = viewModel.payment.collectAsState().value?.name,
+            onAddClick = { text, _ -> viewModel.updatePaymentMethod(text) }, // viewModel의 paymentId 변경 필요
+            onBackClick = { setScreenState(ScreenType.SETTING) })
+        ScreenType.ADD_EXPENSES -> EditScreen(
             title = "지출 카테고리 추가",
             colors = expensesColors,
-            onAddClick = { text, color -> color?.let { viewModel.insertExpensesCategory(text, color) } },
-            onBackClick = { setScreenState(CardType.SETTING) }
-        )
-        CardType.INCOME_CATEGORY -> AddScreen(
+            onAddClick = { text, color -> viewModel.insertExpensesCategory(text, color!!) },
+            onBackClick = { setScreenState(ScreenType.SETTING) })
+        ScreenType.UPDATE_EXPENSES -> EditScreen(
+            title = "지출 카테고리 수정",
+            writtenName = viewModel.category.collectAsState().value?.name,
+            selectedColor = viewModel.category.collectAsState().value?.color,
+            colors = expensesColors,
+            onAddClick = { text, color -> viewModel.updateCategory(text, color!!) },
+            onBackClick = { setScreenState(ScreenType.SETTING) })
+        ScreenType.ADD_INCOME -> EditScreen(
             title = "수입 카테고리 추가",
             colors = incomeColors,
-            onAddClick = { text, color -> color?.let { viewModel.insertIncomeCategory(text, color) } },
-            onBackClick = { setScreenState(CardType.SETTING) }
-        )
+            onAddClick = { text, color -> viewModel.insertIncomeCategory(text, color!!) },
+            onBackClick = { setScreenState(ScreenType.SETTING) })
+        ScreenType.UPDATE_INCOME -> EditScreen(
+            title = "지출 카테고리 수정",
+            writtenName = viewModel.category.collectAsState().value?.name,
+            selectedColor = viewModel.category.collectAsState().value?.color,
+            colors = expensesColors,
+            onAddClick = { text, color -> viewModel.updateCategory(text, color!!) },
+            onBackClick = { setScreenState(ScreenType.SETTING) })
     }
 }
 
 @Composable
 private fun SettingScreen(
-    state: SettingViewState,
-    onAddClick: (CardType) -> Unit
+    viewModel: SettingViewModel,
+    onScreenChange: (ScreenType) -> Unit
 ) {
+    val state by viewModel.state.collectAsState()
+
     Scaffold(
-        topBar = { Header(title = "설정") }
+        topBar = {
+            Header(title = "설정")
+        }
     ) {
         LazyColumn {
             item {
                 SettingCard(
                     "결제 수단",
-                    onAddClick = { onAddClick(CardType.PAYMENT_METHOD) }
+                    onAddClick = { onScreenChange(ScreenType.ADD_PAYMENT) }
                 ) {
-                    PaymentMethodCard(state.paymentMethods)
+                    PaymentMethodCard(
+                        state.paymentMethods,
+                        onScreenChange = { payment ->
+                            viewModel.payment.value = payment
+                            onScreenChange(ScreenType.UPDATE_PAYMENT)
+                        })
                 }
                 SettingCard(
                     "지출 카테고리",
-                    onAddClick = { onAddClick(CardType.EXPENSES_CATEGORY) }
+                    onAddClick = { onScreenChange(ScreenType.ADD_EXPENSES) }
                 ) {
-                    CategoryCard(state.expensesCategories)
+                    CategoryCard(
+                        state.expensesCategories,
+                        onScreenChange = { category ->
+                            viewModel.category.value = category
+                            onScreenChange(ScreenType.UPDATE_EXPENSES)
+                        })
                 }
                 SettingCard(
                     "수입 카테고리",
-                    onAddClick = { onAddClick(CardType.INCOME_CATEGORY) }
+                    onAddClick = { onScreenChange(ScreenType.ADD_INCOME) }
                 ) {
-                    CategoryCard(state.incomeCategories)
+                    CategoryCard(
+                        state.incomeCategories,
+                        onScreenChange = { category ->
+                            viewModel.category.value = category
+                            onScreenChange(ScreenType.UPDATE_INCOME)
+                        })
                 }
             }
         }
     }
 }
 
-@Composable
-fun SettingCard(
-    title: String,
-    onAddClick: () -> Unit,
-    card: @Composable () -> Unit
-) {
-    Column(
-        modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 0.dp)
-    ) {
-        Text(
-            modifier = Modifier.padding(0.dp, 8.dp),
-            text = title,
-            fontSize = 16.sp,
-            color = LightPurple
-        )
-        Divider(color = Purple04, thickness = 1.dp)
-        card()
-        BottomItem(title, onAddClick)
-    }
-    Divider(color = Purple, thickness = 1.dp)
-}
-
-@Composable
-private fun PaymentMethodCard(
-    paymentMethods: List<PaymentMethod>
-) {
-    Column {
-        paymentMethods.forEach { item ->
-            SettingItem(item.name)
-        }
-    }
-}
-
-@Composable
-private fun CategoryCard(
-    categories: List<Category>
-) {
-    Column {
-        categories.forEach { item ->
-            SettingItem(item.name, item.color)
-        }
-    }
-}
-
-@Composable
-private fun SettingItem(
-    name: String,
-    color: Long? = null
-) {
-    Box(
-        modifier = Modifier
-            .padding(0.dp, 11.dp)
-            .fillMaxWidth()
-    ) {
-       Text(
-           modifier = Modifier.align(CenterStart),
-           text = name,
-           fontSize = 14.sp,
-           fontWeight = FontWeight(700)
-       )
-       color?.let {
-           Text(modifier = Modifier
-               .align(CenterEnd)
-               .clip(RoundedCornerShape(14.dp))
-               .background(Color(color))
-               .padding(8.dp, 4.dp),
-               text = name,
-               color = White)
-       }
-    }
-    Divider(color = Purple04, thickness = 1.dp)
-}
-
-@Composable
-private fun BottomItem(
-    title: String,
-    onAddClick: () -> Unit
-) {
-    Row(modifier = Modifier.padding(0.dp, 11.dp)) {
-        Text(
-            modifier = Modifier.weight(1f),
-            text = "$title 추가하기",
-            fontSize = 14.sp,
-            fontWeight = FontWeight(700)
-        )
-        IconButton(
-            modifier = Modifier.then(
-                Modifier
-                    .size(14.dp)
-                    .align(CenterVertically)),
-            onClick = onAddClick
-        ) {
-            Icon(
-                painterResource(R.drawable.ic_plus),
-                ""
-            )
-        }
-    }
-}
-
-enum class CardType {
-    SETTING, PAYMENT_METHOD, EXPENSES_CATEGORY, INCOME_CATEGORY
+enum class ScreenType {
+    SETTING, ADD_PAYMENT, UPDATE_PAYMENT, ADD_EXPENSES, UPDATE_EXPENSES, ADD_INCOME, UPDATE_INCOME
 }

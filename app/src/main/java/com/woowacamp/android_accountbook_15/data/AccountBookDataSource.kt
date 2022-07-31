@@ -130,6 +130,27 @@ class AccountBookDataSource @Inject constructor(
 
             insertOrThrow(PaymentMethodColumns.TABLE_NAME, null, values)
         }
+
+    fun updatePaymentMethod(
+        id: Long,
+        name: String
+    ): Int {
+        return writableDB.run {
+            val values = ContentValues().apply {
+                put(PaymentMethodColumns.COLUMN_NAME_NAME, name)
+            }
+
+            val selection = "${BaseColumns._ID} LIKE ?"
+            val selectionArgs = arrayOf(id.toString())
+
+            update(
+                PaymentMethodColumns.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs
+            )
+        }
+    }
     
     fun getAllPaymentMethod(): List<PaymentMethod> 
         = readableDB.run {
@@ -172,6 +193,29 @@ class AccountBookDataSource @Inject constructor(
     
             insertOrThrow(CategoryColumns.TABLE_NAME, null, values)
         }
+
+    fun updateCategory(
+        id: Long,
+        name: String,
+        color: Long
+    ): Int {
+        return writableDB.run {
+            val values = ContentValues().apply {
+                put(CategoryColumns.COLUMN_NAME_NAME, name)
+                put(CategoryColumns.COLUMN_NAME_COLOR, color)
+            }
+
+            val selection = "${BaseColumns._ID} LIKE ?"
+            val selectionArgs = arrayOf(id.toString())
+
+            update(
+                CategoryColumns.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs
+            )
+        }
+    }
 
     fun getAllExpensesCategory(): List<Category>
         = readableDB.run {
