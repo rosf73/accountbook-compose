@@ -46,6 +46,42 @@ const val SQL_DELETE_PAYMENT_METHOD = "DROP TABLE IF EXISTS ${PaymentMethodColum
 const val SQL_DELETE_CATEGORY = "DROP TABLE IF EXISTS ${CategoryColumns.TABLE_NAME}"
 
 /**
+ * Insert Row
+ */
+const val SQL_INSERT_PAYMENT_METHOD_1 = "INSERT INTO ${PaymentMethodColumns.TABLE_NAME} (${PaymentMethodColumns.COLUMN_NAME_NAME}) VALUES ('현대카드')"
+const val SQL_INSERT_PAYMENT_METHOD_2 = "INSERT INTO ${PaymentMethodColumns.TABLE_NAME} (${PaymentMethodColumns.COLUMN_NAME_NAME}) VALUES ('카카오페이 체크카드')"
+const val SQL_INSERT_EXPENSES_CATEGORY_1 = "INSERT INTO ${CategoryColumns.TABLE_NAME}" +
+        " (${CategoryColumns.COLUMN_NAME_TYPE}, ${CategoryColumns.COLUMN_NAME_NAME}, ${CategoryColumns.COLUMN_NAME_COLOR})" +
+        " VALUES (0, '교통', 0xFF94D3CC)"
+const val SQL_INSERT_EXPENSES_CATEGORY_2 = "INSERT INTO ${CategoryColumns.TABLE_NAME}" +
+        " (${CategoryColumns.COLUMN_NAME_TYPE}, ${CategoryColumns.COLUMN_NAME_NAME}, ${CategoryColumns.COLUMN_NAME_COLOR})" +
+        " VALUES (0, '문화/여가', 0xFFD092E2)"
+const val SQL_INSERT_EXPENSES_CATEGORY_3 = "INSERT INTO ${CategoryColumns.TABLE_NAME}" +
+        " (${CategoryColumns.COLUMN_NAME_TYPE}, ${CategoryColumns.COLUMN_NAME_NAME}, ${CategoryColumns.COLUMN_NAME_COLOR})" +
+        " VALUES (0, '미분류', 0xFF817DCE)"
+const val SQL_INSERT_EXPENSES_CATEGORY_4 = "INSERT INTO ${CategoryColumns.TABLE_NAME}" +
+        " (${CategoryColumns.COLUMN_NAME_TYPE}, ${CategoryColumns.COLUMN_NAME_NAME}, ${CategoryColumns.COLUMN_NAME_COLOR})" +
+        " VALUES (0, '생활', 0xFF4A6CC3)"
+const val SQL_INSERT_EXPENSES_CATEGORY_5 = "INSERT INTO ${CategoryColumns.TABLE_NAME}" +
+        " (${CategoryColumns.COLUMN_NAME_TYPE}, ${CategoryColumns.COLUMN_NAME_NAME}, ${CategoryColumns.COLUMN_NAME_COLOR})" +
+        " VALUES (0, '쇼핑/뷰티', 0xFF4CB8B8)"
+const val SQL_INSERT_EXPENSES_CATEGORY_6 = "INSERT INTO ${CategoryColumns.TABLE_NAME}" +
+        " (${CategoryColumns.COLUMN_NAME_TYPE}, ${CategoryColumns.COLUMN_NAME_NAME}, ${CategoryColumns.COLUMN_NAME_COLOR})" +
+        " VALUES (0, '식비', 0xFF4CA1DE)"
+const val SQL_INSERT_EXPENSES_CATEGORY_7 = "INSERT INTO ${CategoryColumns.TABLE_NAME}" +
+        " (${CategoryColumns.COLUMN_NAME_TYPE}, ${CategoryColumns.COLUMN_NAME_NAME}, ${CategoryColumns.COLUMN_NAME_COLOR})" +
+        " VALUES (0, '의료/건강', 0xFF6ED5EB)"
+const val SQL_INSERT_INCOME_CATEGORY_1 = "INSERT INTO ${CategoryColumns.TABLE_NAME}" +
+        " (${CategoryColumns.COLUMN_NAME_TYPE}, ${CategoryColumns.COLUMN_NAME_NAME}, ${CategoryColumns.COLUMN_NAME_COLOR})" +
+        " VALUES (1, '월급', 0xFF9BD182)"
+const val SQL_INSERT_INCOME_CATEGORY_2 = "INSERT INTO ${CategoryColumns.TABLE_NAME}" +
+        " (${CategoryColumns.COLUMN_NAME_TYPE}, ${CategoryColumns.COLUMN_NAME_NAME}, ${CategoryColumns.COLUMN_NAME_COLOR})" +
+        " VALUES (1, '용돈', 0xFFEDCF65)"
+const val SQL_INSERT_INCOME_CATEGORY_3 = "INSERT INTO ${CategoryColumns.TABLE_NAME}" +
+        " (${CategoryColumns.COLUMN_NAME_TYPE}, ${CategoryColumns.COLUMN_NAME_NAME}, ${CategoryColumns.COLUMN_NAME_COLOR})" +
+        " VALUES (1, '기타', 0xFFE29C4D)"
+
+/**
  * Select Rows
  */
 const val SQL_SELECT_ALL_HISTORY =

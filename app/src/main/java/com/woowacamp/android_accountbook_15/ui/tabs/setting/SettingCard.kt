@@ -109,7 +109,7 @@ private fun SettingItem(
                 .align(Alignment.CenterEnd)
                 .clip(RoundedCornerShape(14.dp))
                 .background(Color(color))
-                .padding(8.dp, 4.dp),
+                .padding(0.dp, 4.dp),
                 text = name,
                 color = White,
                 fontSize = 10.sp,
