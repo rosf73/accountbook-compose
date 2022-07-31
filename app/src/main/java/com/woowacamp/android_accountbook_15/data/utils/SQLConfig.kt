@@ -15,10 +15,10 @@ const val SQL_FOREIGN_SET =
 const val SQL_CREATE_HISTORY =
     "CREATE TABLE ${HistoryColumns.TABLE_NAME} (" +
             "${BaseColumns._ID} INTEGER PRIMARY KEY," +
-            "${HistoryColumns.COLUMN_NAME_TYPE} INTEGER," +
+            "${HistoryColumns.COLUMN_NAME_TYPE} INTEGER NOT NULL," +
             "${HistoryColumns.COLUMN_NAME_CONTENT} TEXT," +
-            "${HistoryColumns.COLUMN_NAME_DATE} DATETIME," +
-            "${HistoryColumns.COLUMN_NAME_AMOUNT} INTEGER," +
+            "${HistoryColumns.COLUMN_NAME_DATE} TEXT NOT NULL," +
+            "${HistoryColumns.COLUMN_NAME_AMOUNT} INTEGER NOT NULL," +
             "${HistoryColumns.COLUMN_NAME_PAYMENT_ID} INTEGER," +
             "${HistoryColumns.COLUMN_NAME_CATEGORY_ID} INTEGER," +
             "FOREIGN KEY(${HistoryColumns.COLUMN_NAME_PAYMENT_ID})" +
@@ -36,7 +36,7 @@ const val SQL_CREATE_CATEGORY =
             "${BaseColumns._ID} INTEGER PRIMARY KEY," +
             "${CategoryColumns.COLUMN_NAME_TYPE} INTEGER," +
             "${CategoryColumns.COLUMN_NAME_NAME} TEXT UNIQUE," +
-            "${CategoryColumns.COLUMN_NAME_COLOR} INTEGER UNIQUE)"
+            "${CategoryColumns.COLUMN_NAME_COLOR} INTEGER)"
 
 /**
  * Drop Table
@@ -65,4 +65,5 @@ const val SQL_SELECT_ALL_HISTORY =
     " LEFT JOIN ${PaymentMethodColumns.TABLE_NAME}" +
             " ON ${HistoryColumns.TABLE_NAME}.${BaseColumns._ID} = ${PaymentMethodColumns.TABLE_NAME}.${BaseColumns._ID}" +
     " LEFT JOIN ${CategoryColumns.TABLE_NAME}" +
-            " ON ${HistoryColumns.TABLE_NAME}.${BaseColumns._ID} = ${CategoryColumns.TABLE_NAME}.${BaseColumns._ID}"
+            " ON ${HistoryColumns.TABLE_NAME}.${BaseColumns._ID} = ${CategoryColumns.TABLE_NAME}.${BaseColumns._ID}" +
+    " WHERE substr(${HistoryColumns.COLUMN_NAME_DATE}, 1, 7) = ?" // 2001-01-30 이면 2001-01 까지 가져온다.

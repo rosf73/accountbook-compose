@@ -9,11 +9,18 @@ class AccountBookRepository @Inject constructor(
     private val dataSource: AccountBookDataSource
 ) {
 
-    fun getMonthlyHistories(year: Int, month: Int): Result<List<History>> {
-        return runCatching {
-            dataSource.getAllHistory(year, month)
-        }
-    }
+    fun getMonthlyHistories(year: Int, month: Int): Result<Map<String, List<History>>>
+        = runCatching { dataSource.getAllHistory(year, month) }
+
+    fun insertHistory(
+        type: Int,
+        content: String? = null,
+        date: String,
+        amount: Int,
+        paymentId: Long? = null,
+        categoryId: Long? = null
+    ): Result<Long>
+        = runCatching { dataSource.addHistory(type, content, date, amount, paymentId, categoryId) }
 
     fun getAllPaymentMethod(): Result<List<PaymentMethod>>
         = runCatching { dataSource.getAllPaymentMethod() }

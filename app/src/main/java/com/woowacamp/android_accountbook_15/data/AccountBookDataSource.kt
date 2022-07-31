@@ -8,6 +8,9 @@ import com.woowacamp.android_accountbook_15.data.model.Category
 import com.woowacamp.android_accountbook_15.data.model.History
 import com.woowacamp.android_accountbook_15.data.model.PaymentMethod
 import com.woowacamp.android_accountbook_15.data.utils.*
+import com.woowacamp.android_accountbook_15.utils.getTodayMonth
+import com.woowacamp.android_accountbook_15.utils.getTodayMonthAndYear
+import com.woowacamp.android_accountbook_15.utils.getTodayYear
 import javax.inject.Inject
 
 class AccountBookDataSource @Inject constructor(
@@ -19,20 +22,20 @@ class AccountBookDataSource @Inject constructor(
     
     fun addHistory(
         type: Int,
-        content: String,
+        content: String? = null,
         date: String,
         amount: Int,
-        paymentMethod: PaymentMethod,
-        category: Category
+        paymentId: Long? = null,
+        categoryId: Long? = null
     ): Long {
         return writableDB.run {
             val values = ContentValues().apply {
                 put(HistoryColumns.COLUMN_NAME_TYPE, type)
-                put(HistoryColumns.COLUMN_NAME_CONTENT, content)
+                content?.let { put(HistoryColumns.COLUMN_NAME_CONTENT, content) }
                 put(HistoryColumns.COLUMN_NAME_DATE, date)
                 put(HistoryColumns.COLUMN_NAME_AMOUNT, amount)
-                put(HistoryColumns.COLUMN_NAME_PAYMENT_ID, paymentMethod.id)
-                put(HistoryColumns.COLUMN_NAME_CATEGORY_ID, category.id)
+                paymentId?.let { put(HistoryColumns.COLUMN_NAME_PAYMENT_ID, paymentId) }
+                categoryId?.let { put(HistoryColumns.COLUMN_NAME_CATEGORY_ID, categoryId) }
             }
 
             insert(HistoryColumns.TABLE_NAME, null, values)
@@ -82,36 +85,39 @@ class AccountBookDataSource @Inject constructor(
     fun getAllHistory(
         year: Int,
         month: Int
-    ): List<History> 
+    ): Map<String, List<History>>
         = readableDB.run {
-            val cursor = rawQuery(SQL_SELECT_ALL_HISTORY, null)
+            val cursor = rawQuery(SQL_SELECT_ALL_HISTORY, arrayOf(getTodayMonthAndYear(year, month)))
 
-            val histories = mutableListOf<History>()
-            with(cursor) {
-                while (moveToNext()) {
-                    val id = getLong(getColumnIndexOrThrow(BaseColumns._ID))
-                    val type = getInt(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_TYPE))
-                    val content = getString(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_CONTENT))
-                    val date = getString(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_DATE))
-                    val amount = getInt(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_AMOUNT))
-                    val paymentId = getLong(getColumnIndexOrThrow("payment_id"))
-                    val paymentName = getString(getColumnIndexOrThrow("payment_name"))
-                    val categoryId = getLong(getColumnIndexOrThrow("category_id"))
-                    val categoryType = getInt(getColumnIndexOrThrow("category_type"))
-                    val categoryName = getString(getColumnIndexOrThrow("category_name"))
-                    val categoryColor = getLong(getColumnIndexOrThrow("category_color"))
-                    histories.add(
-                        History(
-                            id, type, content, date, amount,
-                            PaymentMethod(paymentId, paymentName),
-                            Category(categoryId, categoryType, categoryName, categoryColor)
-                        )
-                    )
+            mutableMapOf<String, MutableList<History>>().apply {
+                with(cursor) {
+                    while (moveToNext()) {
+                        val id = getLong(getColumnIndexOrThrow(BaseColumns._ID))
+                        val type = getInt(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_TYPE))
+                        val content = getString(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_CONTENT))
+                        val date = getString(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_DATE))
+                        val amount = getInt(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_AMOUNT))
+                        val paymentId = getLong(getColumnIndexOrThrow("payment_id"))
+                        val paymentName = getString(getColumnIndexOrThrow("payment_name"))
+                        val categoryId = getLong(getColumnIndexOrThrow("category_id"))
+                        val categoryType = getInt(getColumnIndexOrThrow("category_type"))
+                        val categoryName = getString(getColumnIndexOrThrow("category_name"))
+                        val categoryColor = getLong(getColumnIndexOrThrow("category_color"))
+                        val history = History(
+                                id, type, content, date, amount,
+                                if (paymentName == null) null else PaymentMethod(paymentId, paymentName),
+                                if (categoryName == null) null else Category(categoryId, categoryType, categoryName, categoryColor)
+                            )
+                        val monthDay = history.date.substring(5)
+                        if (containsKey(monthDay)) {
+                            get(monthDay)?.add(history)
+                        } else {
+                            put(monthDay, mutableListOf(history))
+                        }
+                    }
                 }
+                cursor.close()
             }
-            cursor.close()
-
-            histories
         }
     
     fun addPaymentMethod(
