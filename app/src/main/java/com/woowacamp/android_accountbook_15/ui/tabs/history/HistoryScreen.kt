@@ -29,8 +29,8 @@ fun HistoryScreen(
         }
     } else {
         HistoryScreen(
-            title = getTodayMonthAndYear(year, month),
-            histories = viewModel.histories.collectAsState().value,
+            title = "${year}년 ${month}월",
+            histories = viewModel.monthlyHistories.collectAsState().value,
             onChangeModifyState = { setModifyState(true) },
             onClickLeft = {
                 setYear(if (month-1 > 0) year else year-1)
@@ -47,7 +47,7 @@ fun HistoryScreen(
 @Composable
 private fun HistoryScreen(
     title: String,
-    histories: List<History>,
+    histories: Map<String, List<History>>,
     onChangeModifyState: () -> Unit,
     onClickLeft: () -> Unit,
     onClickRight: () -> Unit
