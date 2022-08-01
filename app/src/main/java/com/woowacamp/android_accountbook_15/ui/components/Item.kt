@@ -21,6 +21,8 @@ import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple04
 import com.woowacamp.android_accountbook_15.ui.theme.White
+import com.woowacamp.android_accountbook_15.utils.toMoneyInt
+import com.woowacamp.android_accountbook_15.utils.toMoneyString
 
 
 @Composable
@@ -85,7 +87,12 @@ fun InputItem(
         BasicTextField(
             modifier = Modifier.weight(1f),
             value = value,
-            onValueChange = onTextChanged,
+            onValueChange = {
+                if (!numeric)
+                    onTextChanged(it)
+                else if (it.length < 12)
+                    onTextChanged(it.toMoneyInt().toMoneyString())
+            },
             singleLine = true,
             textStyle = TextStyle(color = Purple),
             decorationBox = { innerTextField ->
@@ -175,6 +182,7 @@ fun SpinnerItem(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CheckableItem(
+    modifier: Modifier = Modifier,
     isSelectMode: Boolean,
     onPress: () -> Unit,
     onLongPress: () -> Unit,
@@ -184,9 +192,7 @@ fun CheckableItem(
     val (isChecked, setIsChecked) = remember { mutableStateOf(false) }
 
     Row(
-        modifier = Modifier
-            .padding(0.dp, 11.dp)
-            .fillMaxWidth()
+        modifier = modifier
             .combinedClickable(
                 onClick = {
                     if (isSelectMode) {
@@ -216,5 +222,4 @@ fun CheckableItem(
 
         Composition()
     }
-    Divider(color = Purple04, thickness = 1.dp)
 }

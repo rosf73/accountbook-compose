@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.woowacamp.android_accountbook_15.R
 import com.woowacamp.android_accountbook_15.data.model.Category
 import com.woowacamp.android_accountbook_15.data.model.History
@@ -30,6 +31,7 @@ import com.woowacamp.android_accountbook_15.ui.theme.Yellow
 import com.woowacamp.android_accountbook_15.utils.changeKoreanToHyphen
 import com.woowacamp.android_accountbook_15.utils.getMonthAndYearKorean
 import com.woowacamp.android_accountbook_15.utils.getTodayKorean
+import com.woowacamp.android_accountbook_15.utils.toMoneyInt
 
 @Composable
 fun EditScreen(
@@ -97,7 +99,7 @@ fun EditScreen(
                             -1,
                             isIncome,
                             date = changeKoreanToHyphen(date),
-                            amount = amount.toInt(),
+                            amount = amount.toMoneyInt(),
                             payment = PaymentMethod(paymentId, paymentMethod),
                             category = Category(categoryId, isIncome, category, 0x0),
                             content = content
@@ -135,7 +137,8 @@ private fun TypeRadioGroup(
                 },
             text = "수입",
             textAlign = TextAlign.Center,
-            color = White)
+            color = White,
+            fontSize = 12.sp)
         Text(
             modifier = Modifier
                 .weight(1f)
@@ -146,7 +149,8 @@ private fun TypeRadioGroup(
                 },
             text = "지출",
             textAlign = TextAlign.Center,
-            color = White)
+            color = White,
+            fontSize = 12.sp)
     }
 }
 

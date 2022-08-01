@@ -101,7 +101,7 @@ class AccountBookDataSource @Inject constructor(
                         val categoryColor = getLong(getColumnIndexOrThrow("category_color"))
                         val history = History(
                                 id, type, content, date, amount,
-                                if (paymentName == null) null else PaymentMethod(paymentId, paymentName),
+                                if (type == 1) null else PaymentMethod(paymentId, paymentName),
                                 if (categoryName == null) null else Category(categoryId, categoryType, categoryName, categoryColor)
                             )
                         val monthDay = history.date.substring(5)
