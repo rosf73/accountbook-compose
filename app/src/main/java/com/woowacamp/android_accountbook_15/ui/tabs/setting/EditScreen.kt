@@ -82,8 +82,7 @@ private fun EditScreen(
             .padding(16.dp)
         ) {
             InputItem(
-                modifier = modifier.padding(4.dp),
-                title = "이름",
+                label = "이름",
                 value = text,
                 onTextChanged = onTextChanged)
 

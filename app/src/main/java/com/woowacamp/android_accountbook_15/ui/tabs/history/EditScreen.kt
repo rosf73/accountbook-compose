@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -23,6 +22,7 @@ import com.woowacamp.android_accountbook_15.data.model.History
 import com.woowacamp.android_accountbook_15.data.model.PaymentMethod
 import com.woowacamp.android_accountbook_15.ui.components.Header
 import com.woowacamp.android_accountbook_15.ui.components.InputItem
+import com.woowacamp.android_accountbook_15.ui.components.SpinnerItem
 import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple
 import com.woowacamp.android_accountbook_15.ui.theme.White
@@ -42,6 +42,9 @@ fun EditScreen(
     val (paymentMethod, setPaymentMethod) = remember { mutableStateOf(history?.payment?.toString() ?: "") }
     val (category, setCategory) = remember { mutableStateOf(history?.category?.toString() ?: "") }
     val (content, setContent) = remember { mutableStateOf(history?.content ?: "") }
+
+    val (isPaymentOpened, setPaymentOpened) = remember { mutableStateOf(false) }
+    val (isCategoryOpened, setCategoryOpened) = remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -70,13 +73,14 @@ fun EditScreen(
                     .weight(1f),
                 isSelectedExpenses = !isSelectedIncome,
                 date, amount, paymentMethod, category, content,
-                setDate, setAmount, setPaymentMethod, setCategory, setContent
+                setDate, setAmount, setPaymentMethod, setCategory, setContent,
+                isPaymentOpened, isCategoryOpened, setPaymentOpened, setCategoryOpened
             )
 
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(20.dp),
+                    .padding(0.dp, 20.dp),
                 onClick = {
                     val isIncome = if (isSelectedIncome) 1 else 0
                     onAddClick(
@@ -108,7 +112,7 @@ private fun TypeRadioGroup(
     onClick: (Boolean) -> Unit
 ) {
     Row(
-        modifier = modifier.clip(RoundedCornerShape(10.dp))
+        modifier = modifier.padding(0.dp, 0.dp, 0.dp, 16.dp).clip(RoundedCornerShape(10.dp))
     ) {
         Text(
             modifier = Modifier
@@ -148,7 +152,11 @@ private fun EditScreen(
     onAmountChanged: (String) -> Unit,
     onPaymentChanged: (String) -> Unit,
     onCategoryChanged: (String) -> Unit,
-    onContentChanged: (String) -> Unit
+    onContentChanged: (String) -> Unit,
+    isPaymentOpened: Boolean,
+    isCategoryOpened: Boolean,
+    setPaymentOpened: (Boolean) -> Unit,
+    setCategoryOpened: (Boolean) -> Unit
 ) {
     Box(modifier = modifier) {
         LazyColumn(
@@ -156,31 +164,30 @@ private fun EditScreen(
         ) {
             item {
                 InputItem(
-                    modifier = modifier,
-                    title = "일자",
+                    label = "일자",
                     value = date,
                     onTextChanged = onDateChanged)
                 InputItem(
-                    modifier = modifier,
-                    title = "금액",
+                    label = "금액",
                     value = amount,
                     onTextChanged = onAmountChanged)
                 if (isSelectedExpenses)
-                    TextField(
+                    SpinnerItem(
+                        label = "결제 수단",
                         value = paymentMethod,
-                        onValueChange = onPaymentChanged,
-                        placeholder = {
-                            Text(text = "선택하세요")
-                        })
-                TextField(
+                        list = listOf("카드1", "카드2"),
+                        requestToOpen = isPaymentOpened,
+                        onOpen = setPaymentOpened,
+                        onTextChanged = onPaymentChanged)
+                SpinnerItem(
+                    label = "분류",
                     value = category,
-                    onValueChange = onCategoryChanged,
-                    placeholder = {
-                        Text(text = "선택하세요")
-                    })
+                    list = listOf("지출일까", "수입일까"),
+                    requestToOpen = isCategoryOpened,
+                    onOpen = setCategoryOpened,
+                    onTextChanged = onCategoryChanged)
                 InputItem(
-                    modifier = modifier,
-                    title = "내용",
+                    label = "내용",
                     value = content,
                     onTextChanged = onContentChanged)
             }
