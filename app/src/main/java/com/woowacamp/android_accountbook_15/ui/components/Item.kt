@@ -22,6 +22,50 @@ import com.woowacamp.android_accountbook_15.ui.theme.Purple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple04
 import com.woowacamp.android_accountbook_15.ui.theme.White
 
+
+@Composable
+fun DateSpinnerItem(
+    label: String,
+    value: String,
+    requestToOpen: Boolean = false,
+    onOpen: (Boolean) -> Unit,
+    onTextChanged: (String) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(0.dp, 8.dp)
+            .clickable {
+                onOpen(true)
+            }
+    ) {
+        Text(
+            modifier = Modifier
+                .align(CenterVertically)
+                .width(76.dp),
+            text = label,
+            fontSize = 14.sp)
+        Text(
+            modifier = Modifier
+                .align(CenterVertically)
+                .weight(1f),
+            text = value,
+            color = Purple,
+            fontSize = 14.sp)
+    }
+    Divider(color = Purple04, thickness = 1.dp, modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp))
+
+    if (requestToOpen) {
+        val splitDate = value.split(". ")
+        DatePicker(
+            initYear = splitDate[0].toInt(),
+            initMonth = splitDate[1].toInt(),
+            initDate = splitDate[2].split(" ")[0].toInt(),
+            onOpen = onOpen,
+            onTextChanged = onTextChanged)
+    }
+}
+
 @Composable
 fun InputItem(
     label: String,
@@ -29,7 +73,9 @@ fun InputItem(
     numeric: Boolean = false,
     onTextChanged: (String) -> Unit
 ) {
-    Row(modifier = Modifier.fillMaxWidth().padding(0.dp, 8.dp)) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(0.dp, 8.dp)) {
         Text(
             modifier = Modifier
                 .align(Alignment.CenterVertically)
@@ -67,7 +113,9 @@ fun SpinnerItem(
     onOpen: (Boolean) -> Unit,
     onTextChanged: (String) -> Unit
 ) {
-    Row(modifier = Modifier.fillMaxWidth().padding(0.dp, 8.dp)) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(0.dp, 8.dp)) {
         Text(
             modifier = Modifier
                 .align(CenterVertically)
