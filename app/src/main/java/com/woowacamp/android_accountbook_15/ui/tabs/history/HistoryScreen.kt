@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.woowacamp.android_accountbook_15.R
 import com.woowacamp.android_accountbook_15.data.model.History
@@ -99,6 +100,9 @@ private fun HistoryScreen(
     onIncomeClick: (Boolean) -> Unit,
     onExpensesClick: (Boolean) -> Unit
 ) {
+    val totalIncome = histories.values.sumOf { it.sumOf { history -> if (history.type == 1) history.amount else 0 } }
+    val totalExpenses = histories.values.sumOf { it.sumOf { history -> if (history.type == 0) history.amount else 0 } }
+
     Scaffold(
         topBar = {
             Header(
@@ -115,8 +119,8 @@ private fun HistoryScreen(
         Column {
             TypeCheckBoxGroup(
                 modifier = Modifier.padding(16.dp).fillMaxWidth(),
-                totalIncome = 0,
-                totalExpenses = 0,
+                totalIncome = totalIncome,
+                totalExpenses = totalExpenses,
                 isSelectedIncome = isSelectedIncome,
                 isSelectedExpenses = isSelectedExpenses,
                 onIncomeClick = onIncomeClick,
@@ -126,8 +130,7 @@ private fun HistoryScreen(
 
             LazyColumn {
                 item {
-                    histories.forEach { entry ->
-                        val (key, value) = entry
+                    histories.forEach { (key, value) ->
                         val splitDate = key.split("-").map { it.toInt() }
                         HistoryCard(date = getDayKoreanWithoutYear(year, splitDate[0], splitDate[1]), list = value)
                     }
@@ -165,13 +168,10 @@ private fun TypeCheckBoxGroup(
             PurpleCheckBox(checked = isSelectedIncome, onCheckedChange = onIncomeClick)
             Text(
                 modifier = Modifier.padding(4.dp, 0.dp),
-                text = "수입",
+                text = "수입 $totalIncome",
                 textAlign = TextAlign.Center,
-                color = White)
-            Text(
-                text = totalIncome.toString(), //TODO: 콤마 적용 필요
-                textAlign = TextAlign.Center,
-                color = White)
+                color = White,
+                fontSize = 12.sp)
         }
         Row(
             modifier = Modifier
@@ -187,13 +187,10 @@ private fun TypeCheckBoxGroup(
             PurpleCheckBox(checked = isSelectedExpenses, onCheckedChange = onExpensesClick)
             Text(
                 modifier = Modifier.padding(4.dp, 0.dp),
-                text = "지출",
+                text = "지출 $totalExpenses",
                 textAlign = TextAlign.Center,
-                color = White)
-            Text(
-                text = totalExpenses.toString(), //TODO: 콤마 적용 필요
-                textAlign = TextAlign.Center,
-                color = White)
+                color = White,
+                fontSize = 12.sp)
         }
     }
 }

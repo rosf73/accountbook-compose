@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.woowacamp.android_accountbook_15.R
 import com.woowacamp.android_accountbook_15.data.model.Category
 import com.woowacamp.android_accountbook_15.data.model.History
@@ -135,7 +136,8 @@ private fun TypeRadioGroup(
                 },
             text = "수입",
             textAlign = TextAlign.Center,
-            color = White)
+            color = White,
+            fontSize = 12.sp)
         Text(
             modifier = Modifier
                 .weight(1f)
@@ -146,7 +148,8 @@ private fun TypeRadioGroup(
                 },
             text = "지출",
             textAlign = TextAlign.Center,
-            color = White)
+            color = White,
+            fontSize = 12.sp)
     }
 }
 
