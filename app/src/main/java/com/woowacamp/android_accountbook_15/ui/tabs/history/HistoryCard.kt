@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.woowacamp.android_accountbook_15.data.model.History
@@ -25,15 +26,14 @@ fun HistoryCard(
     date: String,
     list: List<History>
 ) {
-    val totalIncome by remember { mutableStateOf(list.sumOf { if (it.type == 1) it.amount else 0 }) }
-    val totalExpenses by remember { mutableStateOf(list.sumOf { if (it.type == 0) it.amount else 0 }) }
-
     Column(
         modifier = modifier.padding(16.dp, 8.dp)
     ) {
         Row(verticalAlignment = Alignment.Bottom) {
-            Text(modifier = Modifier.weight(1f), text = date)
-            Text(text = "수입  $totalIncome  지출  $totalExpenses", fontSize = 10.sp)
+            Text(modifier = Modifier.weight(1f), text = date, color = LightPurple)
+            Text(text = "수입  ${list.sumOf { if (it.type == 1) it.amount else 0} }" +
+                    "  지출  ${list.sumOf { if (it.type == 0) it.amount else 0 }}",
+                fontSize = 10.sp, color = LightPurple)
         }
         Spacer(modifier = Modifier.size(8.dp))
 
@@ -68,9 +68,11 @@ private fun HistoryItem(
             Spacer(modifier = Modifier.weight(1f))
             Text(text = history.payment?.name ?: "", fontSize = 10.sp)
         }
+
         Spacer(modifier = Modifier.size(8.dp))
+
         Row {
-            Text(text = history.content ?: "", fontSize = 14.sp)
+            Text(text = history.content ?: "", fontSize = 14.sp, fontWeight = FontWeight(700))
             Spacer(modifier = Modifier.weight(1f))
             Text(text = "${history.amount}원", fontSize = 14.sp, color = if (history.type == 0) Red else Blue)
         }
