@@ -17,6 +17,7 @@ val White05 = Color(0x7FFFFFFF)
 
 val Yellow = Color(0xFFF5B853)
 val Red = Color(0xFFE75B3F)
+val Blue = Color(0xFF4EAABA)
 
 val expensesColors = listOf(
     0xFF4A6CC3, 0xFF2E86C7, 0xFF4CA1DE, 0xFF48C2E9, 0xFF6ED5EB,
