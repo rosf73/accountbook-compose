@@ -16,8 +16,6 @@ class SettingFragment: Fragment() {
     private var _binding: FragmentSettingBinding? = null
     private val binding get() = requireNotNull(_binding)
 
-    private val viewModel: SettingViewModel by viewModels()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -31,7 +29,7 @@ class SettingFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.composeContainer.setContent {
             AndroidAccountBook15Theme {
-                SettingScreen(viewModel)
+                SettingScreen()
             }
         }
     }

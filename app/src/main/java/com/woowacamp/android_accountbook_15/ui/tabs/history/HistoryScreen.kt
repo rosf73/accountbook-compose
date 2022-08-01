@@ -3,15 +3,18 @@ package com.woowacamp.android_accountbook_15.ui.tabs.history
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.res.painterResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.woowacamp.android_accountbook_15.R
 import com.woowacamp.android_accountbook_15.data.model.History
 import com.woowacamp.android_accountbook_15.ui.components.FloatingButton
 import com.woowacamp.android_accountbook_15.ui.components.Header
+import com.woowacamp.android_accountbook_15.ui.tabs.setting.SettingViewModel
 import com.woowacamp.android_accountbook_15.utils.getMonthAndYearKorean
 
 @Composable
 fun HistoryScreen(
-    viewModel: HistoryViewModel
+    viewModel: HistoryViewModel = hiltViewModel(),
+    settingViewModel: SettingViewModel = hiltViewModel()
 ) {
     val (screenState, setScreenState) = remember { mutableStateOf(ScreenType.HISTORY) }
     val (isCheckedIncome, setIsCheckedIncome) = remember { mutableStateOf(true) }
@@ -39,13 +42,15 @@ fun HistoryScreen(
             }
         )
         ScreenType.ADD_HISTORY -> EditScreen(
+            settingViewModel,
             isCheckedIncome = isCheckedIncome,
-            onAddClick = {  },
+            onAddClick = { viewModel.insertHistory(it) },
             onBackClick = { setScreenState(ScreenType.HISTORY) }
         )
         ScreenType.UPDATE_HISTORY -> EditScreen(
+            settingViewModel,
             isCheckedIncome = isCheckedIncome,
-            onAddClick = {  },
+            onAddClick = { viewModel.insertHistory(it) },
             onBackClick = { setScreenState(ScreenType.HISTORY) }
         )
     }
