@@ -108,10 +108,11 @@ fun InputItem(
 fun SpinnerItem(
     label: String,
     value: String,
-    list: List<String>,
+    valueList: List<Long>,
+    textList: List<String>,
     requestToOpen: Boolean = false,
     onOpen: (Boolean) -> Unit,
-    onTextChanged: (String) -> Unit
+    onTextChanged: (Long, String) -> Unit
 ) {
     Row(modifier = Modifier
         .fillMaxWidth()
@@ -152,15 +153,17 @@ fun SpinnerItem(
                 onDismissRequest = { onOpen(false) },
                 offset = DpOffset(0.dp, 24.dp)
             ) {
-                list.forEach {
+                for (i in valueList.indices) {
+                    val value = valueList[i]
+                    val text = textList[i]
                     DropdownMenuItem(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
                             onOpen(false)
-                            onTextChanged(it)
+                            onTextChanged(value, text)
                         }
                     ) {
-                        Text(it, modifier = Modifier.wrapContentWidth())
+                        Text(text, modifier = Modifier.wrapContentWidth())
                     }
                 }
             }
