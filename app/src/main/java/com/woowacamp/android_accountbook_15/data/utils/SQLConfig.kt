@@ -102,4 +102,5 @@ const val SQL_SELECT_ALL_HISTORY =
             " ON ${HistoryColumns.TABLE_NAME}.${HistoryColumns.COLUMN_NAME_PAYMENT_ID} = ${PaymentMethodColumns.TABLE_NAME}.${BaseColumns._ID}" +
     " LEFT JOIN ${CategoryColumns.TABLE_NAME}" +
             " ON ${HistoryColumns.TABLE_NAME}.${HistoryColumns.COLUMN_NAME_CATEGORY_ID} = ${CategoryColumns.TABLE_NAME}.${BaseColumns._ID}" +
-    " WHERE substr(${HistoryColumns.COLUMN_NAME_DATE}, 1, 7) = ?" // 2001-01-30 이면 2001-01 까지 가져온다.
+    " WHERE substr(${HistoryColumns.COLUMN_NAME_DATE}, 1, 7) = ?" + // 2001-01-30 이면 2001-01 까지 가져온다.
+    " ORDER BY ${HistoryColumns.COLUMN_NAME_DATE} ASC"
