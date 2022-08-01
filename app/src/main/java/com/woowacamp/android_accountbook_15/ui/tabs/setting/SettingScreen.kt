@@ -42,10 +42,10 @@ fun SettingScreen(
             onAddClick = { text, color -> viewModel.insertIncomeCategory(text, color!!) },
             onBackClick = { setScreenState(ScreenType.SETTING) })
         ScreenType.UPDATE_INCOME -> EditScreen(
-            title = "지출 카테고리 수정",
+            title = "수입 카테고리 수정",
             writtenName = viewModel.category.collectAsState().value?.name,
             selectedColor = viewModel.category.collectAsState().value?.color,
-            colors = expensesColors,
+            colors = incomeColors,
             onAddClick = { text, color -> viewModel.updateCategory(text, color!!) },
             onBackClick = { setScreenState(ScreenType.SETTING) })
     }
