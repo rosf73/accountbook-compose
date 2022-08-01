@@ -12,6 +12,8 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -25,6 +27,7 @@ import com.woowacamp.android_accountbook_15.ui.components.FloatingButton
 import com.woowacamp.android_accountbook_15.ui.components.Header
 import com.woowacamp.android_accountbook_15.ui.components.PurpleCheckBox
 import com.woowacamp.android_accountbook_15.ui.tabs.setting.SettingViewModel
+import com.woowacamp.android_accountbook_15.ui.theme.Grey1
 import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple
 import com.woowacamp.android_accountbook_15.ui.theme.White
@@ -131,19 +134,29 @@ private fun HistoryScreen(
 
             Spacer(modifier = Modifier.size(16.dp))
 
-            LazyColumn {
-                item {
-                    histories.forEach { (key, value) ->
-                        val splitDate = key.split("-").map { it.toInt() }
-                        HistoryCard(
-                            isSelectedIncome = isSelectedIncome,
-                            isSelectedExpenses = isSelectedExpenses,
-                            date = getDayKoreanWithoutYear(year, splitDate[0], splitDate[1]),
-                            list = value)
+            if (histories.isNotEmpty() &&
+                    ((isSelectedIncome && histories.filterValues { list -> list.any { it.type == 1 } }.isNotEmpty()) || // 수입이 체크되어 있으면서 수입 항목이 1개 이상?
+                    (isSelectedExpenses && histories.filterValues { list -> list.any { it.type == 0 } }.isNotEmpty()))) // 지출이 체크되어 있으면서 지출 항목이 1개 이상?
+                LazyColumn {
+                    item {
+                            histories.forEach { (key, value) ->
+                                val splitDate = key.split("-").map { it.toInt() }
+                                HistoryCard(
+                                    isSelectedIncome = isSelectedIncome,
+                                    isSelectedExpenses = isSelectedExpenses,
+                                    date = getDayKoreanWithoutYear(year, splitDate[0], splitDate[1]),
+                                    list = value)
+                            }
+                        Spacer(modifier = Modifier.size(88.dp))
                     }
-                    Spacer(modifier = Modifier.size(60.dp))
                 }
-            }
+            else
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Center
+                ) {
+                    Text(modifier = Modifier.fillMaxWidth(), text = "내역이 없습니다", fontSize = 12.sp, color = Grey1, textAlign = TextAlign.Center)
+                }
         }
     }
 }
