@@ -21,6 +21,8 @@ import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple04
 import com.woowacamp.android_accountbook_15.ui.theme.White
+import com.woowacamp.android_accountbook_15.utils.toMoneyInt
+import com.woowacamp.android_accountbook_15.utils.toMoneyString
 
 
 @Composable
@@ -85,7 +87,12 @@ fun InputItem(
         BasicTextField(
             modifier = Modifier.weight(1f),
             value = value,
-            onValueChange = onTextChanged,
+            onValueChange = {
+                if (!numeric)
+                    onTextChanged(it)
+                else if (it.length < 12)
+                    onTextChanged(it.toMoneyInt().toMoneyString())
+            },
             singleLine = true,
             textStyle = TextStyle(color = Purple),
             decorationBox = { innerTextField ->

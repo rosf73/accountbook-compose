@@ -31,6 +31,7 @@ import com.woowacamp.android_accountbook_15.ui.theme.Yellow
 import com.woowacamp.android_accountbook_15.utils.changeKoreanToHyphen
 import com.woowacamp.android_accountbook_15.utils.getMonthAndYearKorean
 import com.woowacamp.android_accountbook_15.utils.getTodayKorean
+import com.woowacamp.android_accountbook_15.utils.toMoneyInt
 
 @Composable
 fun EditScreen(
@@ -98,7 +99,7 @@ fun EditScreen(
                             -1,
                             isIncome,
                             date = changeKoreanToHyphen(date),
-                            amount = amount.toInt(),
+                            amount = amount.toMoneyInt(),
                             payment = PaymentMethod(paymentId, paymentMethod),
                             category = Category(categoryId, isIncome, category, 0x0),
                             content = content
