@@ -1,5 +1,6 @@
 package com.woowacamp.android_accountbook_15.utils
 
+import java.lang.IllegalArgumentException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -35,10 +36,10 @@ fun getTodayKorean(): String {
 
 fun getDayKorean(year: Int, month: Int, date: Int): String {
     val cal = Calendar.getInstance()
-    cal.set(year, month, date)
+    cal.set(year, month-1, date)
 
     var day = ""
-    when (Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) {
+    when (cal.get(Calendar.DAY_OF_WEEK)) {
         1 -> day = "일"
         2 -> day = "월"
         3 -> day = "화"
@@ -49,3 +50,11 @@ fun getDayKorean(year: Int, month: Int, date: Int): String {
     }
     return SimpleDateFormat("yyyy. MM. dd ${day}요일", Locale.KOREA).format(cal.time)
 }
+
+fun getDaysInMonth(year: Int, month: Int): Int
+    = when (month-1) {
+        Calendar.JANUARY, Calendar.MARCH, Calendar.MAY, Calendar.JULY, Calendar.AUGUST, Calendar.OCTOBER, Calendar.DECEMBER -> 31
+        Calendar.APRIL, Calendar.JUNE, Calendar.SEPTEMBER, Calendar.NOVEMBER -> 30
+        Calendar.FEBRUARY -> if (year % 4 == 0 && year % 100 != 0 && year % 400 == 0) 29 else 28
+        else -> throw IllegalArgumentException("Invalid Month")
+    }
