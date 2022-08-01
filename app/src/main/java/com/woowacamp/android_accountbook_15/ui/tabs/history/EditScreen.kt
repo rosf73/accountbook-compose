@@ -22,15 +22,18 @@ import com.woowacamp.android_accountbook_15.ui.components.DateSpinnerItem
 import com.woowacamp.android_accountbook_15.ui.components.Header
 import com.woowacamp.android_accountbook_15.ui.components.InputItem
 import com.woowacamp.android_accountbook_15.ui.components.SpinnerItem
+import com.woowacamp.android_accountbook_15.ui.tabs.setting.SettingViewModel
 import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple
 import com.woowacamp.android_accountbook_15.ui.theme.White
 import com.woowacamp.android_accountbook_15.ui.theme.Yellow
+import com.woowacamp.android_accountbook_15.utils.changeKoreanToHyphen
 import com.woowacamp.android_accountbook_15.utils.getMonthAndYearKorean
 import com.woowacamp.android_accountbook_15.utils.getTodayKorean
 
 @Composable
 fun EditScreen(
+    viewModel: SettingViewModel,
     isCheckedIncome: Boolean,
     history: History? = null,
     onAddClick: (History) -> Unit,
@@ -42,6 +45,8 @@ fun EditScreen(
     val (amount, setAmount) = remember { mutableStateOf(history?.amount?.toString() ?: "") }
     val (paymentMethod, setPaymentMethod) = remember { mutableStateOf(history?.payment?.toString() ?: "") }
     val (category, setCategory) = remember { mutableStateOf(history?.category?.toString() ?: "") }
+    val (paymentId, setPaymentId) = remember { mutableStateOf(history?.payment?.id ?: -1L) }
+    val (categoryId, setCategoryId) = remember { mutableStateOf(history?.category?.id ?: -1L) }
     val (content, setContent) = remember { mutableStateOf(history?.content ?: "") }
 
     val (isDateOpened, setDateOpened) = remember { mutableStateOf(false) }
@@ -70,12 +75,13 @@ fun EditScreen(
             }
 
             EditScreen(
+                viewModel,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
                 isSelectedExpenses = !isSelectedIncome,
                 date, amount, paymentMethod, category, content,
-                setDate, setAmount, setPaymentMethod, setCategory, setContent,
+                setDate, setAmount, setPaymentMethod, setCategory, setPaymentId, setCategoryId, setContent,
                 isDateOpened, isPaymentOpened, isCategoryOpened,
                 setDateOpened, setPaymentOpened, setCategoryOpened
             )
@@ -90,10 +96,10 @@ fun EditScreen(
                         History(
                             -1,
                             isIncome,
-                            date = date,
+                            date = changeKoreanToHyphen(date),
                             amount = amount.toInt(),
-                            payment = PaymentMethod(-1, paymentMethod),
-                            category = Category(-1, isIncome, category, 0x0),
+                            payment = PaymentMethod(paymentId, paymentMethod),
+                            category = Category(categoryId, isIncome, category, 0x0),
                             content = content
                         )
                     )
@@ -146,6 +152,7 @@ private fun TypeRadioGroup(
 
 @Composable
 private fun EditScreen(
+    viewModel: SettingViewModel,
     modifier: Modifier,
     isSelectedExpenses: Boolean,
     date: String,
@@ -157,6 +164,8 @@ private fun EditScreen(
     onAmountChanged: (String) -> Unit,
     onPaymentChanged: (String) -> Unit,
     onCategoryChanged: (String) -> Unit,
+    onPaymentIdChanged: (Long) -> Unit,
+    onCategoryIdChanged: (Long) -> Unit,
     onContentChanged: (String) -> Unit,
     isDateOpened: Boolean,
     isPaymentOpened: Boolean,
@@ -165,6 +174,8 @@ private fun EditScreen(
     setPaymentOpened: (Boolean) -> Unit,
     setCategoryOpened: (Boolean) -> Unit
 ) {
+    val state by viewModel.state.collectAsState()
+
     Box(modifier = modifier) {
         LazyColumn(
             modifier = modifier.align(Alignment.TopCenter)
@@ -185,17 +196,29 @@ private fun EditScreen(
                     SpinnerItem(
                         label = "결제 수단",
                         value = paymentMethod,
-                        list = listOf("카드1", "카드2"),
+                        valueList = state.paymentMethods.map { it.id },
+                        textList = state.paymentMethods.map { it.name },
                         requestToOpen = isPaymentOpened,
                         onOpen = setPaymentOpened,
-                        onTextChanged = onPaymentChanged)
+                        onTextChanged = { value, text ->
+                            onPaymentIdChanged(value)
+                            onPaymentChanged(text)
+                        })
                 SpinnerItem(
                     label = "분류",
                     value = category,
-                    list = listOf("지출일까", "수입일까"),
+                    valueList = if (isSelectedExpenses)
+                        state.expensesCategories.map { it.id }
+                    else state.incomeCategories.map { it.id },
+                    textList = if (isSelectedExpenses)
+                        state.expensesCategories.map { it.name }
+                    else state.incomeCategories.map { it.name },
                     requestToOpen = isCategoryOpened,
                     onOpen = setCategoryOpened,
-                    onTextChanged = onCategoryChanged)
+                    onTextChanged = { value, text ->
+                        onCategoryIdChanged(value)
+                        onCategoryChanged(text)
+                    })
                 InputItem(
                     label = "내용",
                     value = content,
