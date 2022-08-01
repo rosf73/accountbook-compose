@@ -67,8 +67,6 @@ fun SpinnerItem(
     onOpen: (Boolean) -> Unit,
     onTextChanged: (String) -> Unit
 ) {
-    var selectedText by remember { mutableStateOf(value) }
-
     Row(modifier = Modifier.fillMaxWidth().padding(0.dp, 8.dp)) {
         Text(
             modifier = Modifier
@@ -80,8 +78,8 @@ fun SpinnerItem(
             modifier = Modifier
                 .align(CenterVertically)
                 .weight(1f),
-            text = if (selectedText == "") "선택하세요" else selectedText,
-            color = if (selectedText == "") LightPurple else Purple,
+            text = if (value == "") "선택하세요" else value,
+            color = if (value == "") LightPurple else Purple,
             fontSize = 14.sp)
         Box(modifier = Modifier.align(CenterVertically)) {
             Icon(
@@ -112,7 +110,6 @@ fun SpinnerItem(
                         onClick = {
                             onOpen(false)
                             onTextChanged(it)
-                            selectedText = it
                         }
                     ) {
                         Text(it, modifier = Modifier.wrapContentWidth())
