@@ -170,7 +170,8 @@ private fun EditScreen(
                 InputItem(
                     label = "금액",
                     value = amount,
-                    onTextChanged = onAmountChanged)
+                    onTextChanged = onAmountChanged,
+                    numeric = true)
                 if (isSelectedExpenses)
                     SpinnerItem(
                         label = "결제 수단",
