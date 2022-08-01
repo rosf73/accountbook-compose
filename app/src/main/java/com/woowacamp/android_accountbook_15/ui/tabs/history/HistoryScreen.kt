@@ -44,13 +44,19 @@ fun HistoryScreen(
         ScreenType.ADD_HISTORY -> EditScreen(
             settingViewModel,
             isCheckedIncome = isCheckedIncome,
-            onAddClick = { viewModel.insertHistory(it) },
+            onAddClick = {
+                viewModel.insertHistory(it)
+                setScreenState(ScreenType.HISTORY)
+            },
             onBackClick = { setScreenState(ScreenType.HISTORY) }
         )
         ScreenType.UPDATE_HISTORY -> EditScreen(
             settingViewModel,
             isCheckedIncome = isCheckedIncome,
-            onAddClick = { viewModel.insertHistory(it) },
+            onAddClick = {
+                viewModel.insertHistory(it)
+                setScreenState(ScreenType.HISTORY)
+            },
             onBackClick = { setScreenState(ScreenType.HISTORY) }
         )
     }
