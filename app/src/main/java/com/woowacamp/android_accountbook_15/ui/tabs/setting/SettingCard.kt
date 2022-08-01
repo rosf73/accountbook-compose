@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.woowacamp.android_accountbook_15.R
 import com.woowacamp.android_accountbook_15.data.model.Category
 import com.woowacamp.android_accountbook_15.data.model.PaymentMethod
+import com.woowacamp.android_accountbook_15.ui.components.CategoryView
 import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple04
@@ -104,16 +105,9 @@ private fun SettingItem(
             fontWeight = FontWeight(700)
         )
         color?.let {
-            Text(modifier = Modifier
-                .width(56.dp)
-                .align(Alignment.CenterEnd)
-                .clip(RoundedCornerShape(14.dp))
-                .background(Color(color))
-                .padding(0.dp, 4.dp),
-                text = name,
-                color = White,
-                fontSize = 10.sp,
-                textAlign = TextAlign.Center)
+            CategoryView(
+                modifier = Modifier.align(Alignment.CenterEnd),
+                color, name)
         }
     }
     Divider(color = Purple04, thickness = 1.dp)
