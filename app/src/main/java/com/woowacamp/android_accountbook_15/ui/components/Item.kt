@@ -175,6 +175,7 @@ fun SpinnerItem(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CheckableItem(
+    modifier: Modifier = Modifier,
     isSelectMode: Boolean,
     onPress: () -> Unit,
     onLongPress: () -> Unit,
@@ -184,9 +185,7 @@ fun CheckableItem(
     val (isChecked, setIsChecked) = remember { mutableStateOf(false) }
 
     Row(
-        modifier = Modifier
-            .padding(0.dp, 11.dp)
-            .fillMaxWidth()
+        modifier = modifier
             .combinedClickable(
                 onClick = {
                     if (isSelectMode) {
@@ -216,5 +215,4 @@ fun CheckableItem(
 
         Composition()
     }
-    Divider(color = Purple04, thickness = 1.dp)
 }

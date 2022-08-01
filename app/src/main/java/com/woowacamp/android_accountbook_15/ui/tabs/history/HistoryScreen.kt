@@ -27,6 +27,7 @@ import com.woowacamp.android_accountbook_15.ui.tabs.setting.SettingViewModel
 import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple
 import com.woowacamp.android_accountbook_15.ui.theme.White
+import com.woowacamp.android_accountbook_15.utils.getDayKoreanWithoutYear
 import com.woowacamp.android_accountbook_15.utils.getMonthAndYearKorean
 
 @Composable
@@ -43,6 +44,7 @@ fun HistoryScreen(
 
     when (screenState) {
         ScreenType.HISTORY -> HistoryScreen(
+            year,
             title = getMonthAndYearKorean(year, month),
             histories = viewModel.monthlyHistories.collectAsState().value,
             isSelectedIncome = isCheckedIncome,
@@ -86,6 +88,7 @@ fun HistoryScreen(
 
 @Composable
 private fun HistoryScreen(
+    year: Int,
     title: String,
     histories: Map<String, List<History>>,
     isSelectedIncome: Boolean,
@@ -109,9 +112,9 @@ private fun HistoryScreen(
             FloatingButton(onClick = onAddClick)
         }
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column {
             TypeCheckBoxGroup(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.padding(16.dp).fillMaxWidth(),
                 totalIncome = 0,
                 totalExpenses = 0,
                 isSelectedIncome = isSelectedIncome,
@@ -124,7 +127,9 @@ private fun HistoryScreen(
             LazyColumn {
                 item {
                     histories.forEach { entry ->
-                        HistoryCard(entry.key, entry.value)
+                        val (key, value) = entry
+                        val splitDate = key.split("-").map { it.toInt() }
+                        HistoryCard(date = getDayKoreanWithoutYear(year, splitDate[0], splitDate[1]), list = value)
                     }
                 }
             }
