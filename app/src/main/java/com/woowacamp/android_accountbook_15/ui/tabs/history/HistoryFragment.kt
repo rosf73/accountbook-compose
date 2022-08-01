@@ -16,8 +16,6 @@ class HistoryFragment : Fragment() {
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = requireNotNull(_binding)
 
-    private val viewModel: HistoryViewModel by viewModels()
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,7 +28,7 @@ class HistoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.composeHistory.setContent {
             AndroidAccountBook15Theme {
-                HistoryScreen(viewModel)
+                HistoryScreen()
             }
         }
     }

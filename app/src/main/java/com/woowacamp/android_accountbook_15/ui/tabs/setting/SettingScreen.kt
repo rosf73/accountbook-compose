@@ -3,12 +3,13 @@ package com.woowacamp.android_accountbook_15.ui.tabs.setting
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.woowacamp.android_accountbook_15.ui.components.Header
 import com.woowacamp.android_accountbook_15.ui.theme.*
 
 @Composable
 fun SettingScreen(
-    viewModel: SettingViewModel
+    viewModel: SettingViewModel = hiltViewModel()
 ) {
     val (screenState, setScreenState) = remember { mutableStateOf(ScreenType.SETTING) }
 
@@ -58,9 +59,7 @@ private fun SettingScreen(
     val state by viewModel.state.collectAsState()
 
     Scaffold(
-        topBar = {
-            Header(title = "설정")
-        }
+        topBar = { Header(title = "설정") }
     ) {
         LazyColumn {
             item {

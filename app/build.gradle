@@ -65,6 +65,7 @@ dependencies {
     // Dagger - Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
+    implementation "androidx.hilt:hilt-navigation-compose:$hilt_navigation_version"
 
     // KTX
     implementation "androidx.activity:activity-ktx:$ktx_version"
@@ -78,6 +79,9 @@ dependencies {
     // AppCompatActivity
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    // NumberPicker
+    implementation "com.chargemap.compose:numberpicker:$number_picker_version"
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation "androidx.compose.ui:ui:$compose_version"
