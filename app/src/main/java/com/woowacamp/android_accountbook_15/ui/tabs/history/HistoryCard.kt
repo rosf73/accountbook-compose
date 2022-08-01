@@ -19,10 +19,13 @@ import com.woowacamp.android_accountbook_15.ui.theme.Blue
 import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple04
 import com.woowacamp.android_accountbook_15.ui.theme.Red
+import com.woowacamp.android_accountbook_15.utils.toMoneyString
 
 @Composable
 fun HistoryCard(
     modifier: Modifier = Modifier,
+    isSelectedIncome: Boolean,
+    isSelectedExpenses: Boolean,
     date: String,
     list: List<History>
 ) {
@@ -31,29 +34,36 @@ fun HistoryCard(
     ) {
         Row(verticalAlignment = Alignment.Bottom) {
             Text(modifier = Modifier.weight(1f), text = date, color = LightPurple)
-            Text(text = "수입  ${list.sumOf { if (it.type == 1) it.amount else 0} }" +
-                    "  지출  ${list.sumOf { if (it.type == 0) it.amount else 0 }}",
+            Text(text = "수입  ${list.sumOf { if (it.type == 1) it.amount else 0}.toMoneyString()}" +
+                    "  지출  ${list.sumOf { if (it.type == 0) it.amount else 0 }.toMoneyString()}",
                 fontSize = 10.sp, color = LightPurple)
         }
         Spacer(modifier = Modifier.size(8.dp))
 
         Column {
             list.forEach { history ->
-                Divider(color = Purple04, thickness = 1.dp, modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp))
-                CheckableItem(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(0.dp, 8.dp),
-                    isSelectMode = false,
-                    onPress = { /*TODO*/ },
-                    onLongPress = { /*TODO*/ },
-                    onUpdateClick = { /*TODO*/ }) {
-                    HistoryItem(history)
+                if ((isSelectedIncome && history.type == 1) || (isSelectedExpenses && history.type == 0)) {
+                    Divider(
+                        color = Purple04,
+                        thickness = 1.dp,
+                        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp)
+                    )
+                    CheckableItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(0.dp, 8.dp),
+                        isSelectMode = false,
+                        onPress = { /*TODO*/ },
+                        onLongPress = { /*TODO*/ },
+                        onUpdateClick = { /*TODO*/ }) {
+                        HistoryItem(history)
+                    }
                 }
             }
         }
     }
     Divider(color = LightPurple, thickness = 1.dp)
+    Spacer(modifier = Modifier.size(16.dp))
 }
 
 @Composable
@@ -74,7 +84,7 @@ private fun HistoryItem(
         Row {
             Text(text = history.content ?: "", fontSize = 14.sp, fontWeight = FontWeight(700))
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = "${history.amount}원", fontSize = 14.sp, color = if (history.type == 0) Red else Blue)
+            Text(text = "${history.amount.toMoneyString()}원", fontSize = 14.sp, color = if (history.type == 0) Red else Blue)
         }
     }
 }

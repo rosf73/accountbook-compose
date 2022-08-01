@@ -30,6 +30,7 @@ import com.woowacamp.android_accountbook_15.ui.theme.Purple
 import com.woowacamp.android_accountbook_15.ui.theme.White
 import com.woowacamp.android_accountbook_15.utils.getDayKoreanWithoutYear
 import com.woowacamp.android_accountbook_15.utils.getMonthAndYearKorean
+import com.woowacamp.android_accountbook_15.utils.toMoneyString
 
 @Composable
 fun HistoryScreen(
@@ -118,7 +119,9 @@ private fun HistoryScreen(
     ) {
         Column {
             TypeCheckBoxGroup(
-                modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
                 totalIncome = totalIncome,
                 totalExpenses = totalExpenses,
                 isSelectedIncome = isSelectedIncome,
@@ -132,8 +135,13 @@ private fun HistoryScreen(
                 item {
                     histories.forEach { (key, value) ->
                         val splitDate = key.split("-").map { it.toInt() }
-                        HistoryCard(date = getDayKoreanWithoutYear(year, splitDate[0], splitDate[1]), list = value)
+                        HistoryCard(
+                            isSelectedIncome = isSelectedIncome,
+                            isSelectedExpenses = isSelectedExpenses,
+                            date = getDayKoreanWithoutYear(year, splitDate[0], splitDate[1]),
+                            list = value)
                     }
+                    Spacer(modifier = Modifier.size(60.dp))
                 }
             }
         }
@@ -168,7 +176,7 @@ private fun TypeCheckBoxGroup(
             PurpleCheckBox(checked = isSelectedIncome, onCheckedChange = onIncomeClick)
             Text(
                 modifier = Modifier.padding(4.dp, 0.dp),
-                text = "수입 $totalIncome",
+                text = "수입 ${totalIncome.toMoneyString()}",
                 textAlign = TextAlign.Center,
                 color = White,
                 fontSize = 12.sp)
@@ -187,7 +195,7 @@ private fun TypeCheckBoxGroup(
             PurpleCheckBox(checked = isSelectedExpenses, onCheckedChange = onExpensesClick)
             Text(
                 modifier = Modifier.padding(4.dp, 0.dp),
-                text = "지출 $totalExpenses",
+                text = "지출 ${totalExpenses.toMoneyString()}",
                 textAlign = TextAlign.Center,
                 color = White,
                 fontSize = 12.sp)
