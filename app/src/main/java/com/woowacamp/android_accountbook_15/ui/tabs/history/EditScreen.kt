@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,6 +18,7 @@ import com.woowacamp.android_accountbook_15.R
 import com.woowacamp.android_accountbook_15.data.model.Category
 import com.woowacamp.android_accountbook_15.data.model.History
 import com.woowacamp.android_accountbook_15.data.model.PaymentMethod
+import com.woowacamp.android_accountbook_15.ui.components.DateSpinnerItem
 import com.woowacamp.android_accountbook_15.ui.components.Header
 import com.woowacamp.android_accountbook_15.ui.components.InputItem
 import com.woowacamp.android_accountbook_15.ui.components.SpinnerItem
@@ -27,6 +26,8 @@ import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple
 import com.woowacamp.android_accountbook_15.ui.theme.White
 import com.woowacamp.android_accountbook_15.ui.theme.Yellow
+import com.woowacamp.android_accountbook_15.utils.getMonthAndYearKorean
+import com.woowacamp.android_accountbook_15.utils.getTodayKorean
 
 @Composable
 fun EditScreen(
@@ -37,12 +38,13 @@ fun EditScreen(
 ) {
     val (isSelectedIncome, setIsSelectedIncome) = remember { mutableStateOf(isCheckedIncome) }
 
-    val (date, setDate) = remember { mutableStateOf(history?.date ?: "") }
+    val (date, setDate) = remember { mutableStateOf(history?.date ?: getTodayKorean()) }
     val (amount, setAmount) = remember { mutableStateOf(history?.amount?.toString() ?: "") }
     val (paymentMethod, setPaymentMethod) = remember { mutableStateOf(history?.payment?.toString() ?: "") }
     val (category, setCategory) = remember { mutableStateOf(history?.category?.toString() ?: "") }
     val (content, setContent) = remember { mutableStateOf(history?.content ?: "") }
 
+    val (isDateOpened, setDateOpened) = remember { mutableStateOf(false) }
     val (isPaymentOpened, setPaymentOpened) = remember { mutableStateOf(false) }
     val (isCategoryOpened, setCategoryOpened) = remember { mutableStateOf(false) }
 
@@ -74,7 +76,8 @@ fun EditScreen(
                 isSelectedExpenses = !isSelectedIncome,
                 date, amount, paymentMethod, category, content,
                 setDate, setAmount, setPaymentMethod, setCategory, setContent,
-                isPaymentOpened, isCategoryOpened, setPaymentOpened, setCategoryOpened
+                isDateOpened, isPaymentOpened, isCategoryOpened,
+                setDateOpened, setPaymentOpened, setCategoryOpened
             )
 
             Button(
@@ -112,7 +115,9 @@ private fun TypeRadioGroup(
     onClick: (Boolean) -> Unit
 ) {
     Row(
-        modifier = modifier.padding(0.dp, 0.dp, 0.dp, 16.dp).clip(RoundedCornerShape(10.dp))
+        modifier = modifier
+            .padding(0.dp, 0.dp, 0.dp, 16.dp)
+            .clip(RoundedCornerShape(10.dp))
     ) {
         Text(
             modifier = Modifier
@@ -153,8 +158,10 @@ private fun EditScreen(
     onPaymentChanged: (String) -> Unit,
     onCategoryChanged: (String) -> Unit,
     onContentChanged: (String) -> Unit,
+    isDateOpened: Boolean,
     isPaymentOpened: Boolean,
     isCategoryOpened: Boolean,
+    setDateOpened: (Boolean) -> Unit,
     setPaymentOpened: (Boolean) -> Unit,
     setCategoryOpened: (Boolean) -> Unit
 ) {
@@ -163,9 +170,11 @@ private fun EditScreen(
             modifier = modifier.align(Alignment.TopCenter)
         ) {
             item {
-                InputItem(
+                DateSpinnerItem(
                     label = "일자",
                     value = date,
+                    requestToOpen = isDateOpened,
+                    onOpen = setDateOpened,
                     onTextChanged = onDateChanged)
                 InputItem(
                     label = "금액",
