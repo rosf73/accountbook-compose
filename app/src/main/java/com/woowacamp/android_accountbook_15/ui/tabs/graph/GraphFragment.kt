@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.woowacamp.android_accountbook_15.R
 import com.woowacamp.android_accountbook_15.databinding.FragmentGraphBinding
+import com.woowacamp.android_accountbook_15.ui.MainActivity
 import com.woowacamp.android_accountbook_15.ui.tabs.history.HistoryViewModel
 import com.woowacamp.android_accountbook_15.ui.theme.AndroidAccountBook15Theme
 
@@ -30,7 +31,9 @@ class GraphFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.composeGraph.setContent {
             AndroidAccountBook15Theme {
-                GraphScreen(viewModel)
+                GraphScreen(viewModel) {
+                    (activity as MainActivity).backToMain()
+                }
             }
         }
     }

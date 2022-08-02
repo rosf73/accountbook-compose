@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.woowacamp.android_accountbook_15.databinding.FragmentCalendarBinding
+import com.woowacamp.android_accountbook_15.ui.MainActivity
 import com.woowacamp.android_accountbook_15.ui.tabs.history.HistoryViewModel
 import com.woowacamp.android_accountbook_15.ui.theme.AndroidAccountBook15Theme
 
@@ -29,7 +30,9 @@ class CalendarFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.composeCalendar.setContent {
             AndroidAccountBook15Theme {
-                CalendarScreen(viewModel)
+                CalendarScreen(viewModel) {
+                    (activity as MainActivity).backToMain()
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.woowacamp.android_accountbook_15.ui.tabs.graph
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.res.painterResource
@@ -12,7 +13,8 @@ import com.woowacamp.android_accountbook_15.utils.getMonthAndYearKorean
 
 @Composable
 fun GraphScreen(
-    viewModel: HistoryViewModel = hiltViewModel()
+    viewModel: HistoryViewModel = hiltViewModel(),
+    backToMain: () -> Unit
 ) {
     val year by viewModel.currentYear.collectAsState()
     val month by viewModel.currentMonth.collectAsState()
@@ -40,7 +42,9 @@ fun GraphScreen(
                 })
         }
     ) {
-
+        BackHandler {
+            backToMain()
+        }
     }
 
     if (isDateOpened) {
