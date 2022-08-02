@@ -43,7 +43,12 @@ fun EditScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-    val (isSelectedIncome, setIsSelectedIncome) = remember { mutableStateOf(isCheckedIncome) }
+    val (isSelectedIncome, setIsSelectedIncome) = remember { mutableStateOf(
+        if (history != null)
+            history.type == 1
+        else
+            isCheckedIncome
+    ) }
 
     val (date, setDate) = remember { mutableStateOf(if (history != null) changeHyphenToKorean(history.date) else getTodayKorean()) }
     val (amount, setAmount) = remember { mutableStateOf(history?.amount?.toString() ?: "") }
