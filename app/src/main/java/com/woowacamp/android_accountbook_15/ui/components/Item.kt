@@ -21,6 +21,7 @@ import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple04
 import com.woowacamp.android_accountbook_15.ui.theme.White
+import com.woowacamp.android_accountbook_15.utils.getDayKorean
 import com.woowacamp.android_accountbook_15.utils.toMoneyInt
 import com.woowacamp.android_accountbook_15.utils.toMoneyString
 
@@ -64,7 +65,7 @@ fun DateSpinnerItem(
             initMonth = splitDate[1].toInt(),
             initDate = splitDate[2].split(" ")[0].toInt(),
             onOpen = onOpen,
-            onTextChanged = onTextChanged)
+            onDateChanged = { y, m, d -> onTextChanged(getDayKorean(y, m, d)) })
     }
 }
 
@@ -80,7 +81,7 @@ fun InputItem(
         .padding(0.dp, 8.dp)) {
         Text(
             modifier = Modifier
-                .align(Alignment.CenterVertically)
+                .align(CenterVertically)
                 .width(76.dp),
             text = label,
             fontSize = 14.sp)

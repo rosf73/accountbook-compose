@@ -4,16 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Checkbox
-import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -23,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.woowacamp.android_accountbook_15.R
 import com.woowacamp.android_accountbook_15.data.model.History
+import com.woowacamp.android_accountbook_15.ui.components.DatePicker
 import com.woowacamp.android_accountbook_15.ui.components.FloatingButton
 import com.woowacamp.android_accountbook_15.ui.components.Header
 import com.woowacamp.android_accountbook_15.ui.components.PurpleCheckBox
@@ -47,9 +44,11 @@ fun HistoryScreen(
     val year by viewModel.currentYear.collectAsState()
     val month by viewModel.currentMonth.collectAsState()
 
+    val (isDateOpened, setDateOpened) = remember { mutableStateOf(false) }
+
     when (screenState) {
         ScreenType.HISTORY -> HistoryScreen(
-            year,
+            year, month,
             title = getMonthAndYearKorean(year, month),
             histories = viewModel.monthlyHistories.collectAsState().value,
             isSelectedIncome = isCheckedIncome,
@@ -68,7 +67,12 @@ fun HistoryScreen(
                 )
             },
             onIncomeClick = setIsCheckedIncome,
-            onExpensesClick = setIsCheckedExpenses
+            onExpensesClick = setIsCheckedExpenses,
+            isDateOpened = isDateOpened,
+            setDateOpened = setDateOpened,
+            onDateChanged = { newY, newM ->
+                viewModel.setCurrentDate(newY, newM)
+            }
         )
         ScreenType.ADD_HISTORY -> EditScreen(
             settingViewModel,
@@ -94,6 +98,7 @@ fun HistoryScreen(
 @Composable
 private fun HistoryScreen(
     year: Int,
+    month: Int,
     title: String,
     histories: Map<String, List<History>>,
     isSelectedIncome: Boolean,
@@ -102,7 +107,10 @@ private fun HistoryScreen(
     onLeftClick: () -> Unit,
     onRightClick: () -> Unit,
     onIncomeClick: (Boolean) -> Unit,
-    onExpensesClick: (Boolean) -> Unit
+    onExpensesClick: (Boolean) -> Unit,
+    isDateOpened: Boolean,
+    setDateOpened: (Boolean) -> Unit,
+    onDateChanged: (Int, Int) -> Unit
 ) {
     val totalIncome = histories.values.sumOf { it.sumOf { history -> if (history.type == 1) history.amount else 0 } }
     val totalExpenses = histories.values.sumOf { it.sumOf { history -> if (history.type == 0) history.amount else 0 } }
@@ -111,10 +119,11 @@ private fun HistoryScreen(
         topBar = {
             Header(
                 title = title,
+                onTitleClick = { setDateOpened(true) },
                 leftIcon = painterResource(R.drawable.ic_left),
-                leftCallback = onLeftClick,
+                onLeftClick = onLeftClick,
                 rightIcon = painterResource(R.drawable.ic_right),
-                rightCallback = onRightClick)
+                onRightClick = onRightClick)
         },
         floatingActionButton = {
             FloatingButton(onClick = onAddClick)
@@ -158,6 +167,14 @@ private fun HistoryScreen(
                     Text(modifier = Modifier.fillMaxWidth(), text = "내역이 없습니다", fontSize = 12.sp, color = Grey1, textAlign = TextAlign.Center)
                 }
         }
+    }
+
+    if (isDateOpened) {
+        DatePicker(
+            initYear = year,
+            initMonth = month,
+            onOpen = setDateOpened,
+            onDateChanged = { y, m, _ -> onDateChanged(y, m) })
     }
 }
 

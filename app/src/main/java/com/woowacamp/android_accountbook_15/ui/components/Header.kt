@@ -1,5 +1,6 @@
 package com.woowacamp.android_accountbook_15.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -19,12 +20,13 @@ import com.woowacamp.android_accountbook_15.ui.theme.Purple
 fun Header(
     modifier: Modifier = Modifier,
     title: String,
+    onTitleClick: (() -> Unit)? = null,
     leftIcon: Painter? = null,
     leftIconDescription: String = "",
-    leftCallback: (() -> Unit)? = null,
+    onLeftClick: (() -> Unit)? = null,
     rightIcon: Painter? = null,
     rightIconDescription: String = "",
-    rightCallback: (() -> Unit)? = null
+    onRightClick: (() -> Unit)? = null
 ) {
     Column {
         Box(
@@ -37,7 +39,7 @@ fun Header(
                     modifier = Modifier.then(Modifier
                         .size(14.dp)
                         .align(Alignment.CenterStart)),
-                    onClick = { leftCallback?.let { it() } }
+                    onClick = { onLeftClick?.let { it() } }
                 ) {
                     Icon(painter = leftIcon, contentDescription = leftIconDescription)
                 }
@@ -48,13 +50,14 @@ fun Header(
                 fontSize = 18.sp,
                 modifier = modifier
                     .align(Alignment.Center)
+                    .clickable { onTitleClick?.let { it() } }
             )
             rightIcon?.let {
                 IconButton(
                     modifier = Modifier.then(Modifier
                         .size(14.dp)
                         .align(Alignment.CenterEnd)),
-                    onClick = { rightCallback?.let { it() } }
+                    onClick = { onRightClick?.let { it() } }
                 ) {
                     Icon(painter = rightIcon, contentDescription = rightIconDescription)
                 }

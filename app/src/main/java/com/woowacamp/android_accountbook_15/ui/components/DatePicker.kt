@@ -1,7 +1,6 @@
 package com.woowacamp.android_accountbook_15.ui.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -21,7 +20,6 @@ import com.chargemap.compose.numberpicker.NumberPicker
 import com.woowacamp.android_accountbook_15.ui.theme.Purple
 import com.woowacamp.android_accountbook_15.ui.theme.White
 import com.woowacamp.android_accountbook_15.ui.theme.Yellow
-import com.woowacamp.android_accountbook_15.utils.getDayKorean
 import com.woowacamp.android_accountbook_15.utils.getDaysInMonth
 import com.woowacamp.android_accountbook_15.utils.getTodayYear
 
@@ -33,7 +31,7 @@ fun DatePicker(
     initMonth: Int,
     initDate: Int? = null,
     onOpen: (Boolean) -> Unit,
-    onTextChanged: (String) -> Unit
+    onDateChanged: (Int, Int, Int) -> Unit
 ) {
     var year by remember { mutableStateOf(initYear) }
     var month by remember { mutableStateOf(initMonth) }
@@ -75,7 +73,7 @@ fun DatePicker(
                         .align(CenterHorizontally)
                         .width(200.dp),
                     onClick = {
-                        onTextChanged(getDayKorean(year, month, date))
+                        onDateChanged(year, month, date)
                         onOpen(false)
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = Yellow)
@@ -95,5 +93,5 @@ private fun DialogView() {
         initMonth = 7,
         initDate = 26,
         onOpen = {},
-        onTextChanged = {})
+        onDateChanged = {_,_,_ ->})
 }
