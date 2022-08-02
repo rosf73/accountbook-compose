@@ -27,6 +27,13 @@ fun changeHyphenToKorean(dayHyphen: String): String {
 /**
  * 오늘 날짜 얻기
  */
+fun isToday(year: Int, month: Int, date: Int): Boolean {
+    val today = Calendar.getInstance().time
+    val someday = Calendar.getInstance()
+    someday.set(year, month-1, date)
+    return SimpleDateFormat("yyyy. MM. dd", Locale.KOREA).format(today) == SimpleDateFormat("yyyy. MM. dd", Locale.KOREA).format(someday.time)
+}
+
 fun getTodayMonth(): Int {
     val today = Calendar.getInstance().time
     return SimpleDateFormat("MM", Locale.KOREA).format(today).toInt()
@@ -42,6 +49,13 @@ fun getTodayKorean(): String {
 
     val day = getDay(Calendar.getInstance())
     return SimpleDateFormat("yyyy. MM. dd ${day}요일", Locale.KOREA).format(today)
+}
+
+fun getMonthAndDateKorean(month: Int, date: Int): String {
+    val cal = Calendar.getInstance()
+    cal.set(1000, month-1, date)
+
+    return SimpleDateFormat("MM-dd", Locale.KOREA).format(cal.time)
 }
 
 /**
