@@ -30,10 +30,7 @@ import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple
 import com.woowacamp.android_accountbook_15.ui.theme.White
 import com.woowacamp.android_accountbook_15.ui.theme.Yellow
-import com.woowacamp.android_accountbook_15.utils.changeKoreanToHyphen
-import com.woowacamp.android_accountbook_15.utils.getMonthAndYearKorean
-import com.woowacamp.android_accountbook_15.utils.getTodayKorean
-import com.woowacamp.android_accountbook_15.utils.toMoneyInt
+import com.woowacamp.android_accountbook_15.utils.*
 
 @Composable
 fun EditScreen(
@@ -47,10 +44,10 @@ fun EditScreen(
 
     val (isSelectedIncome, setIsSelectedIncome) = remember { mutableStateOf(isCheckedIncome) }
 
-    val (date, setDate) = remember { mutableStateOf(history?.date ?: getTodayKorean()) }
+    val (date, setDate) = remember { mutableStateOf(if (history != null) changeHyphenToKorean(history.date) else getTodayKorean()) }
     val (amount, setAmount) = remember { mutableStateOf(history?.amount?.toString() ?: "") }
-    val (paymentMethod, setPaymentMethod) = remember { mutableStateOf(history?.payment?.toString() ?: "") }
-    val (category, setCategory) = remember { mutableStateOf(history?.category?.toString() ?: "") }
+    val (paymentMethod, setPaymentMethod) = remember { mutableStateOf(history?.payment?.name ?: "") }
+    val (category, setCategory) = remember { mutableStateOf(history?.category?.name ?: "") }
     val (paymentId, setPaymentId) = remember { mutableStateOf(history?.payment?.id ?: -1L) }
     val (categoryId, setCategoryId) = remember { mutableStateOf(history?.category?.id ?: -1L) }
     val (content, setContent) = remember { mutableStateOf(history?.content ?: "") }

@@ -65,6 +65,12 @@ fun changeKoreanToHyphen(dayKorean: String): String {
     return "${splitDate[0]}-${splitDate[1]}-${splitDate[2].split(" ")[0]}"
 }
 
+fun changeHyphenToKorean(dayHyphen: String): String {
+    val splitDate = dayHyphen.split("-").map { it.toInt() }
+
+    return getDayKorean(splitDate[0], splitDate[1], splitDate[2])
+}
+
 private fun getDay(calendar: Calendar): String
         = when (calendar.get(Calendar.DAY_OF_WEEK)) {
     1 -> "일"
