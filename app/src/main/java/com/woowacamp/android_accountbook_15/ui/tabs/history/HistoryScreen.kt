@@ -250,9 +250,10 @@ private fun TypeCheckBoxGroup(
             verticalAlignment = Alignment.CenterVertically
         ) {
             PurpleCheckBox(checked = isSelectedExpenses, onCheckedChange = onExpensesClick)
+            val amount = if (totalExpenses != 0) "-${totalExpenses.toMoneyString()}" else "0"
             Text(
                 modifier = Modifier.padding(4.dp, 0.dp),
-                text = "지출 ${totalExpenses.toMoneyString()}",
+                text = "지출 $amount",
                 textAlign = TextAlign.Center,
                 color = White,
                 fontSize = 12.sp)
