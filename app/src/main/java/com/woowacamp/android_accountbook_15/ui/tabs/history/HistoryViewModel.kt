@@ -33,13 +33,13 @@ class HistoryViewModel @Inject constructor(
     val selectedHistories = mutableStateListOf<Long>()
 
     init {
-        _monthlyHistories.value = repository.getMonthlyHistories(currentYear.value, currentMonth.value).getOrThrow()
+        _monthlyHistories.value = repository.readMonthlyHistories(currentYear.value, currentMonth.value).getOrThrow()
     }
 
     fun setCurrentDate(year: Int, month: Int) {
         _currentYear.value = year
         _currentMonth.value = month
-        _monthlyHistories.value = repository.getMonthlyHistories(year, month).getOrThrow()
+        _monthlyHistories.value = repository.readMonthlyHistories(year, month).getOrThrow()
     }
 
     fun insertHistory(history: History) {
@@ -51,7 +51,7 @@ class HistoryViewModel @Inject constructor(
             createToast("등록에 실패하였습니다")
             return
         }
-        _monthlyHistories.value = repository.getMonthlyHistories(currentYear.value, currentMonth.value).getOrThrow()
+        _monthlyHistories.value = repository.readMonthlyHistories(currentYear.value, currentMonth.value).getOrThrow()
     }
 
     fun updateHistory(newHistory: History) {
@@ -70,19 +70,19 @@ class HistoryViewModel @Inject constructor(
                 createToast("등록에 실패하였습니다")
                 return
             }
-            _monthlyHistories.value = repository.getMonthlyHistories(currentYear.value, currentMonth.value).getOrThrow()
+            _monthlyHistories.value = repository.readMonthlyHistories(currentYear.value, currentMonth.value).getOrThrow()
         }
         history.value = null
     }
 
     fun removeHistories() {
-        val res = repository.removeHistories(selectedHistories).getOrNull()
+        val res = repository.deleteHistories(selectedHistories).getOrNull()
 
         if (res == null) {
             createToast("삭제에 실패하였습니다")
             return
         }
-        _monthlyHistories.value = repository.getMonthlyHistories(currentYear.value, currentMonth.value).getOrThrow()
+        _monthlyHistories.value = repository.readMonthlyHistories(currentYear.value, currentMonth.value).getOrThrow()
         removeAllSelectedHistories()
     }
 
