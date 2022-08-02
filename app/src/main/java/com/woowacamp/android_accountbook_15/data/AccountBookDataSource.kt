@@ -38,14 +38,19 @@ class AccountBookDataSource @Inject constructor(
         }
     }
 
-    fun removeHistory(
-        id: Long
+    fun removeHistories(
+        ids: List<Long>
     ): Int {
         return writableDB.run {
-            val selection = "${BaseColumns._ID} LIKE ?"
-            val selectionArgs = arrayOf(id.toString())
+            var selection = "${BaseColumns._ID} = ?"
+            val selectionArgs = mutableListOf(ids[0].toString())
 
-            delete(HistoryColumns.TABLE_NAME, selection, selectionArgs)
+            for (i in 1 until ids.size) {
+                selection += " OR ${BaseColumns._ID} = ?"
+                selectionArgs.add(ids[i].toString())
+            }
+
+            delete(HistoryColumns.TABLE_NAME, selection, selectionArgs.toTypedArray())
         }
     }
 
