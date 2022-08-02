@@ -61,15 +61,25 @@ fun CalendarScreen(
         }
 
         Column {
+            val histories by viewModel.monthlyHistories.collectAsState()
             CalendarCard(
-                Modifier.fillMaxWidth().weight(1f),
-                getDaysOfMonth(year, month))
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                year = year,
+                month = month,
+                histories = histories)
 
-            StatisticsItem(label = "수입", amount = 0, amountColor = Blue)
+            val totalIncome = histories.values.sumOf { list -> list.sumOf { if (it.type == 1) it.amount else 0 } }
+            val totalExpenses = histories.values.sumOf { list -> list.sumOf { if (it.type == 0) it.amount else 0 } }
+            StatisticsItem(label = "수입", amountColor = Blue,
+                amount = totalIncome)
             Divider(modifier = Modifier.padding(16.dp, 0.dp), color = LightPurple, thickness = 1.dp)
-            StatisticsItem(label = "지출", amount = 0, amountColor = Red)
+            StatisticsItem(label = "지출", amountColor = Red,
+                amount = totalExpenses*-1)
             Divider(modifier = Modifier.padding(16.dp, 0.dp), color = LightPurple, thickness = 1.dp)
-            StatisticsItem(label = "총합", amount = 0, amountColor = Purple)
+            StatisticsItem(label = "총합", amountColor = Purple,
+                amount = totalIncome-totalExpenses)
         }
     }
 
