@@ -24,13 +24,13 @@ class SettingViewModel @Inject constructor(
     val category = MutableStateFlow<Category?>(null)
 
     init {
-        this.paymentMethods.addAll(repository.getAllPaymentMethod().getOrThrow())
-        this.expensesCategories.addAll(repository.getAllExpensesCategory().getOrThrow())
-        this.incomeCategories.addAll(repository.getAllIncomeCategory().getOrThrow())
+        this.paymentMethods.addAll(repository.readAllPaymentMethod().getOrThrow())
+        this.expensesCategories.addAll(repository.readAllExpensesCategory().getOrThrow())
+        this.incomeCategories.addAll(repository.readAllIncomeCategory().getOrThrow())
     }
 
     fun insertPaymentMethod(name: String): Long? {
-        val res = repository.insertPaymentMethod(name).getOrNull()
+        val res = repository.createPaymentMethod(name).getOrNull()
         if (res == null) {
             createToast("이미 등록된 결제 수단입니다")
             return null
@@ -40,7 +40,7 @@ class SettingViewModel @Inject constructor(
     }
 
     fun insertExpensesCategory(name: String, color: Long): Long? {
-        val res = repository.insertCategory(0, name, color).getOrNull()
+        val res = repository.createCategory(0, name, color).getOrNull()
         if (res == null) {
             createToast("이미 등록된 지출 카테고리입니다")
             return null
@@ -50,7 +50,7 @@ class SettingViewModel @Inject constructor(
     }
 
     fun insertIncomeCategory(name: String, color: Long): Long? {
-        val res = repository.insertCategory(1, name, color).getOrNull()
+        val res = repository.createCategory(1, name, color).getOrNull()
         if (res == null) {
             createToast("이미 등록된 수입 카테고리입니다")
             return null
@@ -68,7 +68,7 @@ class SettingViewModel @Inject constructor(
                 return
             }
             this.paymentMethods.clear()
-            this.paymentMethods.addAll(repository.getAllPaymentMethod().getOrThrow())
+            this.paymentMethods.addAll(repository.readAllPaymentMethod().getOrThrow())
         }
         payment.value = null
     }
@@ -83,15 +83,9 @@ class SettingViewModel @Inject constructor(
             }
             this.expensesCategories.clear()
             this.incomeCategories.clear()
-            this.expensesCategories.addAll(repository.getAllExpensesCategory().getOrThrow())
-            this.incomeCategories.addAll(repository.getAllIncomeCategory().getOrThrow())
+            this.expensesCategories.addAll(repository.readAllExpensesCategory().getOrThrow())
+            this.incomeCategories.addAll(repository.readAllIncomeCategory().getOrThrow())
         }
         category.value = null
     }
 }
-
-data class SettingViewState(
-    var paymentMethods: List<PaymentMethod> = emptyList(),
-    var expensesCategories: List<Category> = emptyList(),
-    var incomeCategories: List<Category> = emptyList()
-)

@@ -3,23 +3,24 @@ package com.woowacamp.android_accountbook_15.data
 import com.woowacamp.android_accountbook_15.data.model.Category
 import com.woowacamp.android_accountbook_15.data.model.History
 import com.woowacamp.android_accountbook_15.data.model.PaymentMethod
+import com.woowacamp.android_accountbook_15.data.utils.AccountBookDataSource
 import javax.inject.Inject
 
 class AccountBookRepository @Inject constructor(
     private val dataSource: AccountBookDataSource
 ) {
 
-    fun getMonthlyHistories(year: Int, month: Int): Result<Map<String, List<History>>>
-        = runCatching { dataSource.getAllHistory(year, month) }
+    fun readMonthlyHistories(year: Int, month: Int): Result<Map<String, List<History>>>
+        = runCatching { dataSource.readMonthlyHistories(year, month) }
 
-    fun getAllPaymentMethod(): Result<List<PaymentMethod>>
-        = runCatching { dataSource.getAllPaymentMethod() }
+    fun readAllPaymentMethod(): Result<List<PaymentMethod>>
+        = runCatching { dataSource.readAllPaymentMethod() }
 
-    fun getAllExpensesCategory(): Result<List<Category>>
-            = runCatching { dataSource.getAllExpensesCategory() }
+    fun readAllExpensesCategory(): Result<List<Category>>
+            = runCatching { dataSource.readAllExpensesCategory() }
 
-    fun getAllIncomeCategory(): Result<List<Category>>
-            = runCatching { dataSource.getAllIncomeCategory() }
+    fun readAllIncomeCategory(): Result<List<Category>>
+            = runCatching { dataSource.readAllIncomeCategory() }
 
     fun insertHistory(
         type: Int,
@@ -29,13 +30,13 @@ class AccountBookRepository @Inject constructor(
         paymentId: Long? = null,
         categoryId: Long? = null
     ): Result<Long>
-            = runCatching { dataSource.addHistory(type, content, date, amount, paymentId, categoryId) }
+            = runCatching { dataSource.createHistory(type, content, date, amount, paymentId, categoryId) }
 
-    fun insertPaymentMethod(name: String): Result<Long>
-        = runCatching { dataSource.addPaymentMethod(name) }
+    fun createPaymentMethod(name: String): Result<Long>
+        = runCatching { dataSource.createPaymentMethod(name) }
 
-    fun insertCategory(type: Int, name: String, color: Long): Result<Long>
-        = runCatching { dataSource.addCategory(type, name, color) }
+    fun createCategory(type: Int, name: String, color: Long): Result<Long>
+        = runCatching { dataSource.createCategory(type, name, color) }
 
     fun updateHistory(
         id: Long,
@@ -54,6 +55,6 @@ class AccountBookRepository @Inject constructor(
     fun updateCategory(id: Long, name: String, color: Long): Result<Int>
             = runCatching { dataSource.updateCategory(id, name, color) }
 
-    fun removeHistories(ids: List<Long>)
-            = runCatching { dataSource.removeHistories(ids) }
+    fun deleteHistories(ids: List<Long>)
+            = runCatching { dataSource.deleteHistories(ids) }
 }
