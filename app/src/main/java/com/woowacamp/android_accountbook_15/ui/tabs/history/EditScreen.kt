@@ -41,8 +41,6 @@ fun EditScreen(
     onAddClick: (History) -> Unit,
     onBackClick: () -> Unit
 ) {
-    val state by viewModel.state.collectAsState()
-
     val (isSelectedIncome, setIsSelectedIncome) = remember { mutableStateOf(
         if (history != null)
             history.type == 1
@@ -86,7 +84,7 @@ fun EditScreen(
             }
 
             EditScreen(
-                state,
+                viewModel,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
@@ -170,7 +168,7 @@ private fun TypeRadioGroup(
 
 @Composable
 private fun EditScreen(
-    state: SettingViewState,
+    viewModel: SettingViewModel,
     modifier: Modifier,
     isSelectedExpenses: Boolean,
     date: String,
@@ -194,6 +192,10 @@ private fun EditScreen(
     onAddPayment: (String) -> Long?,
     onAddCategory: (String) -> Long?
 ) {
+    val paymentMethods = viewModel.paymentMethods
+    val expensesCategories = viewModel.expensesCategories
+    val incomeCategories = viewModel.incomeCategories
+
     Box(modifier = modifier) {
         LazyColumn(
             modifier = modifier.align(Alignment.TopCenter)
@@ -214,8 +216,8 @@ private fun EditScreen(
                     SpinnerItem(
                         label = "결제 수단",
                         value = paymentMethod,
-                        valueList = state.paymentMethods.map { it.id },
-                        textList = state.paymentMethods.map { it.name },
+                        valueList = paymentMethods.map { it.id },
+                        textList = paymentMethods.map { it.name },
                         requestToOpen = isPaymentOpened,
                         onOpen = setPaymentOpened,
                         onTextChanged = { value, text ->
@@ -227,11 +229,11 @@ private fun EditScreen(
                     label = "분류",
                     value = category,
                     valueList = if (isSelectedExpenses)
-                        state.expensesCategories.map { it.id }
-                    else state.incomeCategories.map { it.id },
+                        expensesCategories.map { it.id }
+                    else incomeCategories.map { it.id },
                     textList = if (isSelectedExpenses)
-                        state.expensesCategories.map { it.name }
-                    else state.incomeCategories.map { it.name },
+                        expensesCategories.map { it.name }
+                    else incomeCategories.map { it.name },
                     requestToOpen = isCategoryOpened,
                     onOpen = setCategoryOpened,
                     onTextChanged = { value, text ->

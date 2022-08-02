@@ -125,8 +125,6 @@ fun SpinnerItem(
     onAddClick: (String) -> Long?
 ) {
     var addText by remember { mutableStateOf("") }
-    var spinnerList by remember { mutableStateOf(textList) }
-    var idList by remember { mutableStateOf(valueList) }
 
     Row(modifier = Modifier
         .fillMaxWidth()
@@ -167,9 +165,9 @@ fun SpinnerItem(
                 onDismissRequest = { onOpen(false) },
                 offset = DpOffset(0.dp, 24.dp)
             ) {
-                for (i in spinnerList.indices) {
-                    val value = idList[i]
-                    val text = spinnerList[i]
+                for (i in valueList.indices) {
+                    val value = valueList[i]
+                    val text = textList[i]
                     DropdownMenuItem(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
@@ -205,16 +203,7 @@ fun SpinnerItem(
                         modifier = Modifier.then(Modifier
                             .size(14.dp)),
                         onClick = {
-                            val res = onAddClick(addText)
-                            if (res != null) {
-                                val temp1 = spinnerList.toMutableList()
-                                temp1.add(addText)
-                                spinnerList = temp1
-                                val temp2 = idList.toMutableList()
-                                temp2.add(res)
-                                idList = temp2
-                            }
-
+                            onAddClick(addText)
                             addText = ""
                         },
                         enabled = addText.isNotBlank()
@@ -242,6 +231,8 @@ fun CheckableItem(
 
     Row(
         modifier = modifier
+            .background(if (isChecked) White else OffWhite)
+            .padding(16.dp, 8.dp)
             .combinedClickable(
                 onClick = {
                     if (isSelectMode) {
@@ -269,6 +260,7 @@ fun CheckableItem(
                 else painterResource(id = R.drawable.ic_checkbox),
                 contentDescription = "체크 박스",
                 tint= Color.Unspecified)
+        else setIsChecked(false)
 
         Composition()
     }

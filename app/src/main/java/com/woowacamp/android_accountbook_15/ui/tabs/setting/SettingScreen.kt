@@ -56,7 +56,9 @@ private fun SettingScreen(
     viewModel: SettingViewModel,
     onScreenChange: (ScreenType) -> Unit
 ) {
-    val state by viewModel.state.collectAsState()
+    val paymentMethods = viewModel.paymentMethods
+    val expensesCategories = viewModel.expensesCategories
+    val incomeCategories = viewModel.incomeCategories
 
     Scaffold(
         topBar = { Header(title = "설정") }
@@ -68,7 +70,7 @@ private fun SettingScreen(
                     onAddClick = { onScreenChange(ScreenType.ADD_PAYMENT) }
                 ) {
                     PaymentMethodCard(
-                        state.paymentMethods,
+                        paymentMethods,
                         onScreenChange = { payment ->
                             viewModel.payment.value = payment
                             onScreenChange(ScreenType.UPDATE_PAYMENT)
@@ -79,7 +81,7 @@ private fun SettingScreen(
                     onAddClick = { onScreenChange(ScreenType.ADD_EXPENSES) }
                 ) {
                     CategoryCard(
-                        state.expensesCategories,
+                        expensesCategories,
                         onScreenChange = { category ->
                             viewModel.category.value = category
                             onScreenChange(ScreenType.UPDATE_EXPENSES)
@@ -90,7 +92,7 @@ private fun SettingScreen(
                     onAddClick = { onScreenChange(ScreenType.ADD_INCOME) }
                 ) {
                     CategoryCard(
-                        state.incomeCategories,
+                        incomeCategories,
                         onScreenChange = { category ->
                             viewModel.category.value = category
                             onScreenChange(ScreenType.UPDATE_INCOME)
