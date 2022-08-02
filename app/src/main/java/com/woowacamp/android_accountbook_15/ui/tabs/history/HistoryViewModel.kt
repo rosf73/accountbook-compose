@@ -2,7 +2,9 @@ package com.woowacamp.android_accountbook_15.ui.tabs.history
 
 import androidx.lifecycle.ViewModel
 import com.woowacamp.android_accountbook_15.data.AccountBookRepository
+import com.woowacamp.android_accountbook_15.data.model.Category
 import com.woowacamp.android_accountbook_15.data.model.History
+import com.woowacamp.android_accountbook_15.data.model.PaymentMethod
 import com.woowacamp.android_accountbook_15.utils.createToast
 import com.woowacamp.android_accountbook_15.utils.getTodayMonth
 import com.woowacamp.android_accountbook_15.utils.getTodayYear
@@ -25,6 +27,8 @@ class HistoryViewModel @Inject constructor(
     private val _currentMonth = MutableStateFlow(getTodayMonth())
     val currentMonth: StateFlow<Int> get() = _currentMonth
 
+    val history = MutableStateFlow<History?>(null)
+
     init {
         _monthlyHistories.value = repository.getMonthlyHistories(currentYear.value, currentMonth.value).getOrThrow()
     }
@@ -45,5 +49,25 @@ class HistoryViewModel @Inject constructor(
             return
         }
         _monthlyHistories.value = repository.getMonthlyHistories(currentYear.value, currentMonth.value).getOrThrow()
+    }
+
+    fun updateHistory(newHistory: History) {
+        history.value?.let {
+            val res = repository.updateHistory(
+                it.id,
+                newHistory.content,
+                newHistory.amount,
+                newHistory.date,
+                newHistory.payment,
+                newHistory.category
+            ).getOrNull()
+
+            if (res == null) {
+                createToast("등록에 실패하였습니다")
+                return
+            }
+            _monthlyHistories.value = repository.getMonthlyHistories(currentYear.value, currentMonth.value).getOrThrow()
+        }
+        history.value = null
     }
 }
