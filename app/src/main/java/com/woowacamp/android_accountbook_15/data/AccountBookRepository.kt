@@ -3,7 +3,6 @@ package com.woowacamp.android_accountbook_15.data
 import com.woowacamp.android_accountbook_15.data.model.Category
 import com.woowacamp.android_accountbook_15.data.model.History
 import com.woowacamp.android_accountbook_15.data.model.PaymentMethod
-import com.woowacamp.android_accountbook_15.data.utils.AccountBookDataSource
 import javax.inject.Inject
 
 class AccountBookRepository @Inject constructor(
