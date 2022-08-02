@@ -20,7 +20,7 @@ import com.chargemap.compose.numberpicker.NumberPicker
 import com.woowacamp.android_accountbook_15.ui.theme.Purple
 import com.woowacamp.android_accountbook_15.ui.theme.White
 import com.woowacamp.android_accountbook_15.ui.theme.Yellow
-import com.woowacamp.android_accountbook_15.utils.getDaysInMonth
+import com.woowacamp.android_accountbook_15.utils.getDayCount
 import com.woowacamp.android_accountbook_15.utils.getTodayYear
 
 
@@ -65,7 +65,7 @@ fun DatePicker(
                             dividersColor = Purple,
                             value = date,
                             onValueChange = { selectedDate -> date = selectedDate },
-                            range = 1..getDaysInMonth(year, month))
+                            range = 1..getDayCount(year, month))
                     }
                 }
                 Button(

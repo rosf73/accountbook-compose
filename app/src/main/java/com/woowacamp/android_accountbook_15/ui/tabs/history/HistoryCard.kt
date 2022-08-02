@@ -39,7 +39,7 @@ fun HistoryCard(
         ) {
             Text(modifier = Modifier.weight(1f), text = date, color = LightPurple)
             Text(text = "수입  ${list.sumOf { if (it.type == 1) it.amount else 0}.toMoneyString()}" +
-                    "  지출  ${list.sumOf { if (it.type == 0) it.amount else 0 }.toMoneyString()}",
+                    "  지출  ${(list.sumOf { if (it.type == 0) it.amount else 0 }*-1).toMoneyString()}",
                 fontSize = 10.sp, color = LightPurple)
         }
 
@@ -81,9 +81,10 @@ private fun HistoryItem(
         Spacer(modifier = Modifier.size(8.dp))
 
         Row {
+            val amount = if (history.type == 0) "-"+history.amount.toMoneyString() else history.amount.toMoneyString()
             Text(text = history.content ?: "", fontSize = 14.sp, fontWeight = FontWeight(700))
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = "${history.amount.toMoneyString()}원", fontSize = 14.sp, color = if (history.type == 0) Red else Blue)
+            Text(text = "${amount}원", fontSize = 14.sp, color = if (history.type == 0) Red else Blue)
         }
     }
 }
