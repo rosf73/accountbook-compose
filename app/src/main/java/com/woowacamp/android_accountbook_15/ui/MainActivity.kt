@@ -44,11 +44,11 @@ class MainActivity : AppCompatActivity() {
         }.attach()
     }
 
-    override fun onBackPressed() {
-        if (binding.viewpagerMain.currentItem > 0) {
-            binding.viewpagerMain.currentItem = 0
-        } else {
-            super.onBackPressed()
+    fun backToMain() {
+        _binding?.let {
+            if (binding.viewpagerMain.currentItem > 0) {
+                binding.viewpagerMain.currentItem = 0
+            }
         }
     }
 }
