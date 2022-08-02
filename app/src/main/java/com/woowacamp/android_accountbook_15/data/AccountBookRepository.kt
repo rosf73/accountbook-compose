@@ -53,4 +53,7 @@ class AccountBookRepository @Inject constructor(
 
     fun updateCategory(id: Long, name: String, color: Long): Result<Int>
             = runCatching { dataSource.updateCategory(id, name, color) }
+
+    fun removeHistories(ids: List<Long>)
+            = runCatching { dataSource.removeHistories(ids) }
 }

@@ -1,5 +1,6 @@
 package com.woowacamp.android_accountbook_15.ui.tabs.history
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.woowacamp.android_accountbook_15.data.AccountBookRepository
 import com.woowacamp.android_accountbook_15.data.model.Category
@@ -28,6 +29,10 @@ class HistoryViewModel @Inject constructor(
     val currentMonth: StateFlow<Int> get() = _currentMonth
 
     val history = MutableStateFlow<History?>(null)
+
+//    private val _selectedHistories = MutableStateFlow<MutableList<Long>>(mutableListOf())
+//    val selectedHistories: StateFlow<List<Long>> get() = _selectedHistories
+    val selectedHistories = mutableStateListOf<Long>()
 
     init {
         _monthlyHistories.value = repository.getMonthlyHistories(currentYear.value, currentMonth.value).getOrThrow()
@@ -70,5 +75,28 @@ class HistoryViewModel @Inject constructor(
             _monthlyHistories.value = repository.getMonthlyHistories(currentYear.value, currentMonth.value).getOrThrow()
         }
         history.value = null
+    }
+
+    fun removeHistories() {
+        val res = repository.removeHistories(selectedHistories).getOrNull()
+
+        if (res == null) {
+            createToast("삭제에 실패하였습니다")
+            return
+        }
+        _monthlyHistories.value = repository.getMonthlyHistories(currentYear.value, currentMonth.value).getOrThrow()
+        removeAllSelectedHistories()
+    }
+
+    fun selectHistory(id: Long) {
+        selectedHistories.add(id)
+    }
+
+    fun deselectHistory(id: Long) {
+        selectedHistories.remove(id)
+    }
+
+    fun removeAllSelectedHistories() {
+        selectedHistories.clear()
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -260,14 +261,14 @@ fun CheckableItem(
                     onLongPress()
                 },
             )
-            .background(if (isSelectMode) White else OffWhite)
     ) {
         if (isSelectMode)
             Icon(
                 painter =
                 if (isChecked) painterResource(id = R.drawable.ic_checkedbox)
                 else painterResource(id = R.drawable.ic_checkbox),
-                contentDescription = "체크 박스")
+                contentDescription = "체크 박스",
+                tint= Color.Unspecified)
 
         Composition()
     }
