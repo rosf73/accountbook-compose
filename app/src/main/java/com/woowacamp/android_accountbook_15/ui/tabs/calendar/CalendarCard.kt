@@ -56,7 +56,7 @@ fun CalendarCard(
                         isTodayMonth = curM == month,
                         date = days[i],
                         totalIncome, totalExpenses)
-                    Divider(color = LightPurple, modifier = Modifier.height(80.dp).width(1.dp))
+                    if ((i+1)%7>0) Divider(color = LightPurple, modifier = Modifier.height(80.dp).width(1.dp))
 
                     i++
                     if (i >= days.size) break
