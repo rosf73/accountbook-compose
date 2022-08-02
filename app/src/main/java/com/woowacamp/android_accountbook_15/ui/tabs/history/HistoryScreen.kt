@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.woowacamp.android_accountbook_15.R
 import com.woowacamp.android_accountbook_15.data.model.History
+import com.woowacamp.android_accountbook_15.ui.components.DatePicker
 import com.woowacamp.android_accountbook_15.ui.components.FloatingButton
 import com.woowacamp.android_accountbook_15.ui.components.Header
 import com.woowacamp.android_accountbook_15.ui.components.PurpleCheckBox
@@ -47,10 +48,13 @@ fun HistoryScreen(
     val year by viewModel.currentYear.collectAsState()
     val month by viewModel.currentMonth.collectAsState()
 
+    val (isDateOpened, setDateOpened) = remember { mutableStateOf(false) }
+    val (date, setDate) = remember { mutableStateOf(getMonthAndYearKorean(year, month)) }
+
     when (screenState) {
         ScreenType.HISTORY -> HistoryScreen(
-            year,
-            title = getMonthAndYearKorean(year, month),
+            year, month,
+            title = date,
             histories = viewModel.monthlyHistories.collectAsState().value,
             isSelectedIncome = isCheckedIncome,
             isSelectedExpenses = isCheckedExpenses,
@@ -68,7 +72,10 @@ fun HistoryScreen(
                 )
             },
             onIncomeClick = setIsCheckedIncome,
-            onExpensesClick = setIsCheckedExpenses
+            onExpensesClick = setIsCheckedExpenses,
+            isDateOpened = isDateOpened,
+            setDateOpened = setDateOpened,
+            onDateChanged = setDate
         )
         ScreenType.ADD_HISTORY -> EditScreen(
             settingViewModel,
@@ -94,6 +101,7 @@ fun HistoryScreen(
 @Composable
 private fun HistoryScreen(
     year: Int,
+    month: Int,
     title: String,
     histories: Map<String, List<History>>,
     isSelectedIncome: Boolean,
@@ -102,7 +110,10 @@ private fun HistoryScreen(
     onLeftClick: () -> Unit,
     onRightClick: () -> Unit,
     onIncomeClick: (Boolean) -> Unit,
-    onExpensesClick: (Boolean) -> Unit
+    onExpensesClick: (Boolean) -> Unit,
+    isDateOpened: Boolean,
+    setDateOpened: (Boolean) -> Unit,
+    onDateChanged: (String) -> Unit
 ) {
     val totalIncome = histories.values.sumOf { it.sumOf { history -> if (history.type == 1) history.amount else 0 } }
     val totalExpenses = histories.values.sumOf { it.sumOf { history -> if (history.type == 0) history.amount else 0 } }
@@ -111,6 +122,7 @@ private fun HistoryScreen(
         topBar = {
             Header(
                 title = title,
+                onTitleClick = { setDateOpened(true) },
                 leftIcon = painterResource(R.drawable.ic_left),
                 onLeftClick = onLeftClick,
                 rightIcon = painterResource(R.drawable.ic_right),
@@ -158,6 +170,14 @@ private fun HistoryScreen(
                     Text(modifier = Modifier.fillMaxWidth(), text = "내역이 없습니다", fontSize = 12.sp, color = Grey1, textAlign = TextAlign.Center)
                 }
         }
+    }
+
+    if (isDateOpened) {
+        DatePicker(
+            initYear = year,
+            initMonth = month,
+            onOpen = setDateOpened,
+            onTextChanged = onDateChanged)
     }
 }
 

@@ -23,6 +23,7 @@ import com.woowacamp.android_accountbook_15.ui.theme.White
 import com.woowacamp.android_accountbook_15.ui.theme.Yellow
 import com.woowacamp.android_accountbook_15.utils.getDayKorean
 import com.woowacamp.android_accountbook_15.utils.getDaysInMonth
+import com.woowacamp.android_accountbook_15.utils.getMonthAndYearKorean
 import com.woowacamp.android_accountbook_15.utils.getTodayYear
 
 
@@ -75,7 +76,10 @@ fun DatePicker(
                         .align(CenterHorizontally)
                         .width(200.dp),
                     onClick = {
-                        onTextChanged(getDayKorean(year, month, date))
+                        if (date != 0)
+                            onTextChanged(getDayKorean(year, month, date))
+                        else
+                            onTextChanged(getMonthAndYearKorean(year, month))
                         onOpen(false)
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = Yellow)
