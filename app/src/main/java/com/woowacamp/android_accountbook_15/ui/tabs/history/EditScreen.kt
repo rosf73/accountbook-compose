@@ -34,6 +34,7 @@ import com.woowacamp.android_accountbook_15.utils.*
 
 @Composable
 fun EditScreen(
+    title: String,
     viewModel: SettingViewModel,
     isCheckedIncome: Boolean,
     history: History? = null,
@@ -59,7 +60,7 @@ fun EditScreen(
     Scaffold(
         topBar = {
             Header(
-                title = "내역 등록",
+                title = title,
                 leftIcon = painterResource(R.drawable.ic_back),
                 onLeftClick = onBackClick
             )

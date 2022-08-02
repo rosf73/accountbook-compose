@@ -17,10 +17,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.woowacamp.android_accountbook_15.R
-import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
-import com.woowacamp.android_accountbook_15.ui.theme.Purple
-import com.woowacamp.android_accountbook_15.ui.theme.Purple04
-import com.woowacamp.android_accountbook_15.ui.theme.White
+import com.woowacamp.android_accountbook_15.ui.theme.*
 import com.woowacamp.android_accountbook_15.utils.getDayKorean
 import com.woowacamp.android_accountbook_15.utils.toMoneyInt
 import com.woowacamp.android_accountbook_15.utils.toMoneyString
@@ -260,6 +257,7 @@ fun CheckableItem(
                     onLongPress()
                 },
             )
+            .background(if (isSelectMode) White else OffWhite)
     ) {
         if (isSelectMode)
             Icon(

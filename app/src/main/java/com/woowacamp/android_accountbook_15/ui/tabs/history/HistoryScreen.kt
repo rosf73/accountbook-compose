@@ -38,6 +38,8 @@ fun HistoryScreen(
     settingViewModel: SettingViewModel = hiltViewModel()
 ) {
     val (screenState, setScreenState) = remember { mutableStateOf(ScreenType.HISTORY) }
+    val (selectMode, setSelectMode) = remember { mutableStateOf(false) }
+
     val (isCheckedIncome, setIsCheckedIncome) = remember { mutableStateOf(true) }
     val (isCheckedExpenses, setIsCheckedExpenses) = remember { mutableStateOf(true) }
 
@@ -72,9 +74,16 @@ fun HistoryScreen(
             setDateOpened = setDateOpened,
             onDateChanged = { newY, newM ->
                 viewModel.setCurrentDate(newY, newM)
+            },
+            selectMode = selectMode,
+            onSelect = setSelectMode,
+            onUpdateClick = { history ->
+                viewModel.history.value = history
+                setScreenState(ScreenType.UPDATE_HISTORY)
             }
         )
         ScreenType.ADD_HISTORY -> EditScreen(
+            title = "내역 등록",
             settingViewModel,
             isCheckedIncome = isCheckedIncome,
             onAddClick = {
@@ -84,10 +93,12 @@ fun HistoryScreen(
             onBackClick = { setScreenState(ScreenType.HISTORY) }
         )
         ScreenType.UPDATE_HISTORY -> EditScreen(
+            title = "내역 수정",
             settingViewModel,
             isCheckedIncome = isCheckedIncome,
+            history = viewModel.history.collectAsState().value,
             onAddClick = {
-                viewModel.insertHistory(it)
+                viewModel.updateHistory(it)
                 setScreenState(ScreenType.HISTORY)
             },
             onBackClick = { setScreenState(ScreenType.HISTORY) }
@@ -110,7 +121,10 @@ private fun HistoryScreen(
     onExpensesClick: (Boolean) -> Unit,
     isDateOpened: Boolean,
     setDateOpened: (Boolean) -> Unit,
-    onDateChanged: (Int, Int) -> Unit
+    onDateChanged: (Int, Int) -> Unit,
+    selectMode: Boolean,
+    onSelect: (Boolean) -> Unit,
+    onUpdateClick: (History) -> Unit
 ) {
     val totalIncome = histories.values.sumOf { it.sumOf { history -> if (history.type == 1) history.amount else 0 } }
     val totalExpenses = histories.values.sumOf { it.sumOf { history -> if (history.type == 0) history.amount else 0 } }
@@ -154,7 +168,10 @@ private fun HistoryScreen(
                                     isSelectedIncome = isSelectedIncome,
                                     isSelectedExpenses = isSelectedExpenses,
                                     date = getDayKoreanWithoutYear(year, splitDate[0], splitDate[1]),
-                                    list = value)
+                                    list = value,
+                                    selectMode = selectMode,
+                                    onSelect = onSelect,
+                                    onUpdateClick = onUpdateClick)
                             }
                         Spacer(modifier = Modifier.size(88.dp))
                     }
