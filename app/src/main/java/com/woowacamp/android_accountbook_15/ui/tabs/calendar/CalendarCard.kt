@@ -53,6 +53,7 @@ fun CalendarCard(
                     CalendarItem(
                         modifier = Modifier.weight(1f).height(80.dp),
                         isToday = isToday(year, curM, days[i]),
+                        isTodayMonth = curM == month,
                         date = days[i],
                         totalIncome, totalExpenses)
                     Divider(color = LightPurple, modifier = Modifier.height(80.dp).width(1.dp))
@@ -70,6 +71,7 @@ fun CalendarCard(
 fun CalendarItem(
     modifier: Modifier = Modifier,
     isToday: Boolean,
+    isTodayMonth: Boolean,
     date: Int,
     totalIncome: Int,
     totalExpenses: Int
@@ -84,6 +86,10 @@ fun CalendarItem(
             if (totalExpenses != 0) Text(text = "-$totalExpenses", fontSize = 8.sp, color = Red)
             if (totalIncome != 0 || totalExpenses != 0) Text(text = (totalIncome-totalExpenses).toString(), fontSize = 8.sp)
         }
-        Text(modifier = Modifier.align(Alignment.BottomEnd), text = date.toString(), fontSize = 8.sp)
+        Text(
+            modifier = Modifier.align(Alignment.BottomEnd),
+            text = date.toString(),
+            fontSize = 8.sp,
+            color = if (isTodayMonth) Purple else LightPurple)
     }
 }
