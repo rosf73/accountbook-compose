@@ -1,5 +1,6 @@
 package com.woowacamp.android_accountbook_15.ui.tabs.setting
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -9,12 +10,16 @@ import com.woowacamp.android_accountbook_15.ui.theme.*
 
 @Composable
 fun SettingScreen(
-    viewModel: SettingViewModel = hiltViewModel()
+    viewModel: SettingViewModel = hiltViewModel(),
+    backToMain: () -> Unit
 ) {
     val (screenState, setScreenState) = remember { mutableStateOf(ScreenType.SETTING) }
 
     when (screenState) {
-        ScreenType.SETTING -> SettingScreen(viewModel) { type -> setScreenState(type) }
+        ScreenType.SETTING -> SettingScreen(
+            viewModel,
+            onScreenChange = setScreenState,
+            backToMain = backToMain)
         ScreenType.ADD_PAYMENT -> EditScreen(
             title = "결제 수단 추가",
             onAddClick = { text, _ -> viewModel.insertPaymentMethod(text) },
@@ -54,7 +59,8 @@ fun SettingScreen(
 @Composable
 private fun SettingScreen(
     viewModel: SettingViewModel,
-    onScreenChange: (ScreenType) -> Unit
+    onScreenChange: (ScreenType) -> Unit,
+    backToMain: () -> Unit
 ) {
     val paymentMethods = viewModel.paymentMethods
     val expensesCategories = viewModel.expensesCategories
@@ -63,6 +69,10 @@ private fun SettingScreen(
     Scaffold(
         topBar = { Header(title = "설정") }
     ) {
+        BackHandler {
+            backToMain()
+        }
+
         LazyColumn {
             item {
                 SettingCard(
