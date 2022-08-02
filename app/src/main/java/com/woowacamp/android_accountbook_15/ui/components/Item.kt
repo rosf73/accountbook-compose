@@ -119,8 +119,11 @@ fun SpinnerItem(
     textList: List<String>,
     requestToOpen: Boolean = false,
     onOpen: (Boolean) -> Unit,
-    onTextChanged: (Long, String) -> Unit
+    onTextChanged: (Long, String) -> Unit,
+    onAddClick: (String) -> Unit
 ) {
+    var addText by remember { mutableStateOf("") }
+
     Row(modifier = Modifier
         .fillMaxWidth()
         .padding(0.dp, 8.dp)) {
@@ -171,6 +174,35 @@ fun SpinnerItem(
                         }
                     ) {
                         Text(text, modifier = Modifier.wrapContentWidth())
+                    }
+                }
+                DropdownMenuItem(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { }
+                ) {
+                    BasicTextField(
+                        modifier = Modifier.weight(1f),
+                        value = addText,
+                        onValueChange = { addText = it },
+                        singleLine = true,
+                        textStyle = TextStyle(color = Purple),
+                        decorationBox = { innerTextField ->
+                            Row(modifier = Modifier.fillMaxWidth()) {
+                                if (addText.isEmpty()) {
+                                    Text(
+                                        text = "추가하기",
+                                        color = Purple)
+                                }
+                            }
+                            innerTextField()
+                        })
+                    IconButton(
+                        modifier = Modifier.then(Modifier
+                            .size(14.dp)),
+                        onClick = { onAddClick(addText); addText = "" },
+                        enabled = addText.isNotBlank()
+                    ) {
+                        Icon(painter = painterResource(R.drawable.ic_plus), contentDescription = "추가하기", tint = Purple)
                     }
                 }
             }
