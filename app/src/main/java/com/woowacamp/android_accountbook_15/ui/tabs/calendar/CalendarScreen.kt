@@ -1,14 +1,28 @@
 package com.woowacamp.android_accountbook_15.ui.tabs.calendar
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.woowacamp.android_accountbook_15.R
 import com.woowacamp.android_accountbook_15.ui.components.DatePicker
 import com.woowacamp.android_accountbook_15.ui.components.Header
 import com.woowacamp.android_accountbook_15.ui.tabs.history.HistoryViewModel
+import com.woowacamp.android_accountbook_15.ui.theme.Blue
+import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
+import com.woowacamp.android_accountbook_15.ui.theme.Purple
+import com.woowacamp.android_accountbook_15.ui.theme.Red
+import com.woowacamp.android_accountbook_15.utils.getDaysOfMonth
 import com.woowacamp.android_accountbook_15.utils.getMonthAndYearKorean
 
 @Composable
@@ -44,6 +58,18 @@ fun CalendarScreen(
     ) {
         BackHandler {
             backToMain()
+        }
+
+        Column {
+            CalendarCard(
+                Modifier.fillMaxWidth().weight(1f),
+                getDaysOfMonth(year, month))
+
+            StatisticsItem(label = "수입", amount = 0, amountColor = Blue)
+            Divider(modifier = Modifier.padding(16.dp, 0.dp), color = LightPurple, thickness = 1.dp)
+            StatisticsItem(label = "지출", amount = 0, amountColor = Red)
+            Divider(modifier = Modifier.padding(16.dp, 0.dp), color = LightPurple, thickness = 1.dp)
+            StatisticsItem(label = "총합", amount = 0, amountColor = Purple)
         }
     }
 
