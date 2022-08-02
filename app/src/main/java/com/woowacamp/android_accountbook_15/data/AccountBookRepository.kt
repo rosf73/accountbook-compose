@@ -37,6 +37,17 @@ class AccountBookRepository @Inject constructor(
     fun insertCategory(type: Int, name: String, color: Long): Result<Long>
         = runCatching { dataSource.addCategory(type, name, color) }
 
+    fun updateHistory(
+        id: Long,
+        type: Int,
+        content: String? = null,
+        amount: Int? = null,
+        date: String? = null,
+        paymentMethod: PaymentMethod? = null,
+        category: Category? = null
+    ): Result<Int>
+            = runCatching { dataSource.updateHistory(id, type, content, amount, date, paymentMethod, category) }
+
     fun updatePaymentMethod(id: Long, name: String): Result<Int>
             = runCatching { dataSource.updatePaymentMethod(id, name) }
 

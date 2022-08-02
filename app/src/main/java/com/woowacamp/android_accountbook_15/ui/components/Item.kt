@@ -17,10 +17,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.woowacamp.android_accountbook_15.R
-import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
-import com.woowacamp.android_accountbook_15.ui.theme.Purple
-import com.woowacamp.android_accountbook_15.ui.theme.Purple04
-import com.woowacamp.android_accountbook_15.ui.theme.White
+import com.woowacamp.android_accountbook_15.ui.theme.*
 import com.woowacamp.android_accountbook_15.utils.getDayKorean
 import com.woowacamp.android_accountbook_15.utils.toMoneyInt
 import com.woowacamp.android_accountbook_15.utils.toMoneyString
@@ -91,8 +88,11 @@ fun InputItem(
             onValueChange = {
                 if (!numeric)
                     onTextChanged(it)
-                else if (it.length < 12)
+                else if (it.isEmpty())
+                    onTextChanged("0")
+                else if (it.length < 12) {
                     onTextChanged(it.toMoneyInt().toMoneyString())
+                }
             },
             singleLine = true,
             textStyle = TextStyle(color = Purple),
@@ -260,6 +260,7 @@ fun CheckableItem(
                     onLongPress()
                 },
             )
+            .background(if (isSelectMode) White else OffWhite)
     ) {
         if (isSelectMode)
             Icon(

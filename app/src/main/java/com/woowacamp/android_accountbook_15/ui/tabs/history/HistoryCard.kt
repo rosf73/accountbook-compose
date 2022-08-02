@@ -27,7 +27,10 @@ fun HistoryCard(
     isSelectedIncome: Boolean,
     isSelectedExpenses: Boolean,
     date: String,
-    list: List<History>
+    list: List<History>,
+    selectMode: Boolean,
+    onSelect: (Boolean) -> Unit,
+    onUpdateClick: (History) -> Unit,
 ) {
     Column(
         modifier = modifier.padding(16.dp, 8.dp)
@@ -52,10 +55,10 @@ fun HistoryCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(0.dp, 8.dp),
-                        isSelectMode = false,
+                        isSelectMode = selectMode,
                         onPress = { /*TODO*/ },
-                        onLongPress = { /*TODO*/ },
-                        onUpdateClick = { /*TODO*/ }) {
+                        onLongPress = { onSelect(true) },
+                        onUpdateClick = { onUpdateClick(history) }) {
                         HistoryItem(history)
                     }
                 }
