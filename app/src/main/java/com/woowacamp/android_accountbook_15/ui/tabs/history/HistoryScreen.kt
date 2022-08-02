@@ -112,9 +112,9 @@ private fun HistoryScreen(
             Header(
                 title = title,
                 leftIcon = painterResource(R.drawable.ic_left),
-                leftCallback = onLeftClick,
+                onLeftClick = onLeftClick,
                 rightIcon = painterResource(R.drawable.ic_right),
-                rightCallback = onRightClick)
+                onRightClick = onRightClick)
         },
         floatingActionButton = {
             FloatingButton(onClick = onAddClick)

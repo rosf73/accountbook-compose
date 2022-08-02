@@ -64,7 +64,7 @@ fun EditScreen(
             Header(
                 title = "내역 등록",
                 leftIcon = painterResource(R.drawable.ic_back),
-                leftCallback = onBackClick
+                onLeftClick = onBackClick
             )
         }
     ) {

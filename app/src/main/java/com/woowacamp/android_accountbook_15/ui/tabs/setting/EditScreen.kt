@@ -39,7 +39,7 @@ fun EditScreen(
             Header(
                 title = title,
                 leftIcon = painterResource(R.drawable.ic_back),
-                leftCallback = onBackClick
+                onLeftClick = onBackClick
             )
         }
     ) {
