@@ -12,6 +12,18 @@ fun getMonthAndYearKorean(year: Int, month: Int): String = "${year}년 ${if (mon
 
 fun getMonthAndYearHyphen(year: Int, month: Int): String = "$year-${if (month < 10) "0$month" else month}"
 
+fun changeKoreanToHyphen(dayKorean: String): String {
+    val splitDate = dayKorean.split(". ")
+
+    return "${splitDate[0]}-${splitDate[1]}-${splitDate[2].split(" ")[0]}"
+}
+
+fun changeHyphenToKorean(dayHyphen: String): String {
+    val splitDate = dayHyphen.split("-").map { it.toInt() }
+
+    return getDayKorean(splitDate[0], splitDate[1], splitDate[2])
+}
+
 /**
  * 오늘 날짜 얻기
  */
@@ -51,7 +63,36 @@ fun getDayKoreanWithoutYear(year: Int, month: Int, date: Int): String {
     return SimpleDateFormat("MM월 dd일 $day", Locale.KOREA).format(cal.time)
 }
 
-fun getDaysInMonth(year: Int, month: Int): Int
+private fun getDay(calendar: Calendar): String
+    = when (calendar.get(Calendar.DAY_OF_WEEK)) {
+        1 -> "일"
+        2 -> "월"
+        3 -> "화"
+        4 -> "수"
+        5 -> "목"
+        6 -> "금"
+        else -> "토"
+    }
+
+private fun getDay(year: Int, month: Int, date: Int): String {
+    val cal = Calendar.getInstance()
+    cal.set(year, month-1, date)
+
+    return when (cal.get(Calendar.DAY_OF_WEEK)) {
+        1 -> "일"
+        2 -> "월"
+        3 -> "화"
+        4 -> "수"
+        5 -> "목"
+        6 -> "금"
+        else -> "토"
+    }
+}
+
+/**
+ * 월별 일 수 얻기
+ */
+fun getDayCount(year: Int, month: Int): Int
     = when (month-1) {
         Calendar.JANUARY, Calendar.MARCH, Calendar.MAY, Calendar.JULY, Calendar.AUGUST, Calendar.OCTOBER, Calendar.DECEMBER -> 31
         Calendar.APRIL, Calendar.JUNE, Calendar.SEPTEMBER, Calendar.NOVEMBER -> 30
@@ -59,25 +100,17 @@ fun getDaysInMonth(year: Int, month: Int): Int
         else -> throw IllegalArgumentException("Invalid Month")
     }
 
-fun changeKoreanToHyphen(dayKorean: String): String {
-    val splitDate = dayKorean.split(". ")
+fun getDaysOfMonth(year: Int, month: Int): List<Int> {
+    val res = mutableListOf<Int>()
+    for (i in getDayCount(year, month) downTo 1)
+        res.add(i) // ex) [31, 30, 29, ..., 1]
 
-    return "${splitDate[0]}-${splitDate[1]}-${splitDate[2].split(" ")[0]}"
-}
+    var prevMonthDayCount = getDayCount(year, month-1)
+    if (getDay(year, month, res.last()) != "일") // 이번 달의 첫째 날 요일 확인!
+        while (getDay(year, month-1, res.last()) != "일") { // 첫 주의 시작은 일요일로!
+            res.add(prevMonthDayCount)
+            prevMonthDayCount--
+        }
 
-fun changeHyphenToKorean(dayHyphen: String): String {
-    val splitDate = dayHyphen.split("-").map { it.toInt() }
-
-    return getDayKorean(splitDate[0], splitDate[1], splitDate[2])
-}
-
-private fun getDay(calendar: Calendar): String
-        = when (calendar.get(Calendar.DAY_OF_WEEK)) {
-    1 -> "일"
-    2 -> "월"
-    3 -> "화"
-    4 -> "수"
-    5 -> "목"
-    6 -> "금"
-    else -> "토"
+    return res.reversed() // ex) [29, 30, 1, 2, ..., 30, 31]
 }
