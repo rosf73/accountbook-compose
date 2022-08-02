@@ -45,12 +45,11 @@ fun HistoryScreen(
     val month by viewModel.currentMonth.collectAsState()
 
     val (isDateOpened, setDateOpened) = remember { mutableStateOf(false) }
-    val (date, setDate) = remember { mutableStateOf(getMonthAndYearKorean(year, month)) }
 
     when (screenState) {
         ScreenType.HISTORY -> HistoryScreen(
             year, month,
-            title = date,
+            title = getMonthAndYearKorean(year, month),
             histories = viewModel.monthlyHistories.collectAsState().value,
             isSelectedIncome = isCheckedIncome,
             isSelectedExpenses = isCheckedExpenses,
@@ -71,7 +70,9 @@ fun HistoryScreen(
             onExpensesClick = setIsCheckedExpenses,
             isDateOpened = isDateOpened,
             setDateOpened = setDateOpened,
-            onDateChanged = setDate
+            onDateChanged = { newY, newM ->
+                viewModel.setCurrentDate(newY, newM)
+            }
         )
         ScreenType.ADD_HISTORY -> EditScreen(
             settingViewModel,
@@ -109,7 +110,7 @@ private fun HistoryScreen(
     onExpensesClick: (Boolean) -> Unit,
     isDateOpened: Boolean,
     setDateOpened: (Boolean) -> Unit,
-    onDateChanged: (String) -> Unit
+    onDateChanged: (Int, Int) -> Unit
 ) {
     val totalIncome = histories.values.sumOf { it.sumOf { history -> if (history.type == 1) history.amount else 0 } }
     val totalExpenses = histories.values.sumOf { it.sumOf { history -> if (history.type == 0) history.amount else 0 } }
@@ -173,7 +174,7 @@ private fun HistoryScreen(
             initYear = year,
             initMonth = month,
             onOpen = setDateOpened,
-            onDateChanged = { y, m, _ -> onDateChanged(getMonthAndYearKorean(y, m)) })
+            onDateChanged = { y, m, _ -> onDateChanged(y, m) })
     }
 }
 
