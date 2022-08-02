@@ -1,4 +1,4 @@
-package com.woowacamp.android_accountbook_15.data.utils
+package com.woowacamp.android_accountbook_15.data
 
 import com.woowacamp.android_accountbook_15.data.model.Category
 import com.woowacamp.android_accountbook_15.data.model.History
