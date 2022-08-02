@@ -9,22 +9,22 @@ import com.woowacamp.android_accountbook_15.data.utils.*
 import com.woowacamp.android_accountbook_15.utils.getMonthAndYearHyphen
 import javax.inject.Inject
 
-class AccountBookDataSource @Inject constructor(
+class AccountBookDataSourceImpl @Inject constructor(
     dbHelper: AccountBookHelper
-) {
+): AccountBookDataSource {
     
     private val writableDB = dbHelper.writableDatabase
     private val readableDB = dbHelper.readableDatabase
     
-    fun addHistory(
+    override fun createHistory(
         type: Int,
-        content: String? = null,
+        content: String?,
         date: String,
         amount: Int,
-        paymentId: Long? = null,
-        categoryId: Long? = null
-    ): Long {
-        return writableDB.run {
+        paymentId: Long?,
+        categoryId: Long?
+    ): Long
+        = writableDB.run {
             val values = ContentValues().apply {
                 put(HistoryColumns.COLUMN_NAME_TYPE, type)
                 content?.let { put(HistoryColumns.COLUMN_NAME_CONTENT, content) }
@@ -36,56 +36,34 @@ class AccountBookDataSource @Inject constructor(
 
             insert(HistoryColumns.TABLE_NAME, null, values)
         }
-    }
 
-    fun removeHistories(
-        ids: List<Long>
-    ): Int {
-        return writableDB.run {
-            var selection = "${BaseColumns._ID} = ?"
-            val selectionArgs = mutableListOf(ids[0].toString())
-
-            for (i in 1 until ids.size) {
-                selection += " OR ${BaseColumns._ID} = ?"
-                selectionArgs.add(ids[i].toString())
-            }
-
-            delete(HistoryColumns.TABLE_NAME, selection, selectionArgs.toTypedArray())
-        }
-    }
-
-    fun updateHistory(
-        id: Long,
-        type: Int,
-        content: String? = null,
-        amount: Int? = null,
-        date: String? = null,
-        paymentMethod: PaymentMethod? = null,
-        category: Category? = null
-    ): Int {
-        return writableDB.run {
+    override fun createPaymentMethod(
+        name: String
+    ): Long
+        = writableDB.run {
             val values = ContentValues().apply {
-                put(HistoryColumns.COLUMN_NAME_TYPE, type)
-                content?.let { put(HistoryColumns.COLUMN_NAME_CONTENT, content) }
-                amount?.let { put(HistoryColumns.COLUMN_NAME_AMOUNT, amount) }
-                date?.let { put(HistoryColumns.COLUMN_NAME_DATE, date) }
-                paymentMethod?.let { put(HistoryColumns.COLUMN_NAME_PAYMENT_ID, paymentMethod.id) }
-                category?.let { put(HistoryColumns.COLUMN_NAME_CATEGORY_ID, category.id) }
+                put(PaymentMethodColumns.COLUMN_NAME_NAME, name)
             }
 
-            val selection = "${BaseColumns._ID} LIKE ?"
-            val selectionArgs = arrayOf(id.toString())
-
-            update(
-                HistoryColumns.TABLE_NAME,
-                values,
-                selection,
-                selectionArgs
-            )
+            insertOrThrow(PaymentMethodColumns.TABLE_NAME, null, values)
         }
-    }
 
-    fun getAllHistory(
+    override fun createCategory(
+        type: Int,
+        name: String,
+        color: Long
+    ): Long
+        = writableDB.run {
+            val values = ContentValues().apply {
+                put(CategoryColumns.COLUMN_NAME_TYPE, type)
+                put(CategoryColumns.COLUMN_NAME_NAME, name)
+                put(CategoryColumns.COLUMN_NAME_COLOR, color)
+            }
+
+            insertOrThrow(CategoryColumns.TABLE_NAME, null, values)
+        }
+
+    override fun readMonthlyHistories(
         year: Int,
         month: Int
     ): Map<String, List<History>>
@@ -107,10 +85,10 @@ class AccountBookDataSource @Inject constructor(
                         val categoryName = getString(getColumnIndexOrThrow("category_name"))
                         val categoryColor = getLong(getColumnIndexOrThrow("category_color"))
                         val history = History(
-                                id, type, content, date, amount,
-                                if (type == 1) null else PaymentMethod(paymentId, paymentName),
-                                if (categoryName == null) null else Category(categoryId, categoryType, categoryName, categoryColor)
-                            )
+                            id, type, content, date, amount,
+                            if (type == 1) null else PaymentMethod(paymentId, paymentName),
+                            if (categoryName == null) null else Category(categoryId, categoryType, categoryName, categoryColor)
+                        )
                         val monthDay = history.date.substring(5)
                         if (containsKey(monthDay)) {
                             get(monthDay)?.add(history)
@@ -122,40 +100,8 @@ class AccountBookDataSource @Inject constructor(
                 cursor.close()
             }
         }
-    
-    fun addPaymentMethod(
-        name: String
-    ): Long 
-        = writableDB.run {
-            val values = ContentValues().apply {
-                put(PaymentMethodColumns.COLUMN_NAME_NAME, name)
-            }
 
-            insertOrThrow(PaymentMethodColumns.TABLE_NAME, null, values)
-        }
-
-    fun updatePaymentMethod(
-        id: Long,
-        name: String
-    ): Int {
-        return writableDB.run {
-            val values = ContentValues().apply {
-                put(PaymentMethodColumns.COLUMN_NAME_NAME, name)
-            }
-
-            val selection = "${BaseColumns._ID} LIKE ?"
-            val selectionArgs = arrayOf(id.toString())
-
-            update(
-                PaymentMethodColumns.TABLE_NAME,
-                values,
-                selection,
-                selectionArgs
-            )
-        }
-    }
-    
-    fun getAllPaymentMethod(): List<PaymentMethod> 
+    override fun readAllPaymentMethod(): List<PaymentMethod>
         = readableDB.run {
             val cursor = query(
                 PaymentMethodColumns.TABLE_NAME,
@@ -181,46 +127,8 @@ class AccountBookDataSource @Inject constructor(
 
             payments
         }
-    
-    fun addCategory(
-        type: Int,
-        name: String,
-        color: Long
-    ): Long
-        = writableDB.run {
-            val values = ContentValues().apply {
-                put(CategoryColumns.COLUMN_NAME_TYPE, type)
-                put(CategoryColumns.COLUMN_NAME_NAME, name)
-                put(CategoryColumns.COLUMN_NAME_COLOR, color)
-            }
-    
-            insertOrThrow(CategoryColumns.TABLE_NAME, null, values)
-        }
 
-    fun updateCategory(
-        id: Long,
-        name: String,
-        color: Long
-    ): Int {
-        return writableDB.run {
-            val values = ContentValues().apply {
-                put(CategoryColumns.COLUMN_NAME_NAME, name)
-                put(CategoryColumns.COLUMN_NAME_COLOR, color)
-            }
-
-            val selection = "${BaseColumns._ID} LIKE ?"
-            val selectionArgs = arrayOf(id.toString())
-
-            update(
-                CategoryColumns.TABLE_NAME,
-                values,
-                selection,
-                selectionArgs
-            )
-        }
-    }
-
-    fun getAllExpensesCategory(): List<Category>
+    override fun readAllExpensesCategory(): List<Category>
         = readableDB.run {
             val cursor = query(
                 CategoryColumns.TABLE_NAME,
@@ -249,8 +157,8 @@ class AccountBookDataSource @Inject constructor(
             categories
         }
 
-    fun getAllIncomeCategory(): List<Category>
-            = readableDB.run {
+    override fun readAllIncomeCategory(): List<Category>
+        = readableDB.run {
             val cursor = query(
                 CategoryColumns.TABLE_NAME,
                 null,
@@ -277,4 +185,103 @@ class AccountBookDataSource @Inject constructor(
 
             categories
         }
+
+    override fun updateHistory(
+        id: Long,
+        type: Int,
+        content: String?,
+        amount: Int?,
+        date: String?,
+        paymentMethod: PaymentMethod?,
+        category: Category?
+    ): Int
+        = writableDB.run {
+            val values = ContentValues().apply {
+                put(HistoryColumns.COLUMN_NAME_TYPE, type)
+                content?.let { put(HistoryColumns.COLUMN_NAME_CONTENT, content) }
+                amount?.let { put(HistoryColumns.COLUMN_NAME_AMOUNT, amount) }
+                date?.let { put(HistoryColumns.COLUMN_NAME_DATE, date) }
+                paymentMethod?.let { put(HistoryColumns.COLUMN_NAME_PAYMENT_ID, paymentMethod.id) }
+                category?.let { put(HistoryColumns.COLUMN_NAME_CATEGORY_ID, category.id) }
+            }
+
+            val selection = "${BaseColumns._ID} LIKE ?"
+            val selectionArgs = arrayOf(id.toString())
+
+            update(
+                HistoryColumns.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs
+            )
+        }
+
+    override fun updatePaymentMethod(
+        id: Long,
+        name: String
+    ): Int
+        = writableDB.run {
+            val values = ContentValues().apply {
+                put(PaymentMethodColumns.COLUMN_NAME_NAME, name)
+            }
+
+            val selection = "${BaseColumns._ID} LIKE ?"
+            val selectionArgs = arrayOf(id.toString())
+
+            update(
+                PaymentMethodColumns.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs
+            )
+        }
+
+    override fun updateCategory(
+        id: Long,
+        name: String,
+        color: Long
+    ): Int
+        = writableDB.run {
+            val values = ContentValues().apply {
+                put(CategoryColumns.COLUMN_NAME_NAME, name)
+                put(CategoryColumns.COLUMN_NAME_COLOR, color)
+            }
+
+            val selection = "${BaseColumns._ID} LIKE ?"
+            val selectionArgs = arrayOf(id.toString())
+
+            update(
+                CategoryColumns.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs
+            )
+        }
+
+    override fun deleteHistories(
+        ids: List<Long>
+    ): Int
+        = writableDB.run {
+            var selection = "${BaseColumns._ID} = ?"
+            val selectionArgs = mutableListOf(ids[0].toString())
+
+            for (i in 1 until ids.size) {
+                selection += " OR ${BaseColumns._ID} = ?"
+                selectionArgs.add(ids[i].toString())
+            }
+
+            delete(HistoryColumns.TABLE_NAME, selection, selectionArgs.toTypedArray())
+        }
+
+    override fun deletePaymentMethods(
+        ids: List<Long>
+    ): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteCategories(
+        ids: List<Long>
+    ): Int {
+        TODO("Not yet implemented")
+    }
 }
