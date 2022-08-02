@@ -30,8 +30,6 @@ class HistoryViewModel @Inject constructor(
 
     val history = MutableStateFlow<History?>(null)
 
-//    private val _selectedHistories = MutableStateFlow<MutableList<Long>>(mutableListOf())
-//    val selectedHistories: StateFlow<List<Long>> get() = _selectedHistories
     val selectedHistories = mutableStateListOf<Long>()
 
     init {
