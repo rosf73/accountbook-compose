@@ -1,5 +1,6 @@
 package com.woowacamp.android_accountbook_15.ui.tabs.setting
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.woowacamp.android_accountbook_15.data.AccountBookRepository
 import com.woowacamp.android_accountbook_15.data.model.Category
@@ -15,17 +16,17 @@ class SettingViewModel @Inject constructor(
     private val repository: AccountBookRepository
 ): ViewModel() {
 
-    private val _state = MutableStateFlow(SettingViewState())
-    val state: StateFlow<SettingViewState> get() = _state
+    val paymentMethods = mutableStateListOf<PaymentMethod>()
+    val expensesCategories = mutableStateListOf<Category>()
+    val incomeCategories = mutableStateListOf<Category>()
 
     val payment = MutableStateFlow<PaymentMethod?>(null)
     val category = MutableStateFlow<Category?>(null)
 
     init {
-        val paymentMethods = repository.getAllPaymentMethod().getOrThrow()
-        val expensesCategories = repository.getAllExpensesCategory().getOrThrow()
-        val incomeCategories = repository.getAllIncomeCategory().getOrThrow()
-        _state.value = SettingViewState(paymentMethods, expensesCategories, incomeCategories)
+        this.paymentMethods.addAll(repository.getAllPaymentMethod().getOrThrow())
+        this.expensesCategories.addAll(repository.getAllExpensesCategory().getOrThrow())
+        this.incomeCategories.addAll(repository.getAllIncomeCategory().getOrThrow())
     }
 
     fun insertPaymentMethod(name: String): Long? {
@@ -34,8 +35,7 @@ class SettingViewModel @Inject constructor(
             createToast("이미 등록된 결제 수단입니다")
             return null
         }
-        val paymentMethods = repository.getAllPaymentMethod().getOrThrow()
-        _state.value.paymentMethods = paymentMethods
+        this.paymentMethods.add(PaymentMethod(res, name))
         return res
     }
 
@@ -45,8 +45,7 @@ class SettingViewModel @Inject constructor(
             createToast("이미 등록된 지출 카테고리입니다")
             return null
         }
-        val expensesCategories = repository.getAllExpensesCategory().getOrThrow()
-        _state.value.expensesCategories = expensesCategories
+        this.expensesCategories.add(Category(res, 0, name, color))
         return res
     }
 
@@ -56,8 +55,7 @@ class SettingViewModel @Inject constructor(
             createToast("이미 등록된 수입 카테고리입니다")
             return null
         }
-        val incomeCategories = repository.getAllIncomeCategory().getOrThrow()
-        _state.value.incomeCategories = incomeCategories
+        this.incomeCategories.add(Category(res, 1, name, color))
         return res
     }
 
@@ -69,8 +67,8 @@ class SettingViewModel @Inject constructor(
                 payment.value = null
                 return
             }
-            val paymentMethods = repository.getAllPaymentMethod().getOrThrow()
-            _state.value.paymentMethods = paymentMethods
+            this.paymentMethods.clear()
+            this.paymentMethods.addAll(repository.getAllPaymentMethod().getOrThrow())
         }
         payment.value = null
     }
@@ -83,10 +81,10 @@ class SettingViewModel @Inject constructor(
                 category.value = null
                 return
             }
-            val expensesCategories = repository.getAllExpensesCategory().getOrThrow()
-            val incomeCategories = repository.getAllIncomeCategory().getOrThrow()
-            _state.value.expensesCategories = expensesCategories
-            _state.value.incomeCategories = incomeCategories
+            this.expensesCategories.clear()
+            this.incomeCategories.clear()
+            this.expensesCategories.addAll(repository.getAllExpensesCategory().getOrThrow())
+            this.incomeCategories.addAll(repository.getAllIncomeCategory().getOrThrow())
         }
         category.value = null
     }
