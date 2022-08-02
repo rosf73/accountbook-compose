@@ -55,6 +55,7 @@ class HistoryViewModel @Inject constructor(
         history.value?.let {
             val res = repository.updateHistory(
                 it.id,
+                newHistory.type,
                 newHistory.content,
                 newHistory.amount,
                 newHistory.date,

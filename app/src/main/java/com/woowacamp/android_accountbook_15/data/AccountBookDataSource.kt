@@ -51,6 +51,7 @@ class AccountBookDataSource @Inject constructor(
 
     fun updateHistory(
         id: Long,
+        type: Int,
         content: String? = null,
         amount: Int? = null,
         date: String? = null,
@@ -59,6 +60,7 @@ class AccountBookDataSource @Inject constructor(
     ): Int {
         return writableDB.run {
             val values = ContentValues().apply {
+                put(HistoryColumns.COLUMN_NAME_TYPE, type)
                 content?.let { put(HistoryColumns.COLUMN_NAME_CONTENT, content) }
                 amount?.let { put(HistoryColumns.COLUMN_NAME_AMOUNT, amount) }
                 date?.let { put(HistoryColumns.COLUMN_NAME_DATE, date) }

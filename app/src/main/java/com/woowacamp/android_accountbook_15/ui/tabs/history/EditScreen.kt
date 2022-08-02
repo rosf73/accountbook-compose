@@ -76,6 +76,8 @@ fun EditScreen(
                 isSelectedIncome = isSelectedIncome
             ) { type ->
                 setIsSelectedIncome(type)
+                setCategory("")
+                setCategoryId(-1)
             }
 
             EditScreen(
