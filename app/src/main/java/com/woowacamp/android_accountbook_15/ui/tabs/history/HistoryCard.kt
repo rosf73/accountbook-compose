@@ -1,7 +1,9 @@
 package com.woowacamp.android_accountbook_15.ui.tabs.history
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,10 +17,7 @@ import androidx.compose.ui.unit.sp
 import com.woowacamp.android_accountbook_15.data.model.History
 import com.woowacamp.android_accountbook_15.ui.components.CategoryView
 import com.woowacamp.android_accountbook_15.ui.components.CheckableItem
-import com.woowacamp.android_accountbook_15.ui.theme.Blue
-import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
-import com.woowacamp.android_accountbook_15.ui.theme.Purple04
-import com.woowacamp.android_accountbook_15.ui.theme.Red
+import com.woowacamp.android_accountbook_15.ui.theme.*
 import com.woowacamp.android_accountbook_15.utils.toMoneyString
 
 @Composable
@@ -29,36 +28,33 @@ fun HistoryCard(
     date: String,
     list: List<History>,
     selectMode: Boolean,
-    onSelect: (Boolean) -> Unit,
+    onPress: (Long) -> Unit,
+    onLongPress: (Long) -> Unit,
     onUpdateClick: (History) -> Unit,
 ) {
-    Column(
-        modifier = modifier.padding(16.dp, 8.dp)
-    ) {
-        Row(verticalAlignment = Alignment.Bottom) {
+    Column {
+        Row(
+            modifier = modifier.padding(16.dp, 8.dp),
+            verticalAlignment = Alignment.Bottom
+        ) {
             Text(modifier = Modifier.weight(1f), text = date, color = LightPurple)
             Text(text = "수입  ${list.sumOf { if (it.type == 1) it.amount else 0}.toMoneyString()}" +
                     "  지출  ${list.sumOf { if (it.type == 0) it.amount else 0 }.toMoneyString()}",
                 fontSize = 10.sp, color = LightPurple)
         }
-        Spacer(modifier = Modifier.size(8.dp))
 
         Column {
             list.forEach { history ->
                 if ((isSelectedIncome && history.type == 1) || (isSelectedExpenses && history.type == 0)) {
-                    Divider(
-                        color = Purple04,
-                        thickness = 1.dp,
-                        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp)
-                    )
+                    Divider(color = Purple04, thickness = 1.dp, modifier = Modifier.padding(16.dp, 0.dp))
                     CheckableItem(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(0.dp, 8.dp),
+                            .fillMaxWidth(),
                         isSelectMode = selectMode,
-                        onPress = { /*TODO*/ },
-                        onLongPress = { onSelect(true) },
-                        onUpdateClick = { onUpdateClick(history) }) {
+                        onPress = { onPress(history.id) },
+                        onLongPress = { onLongPress(history.id) },
+                        onUpdateClick = { onUpdateClick(history) }
+                    ) {
                         HistoryItem(history)
                     }
                 }

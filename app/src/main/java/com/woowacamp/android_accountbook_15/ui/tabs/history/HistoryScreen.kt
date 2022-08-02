@@ -38,45 +38,22 @@ fun HistoryScreen(
     settingViewModel: SettingViewModel = hiltViewModel()
 ) {
     val (screenState, setScreenState) = remember { mutableStateOf(ScreenType.HISTORY) }
-    val (selectMode, setSelectMode) = remember { mutableStateOf(false) }
 
     val (isCheckedIncome, setIsCheckedIncome) = remember { mutableStateOf(true) }
     val (isCheckedExpenses, setIsCheckedExpenses) = remember { mutableStateOf(true) }
-
-    val year by viewModel.currentYear.collectAsState()
-    val month by viewModel.currentMonth.collectAsState()
 
     val (isDateOpened, setDateOpened) = remember { mutableStateOf(false) }
 
     when (screenState) {
         ScreenType.HISTORY -> HistoryScreen(
-            year, month,
-            title = getMonthAndYearKorean(year, month),
-            histories = viewModel.monthlyHistories.collectAsState().value,
+            viewModel,
             isSelectedIncome = isCheckedIncome,
             isSelectedExpenses = isCheckedExpenses,
-            onAddClick = { setScreenState(ScreenType.ADD_HISTORY) },
-            onLeftClick = {
-                viewModel.setCurrentDate(
-                    if (month-1 > 0) year else year-1,
-                    if (month-1 > 0) month-1 else 12
-                )
-            },
-            onRightClick = {
-                viewModel.setCurrentDate(
-                    if (month+1 > 12) year+1 else year,
-                    if (month+1 > 12) 1 else month+1
-                )
-            },
             onIncomeClick = setIsCheckedIncome,
             onExpensesClick = setIsCheckedExpenses,
             isDateOpened = isDateOpened,
             setDateOpened = setDateOpened,
-            onDateChanged = { newY, newM ->
-                viewModel.setCurrentDate(newY, newM)
-            },
-            selectMode = selectMode,
-            onSelect = setSelectMode,
+            onAddClick = { setScreenState(ScreenType.ADD_HISTORY) },
             onUpdateClick = { history ->
                 viewModel.history.value = history
                 setScreenState(ScreenType.UPDATE_HISTORY)
@@ -108,36 +85,60 @@ fun HistoryScreen(
 
 @Composable
 private fun HistoryScreen(
-    year: Int,
-    month: Int,
-    title: String,
-    histories: Map<String, List<History>>,
+    viewModel: HistoryViewModel,
     isSelectedIncome: Boolean,
     isSelectedExpenses: Boolean,
     onAddClick: () -> Unit,
-    onLeftClick: () -> Unit,
-    onRightClick: () -> Unit,
     onIncomeClick: (Boolean) -> Unit,
     onExpensesClick: (Boolean) -> Unit,
     isDateOpened: Boolean,
     setDateOpened: (Boolean) -> Unit,
-    onDateChanged: (Int, Int) -> Unit,
-    selectMode: Boolean,
-    onSelect: (Boolean) -> Unit,
     onUpdateClick: (History) -> Unit
 ) {
+    val year by viewModel.currentYear.collectAsState()
+    val month by viewModel.currentMonth.collectAsState()
+
+    val histories by viewModel.monthlyHistories.collectAsState()
+    val selectedHistories = viewModel.selectedHistories
+
+    val (selectMode, setSelectMode) = remember { mutableStateOf(false) }
+
     val totalIncome = histories.values.sumOf { it.sumOf { history -> if (history.type == 1) history.amount else 0 } }
     val totalExpenses = histories.values.sumOf { it.sumOf { history -> if (history.type == 0) history.amount else 0 } }
 
     Scaffold(
         topBar = {
-            Header(
-                title = title,
-                onTitleClick = { setDateOpened(true) },
-                leftIcon = painterResource(R.drawable.ic_left),
-                onLeftClick = onLeftClick,
-                rightIcon = painterResource(R.drawable.ic_right),
-                onRightClick = onRightClick)
+            if (!selectMode)
+                Header(
+                    title = getMonthAndYearKorean(year, month),
+                    onTitleClick = { setDateOpened(true) },
+                    leftIcon = painterResource(R.drawable.ic_left),
+                    onLeftClick = {
+                        viewModel.setCurrentDate(
+                            if (month-1 > 0) year else year-1,
+                            if (month-1 > 0) month-1 else 12
+                        )
+                    },
+                    rightIcon = painterResource(R.drawable.ic_right),
+                    onRightClick = {
+                        viewModel.setCurrentDate(
+                            if (month+1 > 12) year+1 else year,
+                            if (month+1 > 12) 1 else month+1
+                        )
+                    })
+            else
+                Header(
+                    title = "${selectedHistories.size}개 선택됨",
+                    leftIcon = painterResource(R.drawable.ic_back),
+                    onLeftClick = {
+                        setSelectMode(false)
+                        viewModel.removeAllSelectedHistories()
+                    },
+                    rightIcon = painterResource(R.drawable.ic_trash),
+                    onRightClick = {
+                        viewModel.removeHistories()
+                        setSelectMode(false)
+                    })
         },
         floatingActionButton = {
             FloatingButton(onClick = onAddClick)
@@ -170,7 +171,14 @@ private fun HistoryScreen(
                                     date = getDayKoreanWithoutYear(year, splitDate[0], splitDate[1]),
                                     list = value,
                                     selectMode = selectMode,
-                                    onSelect = onSelect,
+                                    onPress = {
+                                        viewModel.deselectHistory(it)
+                                        if (selectedHistories.isEmpty()) setSelectMode(false)
+                                    },
+                                    onLongPress = {
+                                        setSelectMode(true)
+                                        viewModel.selectHistory(it)
+                                    },
                                     onUpdateClick = onUpdateClick)
                             }
                         Spacer(modifier = Modifier.size(88.dp))
@@ -191,7 +199,9 @@ private fun HistoryScreen(
             initYear = year,
             initMonth = month,
             onOpen = setDateOpened,
-            onDateChanged = { y, m, _ -> onDateChanged(y, m) })
+            onDateChanged = { newY, newM, _ ->
+                viewModel.setCurrentDate(newY, newM)
+            })
     }
 }
 
