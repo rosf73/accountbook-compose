@@ -37,7 +37,16 @@ class AccountBookHelper @Inject constructor (
         }
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, p1: Int, p2: Int) {
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        db.apply {
+            execSQL(SQL_DELETE_HISTORY)
+            execSQL(SQL_DELETE_PAYMENT_METHOD)
+            execSQL(SQL_DELETE_CATEGORY)
+        }
+        onCreate(db)
+    }
+
+    override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.apply {
             execSQL(SQL_DELETE_HISTORY)
             execSQL(SQL_DELETE_PAYMENT_METHOD)

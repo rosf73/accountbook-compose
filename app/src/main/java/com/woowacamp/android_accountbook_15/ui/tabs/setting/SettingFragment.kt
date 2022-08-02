@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.woowacamp.android_accountbook_15.databinding.FragmentSettingBinding
 import com.woowacamp.android_accountbook_15.ui.theme.AndroidAccountBook15Theme
@@ -15,6 +16,8 @@ class SettingFragment: Fragment() {
 
     private var _binding: FragmentSettingBinding? = null
     private val binding get() = requireNotNull(_binding)
+
+    private val viewModel by activityViewModels<SettingViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,7 +32,7 @@ class SettingFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.composeContainer.setContent {
             AndroidAccountBook15Theme {
-                SettingScreen()
+                SettingScreen(viewModel)
             }
         }
     }

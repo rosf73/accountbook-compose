@@ -28,34 +28,37 @@ class SettingViewModel @Inject constructor(
         _state.value = SettingViewState(paymentMethods, expensesCategories, incomeCategories)
     }
 
-    fun insertPaymentMethod(name: String) {
+    fun insertPaymentMethod(name: String): Long? {
         val res = repository.insertPaymentMethod(name).getOrNull()
         if (res == null) {
             createToast("이미 등록된 결제 수단입니다")
-            return
+            return null
         }
         val paymentMethods = repository.getAllPaymentMethod().getOrThrow()
         _state.value.paymentMethods = paymentMethods
+        return res
     }
 
-    fun insertExpensesCategory(name: String, color: Long) {
+    fun insertExpensesCategory(name: String, color: Long): Long? {
         val res = repository.insertCategory(0, name, color).getOrNull()
         if (res == null) {
             createToast("이미 등록된 지출 카테고리입니다")
-            return
+            return null
         }
         val expensesCategories = repository.getAllExpensesCategory().getOrThrow()
         _state.value.expensesCategories = expensesCategories
+        return res
     }
 
-    fun insertIncomeCategory(name: String, color: Long) {
+    fun insertIncomeCategory(name: String, color: Long): Long? {
         val res = repository.insertCategory(1, name, color).getOrNull()
         if (res == null) {
             createToast("이미 등록된 수입 카테고리입니다")
-            return
+            return null
         }
         val incomeCategories = repository.getAllIncomeCategory().getOrThrow()
         _state.value.incomeCategories = incomeCategories
+        return res
     }
 
     fun updatePaymentMethod(name: String) {

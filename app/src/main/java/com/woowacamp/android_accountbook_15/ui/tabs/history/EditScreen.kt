@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.woowacamp.android_accountbook_15.R
 import com.woowacamp.android_accountbook_15.data.model.Category
 import com.woowacamp.android_accountbook_15.data.model.History
@@ -24,6 +25,7 @@ import com.woowacamp.android_accountbook_15.ui.components.Header
 import com.woowacamp.android_accountbook_15.ui.components.InputItem
 import com.woowacamp.android_accountbook_15.ui.components.SpinnerItem
 import com.woowacamp.android_accountbook_15.ui.tabs.setting.SettingViewModel
+import com.woowacamp.android_accountbook_15.ui.tabs.setting.SettingViewState
 import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple
 import com.woowacamp.android_accountbook_15.ui.theme.White
@@ -41,6 +43,8 @@ fun EditScreen(
     onAddClick: (History) -> Unit,
     onBackClick: () -> Unit
 ) {
+    val state by viewModel.state.collectAsState()
+
     val (isSelectedIncome, setIsSelectedIncome) = remember { mutableStateOf(isCheckedIncome) }
 
     val (date, setDate) = remember { mutableStateOf(history?.date ?: getTodayKorean()) }
@@ -77,7 +81,7 @@ fun EditScreen(
             }
 
             EditScreen(
-                viewModel,
+                state,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
@@ -85,7 +89,12 @@ fun EditScreen(
                 date, amount, paymentMethod, category, content,
                 setDate, setAmount, setPaymentMethod, setCategory, setPaymentId, setCategoryId, setContent,
                 isDateOpened, isPaymentOpened, isCategoryOpened,
-                setDateOpened, setPaymentOpened, setCategoryOpened
+                setDateOpened, setPaymentOpened, setCategoryOpened,
+                onAddPayment = { viewModel.insertPaymentMethod(it) },
+                onAddCategory = {
+                    if (isSelectedIncome) viewModel.insertIncomeCategory(it, 0xFF9BD182)
+                    else viewModel.insertExpensesCategory(it, 0xFF4A6CC3)
+                }
             )
 
             Button(
@@ -156,7 +165,7 @@ private fun TypeRadioGroup(
 
 @Composable
 private fun EditScreen(
-    viewModel: SettingViewModel,
+    state: SettingViewState,
     modifier: Modifier,
     isSelectedExpenses: Boolean,
     date: String,
@@ -176,10 +185,10 @@ private fun EditScreen(
     isCategoryOpened: Boolean,
     setDateOpened: (Boolean) -> Unit,
     setPaymentOpened: (Boolean) -> Unit,
-    setCategoryOpened: (Boolean) -> Unit
+    setCategoryOpened: (Boolean) -> Unit,
+    onAddPayment: (String) -> Long?,
+    onAddCategory: (String) -> Long?
 ) {
-    val state by viewModel.state.collectAsState()
-
     Box(modifier = modifier) {
         LazyColumn(
             modifier = modifier.align(Alignment.TopCenter)
@@ -207,7 +216,8 @@ private fun EditScreen(
                         onTextChanged = { value, text ->
                             onPaymentIdChanged(value)
                             onPaymentChanged(text)
-                        })
+                        },
+                        onAddClick = onAddPayment)
                 SpinnerItem(
                     label = "분류",
                     value = category,
@@ -222,7 +232,8 @@ private fun EditScreen(
                     onTextChanged = { value, text ->
                         onCategoryIdChanged(value)
                         onCategoryChanged(text)
-                    })
+                    },
+                    onAddClick = onAddCategory)
                 InputItem(
                     label = "내용",
                     value = content,
