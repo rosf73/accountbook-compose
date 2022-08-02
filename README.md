@@ -37,4 +37,9 @@
     - Categories
   - Model / DAO / Repository
 
+<br/>
+
+### - Basic View
+  <img width="641" alt="image" src="https://user-images.githubusercontent.com/47631768/182308796-5512205e-57c4-4940-87cf-d8d657a3f598.png">
+
 <br/><br/><br/>
