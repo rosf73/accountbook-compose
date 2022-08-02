@@ -186,8 +186,8 @@ private fun EditScreen(
     setDateOpened: (Boolean) -> Unit,
     setPaymentOpened: (Boolean) -> Unit,
     setCategoryOpened: (Boolean) -> Unit,
-    onAddPayment: (String) -> Unit,
-    onAddCategory: (String) -> Unit
+    onAddPayment: (String) -> Long?,
+    onAddCategory: (String) -> Long?
 ) {
     Box(modifier = modifier) {
         LazyColumn(
