@@ -88,8 +88,11 @@ fun InputItem(
             onValueChange = {
                 if (!numeric)
                     onTextChanged(it)
-                else if (it.length < 12)
+                else if (it.isEmpty())
+                    onTextChanged("0")
+                else if (it.length < 12) {
                     onTextChanged(it.toMoneyInt().toMoneyString())
+                }
             },
             singleLine = true,
             textStyle = TextStyle(color = Purple),

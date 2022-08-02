@@ -115,7 +115,7 @@ fun EditScreen(
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Yellow),
                 contentPadding = PaddingValues(16.dp),
-                enabled = date.isNotBlank() && amount.isNotBlank() && (isSelectedIncome || paymentMethod.isNotBlank())
+                enabled = date.isNotBlank() && amount.isNotBlank() && amount != "0" && (isSelectedIncome || paymentMethod.isNotBlank())
             ) {
                 Text(text = "등록하기", color = White)
             }
