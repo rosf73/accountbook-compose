@@ -42,6 +42,20 @@ class HistoryViewModel @Inject constructor(
         _monthlyHistories.value = repository.readMonthlyHistories(year, month).getOrThrow()
     }
 
+    fun getExpensesEachCategory(): Map<Category, Float> {
+        return mutableMapOf<Category, Float>().apply {
+            monthlyHistories.value.forEach { (_, value) ->
+                value.forEach { history ->
+                    if (history.type != 1)
+                        if (containsKey(history.category))
+                            this[history.category]?.plus(history.amount)
+                        else
+                            this[history.category] = history.amount.toFloat()
+                }
+            }
+        }
+    }
+
     fun insertHistory(history: History) {
         val res = repository.insertHistory(
             history.type, history.content, history.date, history.amount, history.payment?.id, history.category.id
