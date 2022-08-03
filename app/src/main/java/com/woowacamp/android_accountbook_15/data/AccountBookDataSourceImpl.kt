@@ -22,7 +22,7 @@ class AccountBookDataSourceImpl @Inject constructor(
         date: String,
         amount: Int,
         paymentId: Long?,
-        categoryId: Long?
+        categoryId: Long
     ): Long
         = writableDB.run {
             val values = ContentValues().apply {
@@ -31,7 +31,7 @@ class AccountBookDataSourceImpl @Inject constructor(
                 put(HistoryColumns.COLUMN_NAME_DATE, date)
                 put(HistoryColumns.COLUMN_NAME_AMOUNT, amount)
                 paymentId?.let { put(HistoryColumns.COLUMN_NAME_PAYMENT_ID, paymentId) }
-                categoryId?.let { put(HistoryColumns.COLUMN_NAME_CATEGORY_ID, categoryId) }
+                put(HistoryColumns.COLUMN_NAME_CATEGORY_ID, categoryId)
             }
 
             insert(HistoryColumns.TABLE_NAME, null, values)
@@ -87,7 +87,7 @@ class AccountBookDataSourceImpl @Inject constructor(
                         val history = History(
                             id, type, content, date, amount,
                             if (type == 1) null else PaymentMethod(paymentId, paymentName),
-                            if (categoryName == null) null else Category(categoryId, categoryType, categoryName, categoryColor)
+                            Category(categoryId, categoryType, categoryName, categoryColor)
                         )
                         val monthDay = history.date.substring(5)
                         if (containsKey(monthDay)) {

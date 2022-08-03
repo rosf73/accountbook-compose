@@ -107,7 +107,7 @@ fun EditScreen(
                             date = changeKoreanToHyphen(date),
                             amount = amount.text.toMoneyInt(),
                             payment = PaymentMethod(paymentId, paymentMethod),
-                            category = Category(categoryId, isIncome, category, 0x0),
+                            category = if (categoryId == -1L) Category() else Category(categoryId, isIncome, category, 0x0),
                             content = content
                         )
                     )
