@@ -3,7 +3,9 @@ package com.woowacamp.android_accountbook_15.ui.tabs.graph
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
@@ -60,6 +62,31 @@ fun AnimatedGraphCard(
                 style = Stroke(45f)
             )
             startAngle += sweep
+        }
+    }
+}
+
+@Composable
+fun ExpensesCard(
+    expenses: Map<Category, Float>,
+    modifier: Modifier = Modifier
+) {
+    val totalExpenses = expenses.values.sum()
+    LazyColumn(modifier = modifier) {
+        item {
+            expenses.forEach { (key, value) ->
+                Row(
+                    modifier = Modifier.padding(0.dp, 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    CategoryView(color = key.color, name = key.name)
+                    Spacer(modifier = Modifier.size(8.dp))
+                    Text(modifier = Modifier.weight(1f), text = value.toInt().toMoneyString(), fontSize = 14.sp)
+                    Text(text = "${round(value/totalExpenses*100).toInt()}%", fontSize = 14.sp, fontWeight = FontWeight(700))
+                }
+                if (key != expenses.keys.last())
+                    Divider(color = LightPurple, thickness = 1.dp)
+            }
         }
     }
 }

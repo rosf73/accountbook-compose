@@ -86,6 +86,11 @@ fun GraphScreen(
                     )
                 }
             }
+
+            ExpensesCard(
+                modifier = Modifier.padding(16.dp),
+                expenses = historiesEachCategory)
+            Divider(color = Purple, thickness = 1.dp)
         }
     }
 
