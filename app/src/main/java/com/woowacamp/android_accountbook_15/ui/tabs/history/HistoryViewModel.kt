@@ -1,7 +1,10 @@
 package com.woowacamp.android_accountbook_15.ui.tabs.history
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.woowacamp.android_accountbook_15.data.AccountBookRepository
 import com.woowacamp.android_accountbook_15.data.model.Category
 import com.woowacamp.android_accountbook_15.data.model.History
@@ -12,6 +15,7 @@ import com.woowacamp.android_accountbook_15.utils.getTodayYear
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,20 +44,6 @@ class HistoryViewModel @Inject constructor(
         _currentYear.value = year
         _currentMonth.value = month
         _monthlyHistories.value = repository.readMonthlyHistories(year, month).getOrThrow()
-    }
-
-    fun getExpensesEachCategory(): Map<Category, Float> {
-        return mutableMapOf<Category, Float>().apply {
-            monthlyHistories.value.forEach { (_, value) ->
-                value.forEach { history ->
-                    if (history.type != 1)
-                        if (containsKey(history.category))
-                            this[history.category]?.plus(history.amount)
-                        else
-                            this[history.category] = history.amount.toFloat()
-                }
-            }
-        }
     }
 
     fun insertHistory(history: History) {

@@ -15,13 +15,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.woowacamp.android_accountbook_15.R
+import com.woowacamp.android_accountbook_15.data.model.Category
 import com.woowacamp.android_accountbook_15.ui.components.DatePicker
 import com.woowacamp.android_accountbook_15.ui.components.Header
 import com.woowacamp.android_accountbook_15.ui.tabs.history.HistoryViewModel
-import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple
 import com.woowacamp.android_accountbook_15.ui.theme.Red
-import com.woowacamp.android_accountbook_15.ui.theme.Yellow
 import com.woowacamp.android_accountbook_15.utils.getMonthAndYearKorean
 import com.woowacamp.android_accountbook_15.utils.toMoneyString
 
@@ -32,6 +31,21 @@ fun GraphScreen(
 ) {
     val year by viewModel.currentYear.collectAsState()
     val month by viewModel.currentMonth.collectAsState()
+
+    var historiesEachCategory by remember { mutableStateOf(mapOf<Category, Float>()) }
+    LaunchedEffect(month) {
+        val temp = mutableMapOf<Category, Float>()
+        viewModel.monthlyHistories.value.forEach { (_, value) ->
+            value.forEach { history ->
+                if (history.type != 1)
+                    if (temp.containsKey(history.category))
+                        temp[history.category]?.plus(history.amount)
+                    else
+                        temp[history.category] = history.amount.toFloat()
+            }
+        }
+        historiesEachCategory = temp
+    }
 
     val (isDateOpened, setDateOpened) = remember { mutableStateOf(false) }
 
@@ -61,7 +75,6 @@ fun GraphScreen(
         }
 
         Column {
-            val historiesEachCategory = viewModel.getExpensesEachCategory()
             Box(modifier = Modifier.padding(24.dp)) {
                 AnimatedGraphCard(
                     historiesEachCategory.values.toList(),
