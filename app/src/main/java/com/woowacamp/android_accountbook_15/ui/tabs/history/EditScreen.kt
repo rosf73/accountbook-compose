@@ -12,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -19,10 +21,7 @@ import com.woowacamp.android_accountbook_15.R
 import com.woowacamp.android_accountbook_15.data.model.Category
 import com.woowacamp.android_accountbook_15.data.model.History
 import com.woowacamp.android_accountbook_15.data.model.PaymentMethod
-import com.woowacamp.android_accountbook_15.ui.components.DateSpinnerItem
-import com.woowacamp.android_accountbook_15.ui.components.Header
-import com.woowacamp.android_accountbook_15.ui.components.InputItem
-import com.woowacamp.android_accountbook_15.ui.components.SpinnerItem
+import com.woowacamp.android_accountbook_15.ui.components.*
 import com.woowacamp.android_accountbook_15.ui.tabs.setting.SettingViewModel
 import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple
@@ -53,6 +52,7 @@ fun EditScreen(
     val (paymentId, setPaymentId) = remember { mutableStateOf(history?.payment?.id ?: -1L) }
     val (categoryId, setCategoryId) = remember { mutableStateOf(history?.category?.id ?: -1L) }
     val (content, setContent) = remember { mutableStateOf(history?.content ?: "") }
+    val (money, setMoney) = remember { mutableStateOf(TextFieldValue(history?.amount?.toString() ?: "")) }
 
     val (isDateOpened, setDateOpened) = remember { mutableStateOf(false) }
     val (isPaymentOpened, setPaymentOpened) = remember { mutableStateOf(false) }
@@ -87,8 +87,8 @@ fun EditScreen(
                     .fillMaxWidth()
                     .weight(1f),
                 isSelectedExpenses = !isSelectedIncome,
-                date, amount, paymentMethod, category, content,
-                setDate, setAmount, setPaymentMethod, setCategory, setPaymentId, setCategoryId, setContent,
+                date, money, paymentMethod, category, content,
+                setDate, setMoney, setPaymentMethod, setCategory, setPaymentId, setCategoryId, setContent,
                 isDateOpened, isPaymentOpened, isCategoryOpened,
                 setDateOpened, setPaymentOpened, setCategoryOpened,
                 onAddPayment = { viewModel.insertPaymentMethod(it) },
@@ -170,12 +170,12 @@ private fun EditScreen(
     modifier: Modifier,
     isSelectedExpenses: Boolean,
     date: String,
-    amount: String,
+    amount: TextFieldValue,
     paymentMethod: String,
     category: String,
     content: String,
     onDateChanged: (String) -> Unit,
-    onAmountChanged: (String) -> Unit,
+    onAmountChanged: (TextFieldValue) -> Unit,
     onPaymentChanged: (String) -> Unit,
     onCategoryChanged: (String) -> Unit,
     onPaymentIdChanged: (Long) -> Unit,
@@ -205,11 +205,10 @@ private fun EditScreen(
                     requestToOpen = isDateOpened,
                     onOpen = setDateOpened,
                     onTextChanged = onDateChanged)
-                InputItem(
+                MoneyInputItem(
                     label = "금액",
                     value = amount,
-                    onTextChanged = onAmountChanged,
-                    numeric = true)
+                    onTextChanged = onAmountChanged)
                 if (isSelectedExpenses)
                     SpinnerItem(
                         label = "결제 수단",
