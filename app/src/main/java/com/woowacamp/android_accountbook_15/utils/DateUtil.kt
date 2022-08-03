@@ -119,12 +119,12 @@ fun getDaysOfMonth(year: Int, month: Int): List<Int> {
     for (i in getDayCount(year, month) downTo 1)
         res.add(i) // ex) [31, 30, 29, ..., 1]
 
-    var prevMonthDayCount = getDayCount(year, month-1)
+    var newY = if (month-1 > 0) year else year-1
+    var newM = if (month-1 > 0) month-1 else 12
+    var prevMonthDayCount = getDayCount(newY, newM)
     if (getDay(year, month, res.last()) != "일") { // 이번 달의 1일은 일요일인가?
         res.add(prevMonthDayCount)
         prevMonthDayCount--
-        val newY = if (month-1 > 0) year else year-1
-        val newM = if (month-1 > 0) month-1 else 12
         while (getDay(newY, newM, res.last()) != "일") { // 첫 주의 시작은 일요일로!
             res.add(prevMonthDayCount)
             prevMonthDayCount--
@@ -133,12 +133,12 @@ fun getDaysOfMonth(year: Int, month: Int): List<Int> {
 
     res.reverse() // ex) [31, 1, 2, ..., 30, 31]
 
+    newY = if (month+1 > 12) year+1 else year
+    newM = if (month+1 > 12) 1 else month+1
     var nextMonthDay = 1
     if (getDay(year, month, res.last()) != "토") { // 마지막 요일 확인!
         res.add(nextMonthDay)
         nextMonthDay++
-        val newY = if (month+1 > 12) year+1 else year
-        val newM = if (month+1 > 12) 1 else month+1
         while (getDay(newY, newM, res.last()) != "토") { // 마지막 주의 끝은 토요일로!
             res.add(nextMonthDay)
             nextMonthDay++

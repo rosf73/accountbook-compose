@@ -12,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -19,15 +21,9 @@ import com.woowacamp.android_accountbook_15.R
 import com.woowacamp.android_accountbook_15.data.model.Category
 import com.woowacamp.android_accountbook_15.data.model.History
 import com.woowacamp.android_accountbook_15.data.model.PaymentMethod
-import com.woowacamp.android_accountbook_15.ui.components.DateSpinnerItem
-import com.woowacamp.android_accountbook_15.ui.components.Header
-import com.woowacamp.android_accountbook_15.ui.components.InputItem
-import com.woowacamp.android_accountbook_15.ui.components.SpinnerItem
+import com.woowacamp.android_accountbook_15.ui.components.*
 import com.woowacamp.android_accountbook_15.ui.tabs.setting.SettingViewModel
-import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
-import com.woowacamp.android_accountbook_15.ui.theme.Purple
-import com.woowacamp.android_accountbook_15.ui.theme.White
-import com.woowacamp.android_accountbook_15.ui.theme.Yellow
+import com.woowacamp.android_accountbook_15.ui.theme.*
 import com.woowacamp.android_accountbook_15.utils.*
 
 @Composable
@@ -47,7 +43,7 @@ fun EditScreen(
     ) }
 
     val (date, setDate) = remember { mutableStateOf(if (history != null) changeHyphenToKorean(history.date) else getTodayKorean()) }
-    val (amount, setAmount) = remember { mutableStateOf(history?.amount?.toString() ?: "") }
+    val (amount, setAmount) = remember { mutableStateOf(TextFieldValue(history?.amount?.toString() ?: "")) }
     val (paymentMethod, setPaymentMethod) = remember { mutableStateOf(history?.payment?.name ?: "") }
     val (category, setCategory) = remember { mutableStateOf(history?.category?.name ?: "") }
     val (paymentId, setPaymentId) = remember { mutableStateOf(history?.payment?.id ?: -1L) }
@@ -109,16 +105,16 @@ fun EditScreen(
                             -1,
                             isIncome,
                             date = changeKoreanToHyphen(date),
-                            amount = amount.toMoneyInt(),
+                            amount = amount.text.toMoneyInt(),
                             payment = PaymentMethod(paymentId, paymentMethod),
                             category = Category(categoryId, isIncome, category, 0x0),
                             content = content
                         )
                     )
                 },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Yellow),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Yellow, disabledBackgroundColor = Yellow05),
                 contentPadding = PaddingValues(16.dp),
-                enabled = date.isNotBlank() && amount.isNotBlank() && amount != "0" && (isSelectedIncome || paymentMethod.isNotBlank())
+                enabled = date.isNotBlank() && amount.text.isNotBlank() && amount.text != "0" && (isSelectedIncome || paymentMethod.isNotBlank())
             ) {
                 Text(text = "등록하기", color = White)
             }
@@ -170,12 +166,12 @@ private fun EditScreen(
     modifier: Modifier,
     isSelectedExpenses: Boolean,
     date: String,
-    amount: String,
+    amount: TextFieldValue,
     paymentMethod: String,
     category: String,
     content: String,
     onDateChanged: (String) -> Unit,
-    onAmountChanged: (String) -> Unit,
+    onAmountChanged: (TextFieldValue) -> Unit,
     onPaymentChanged: (String) -> Unit,
     onCategoryChanged: (String) -> Unit,
     onPaymentIdChanged: (Long) -> Unit,
@@ -205,11 +201,10 @@ private fun EditScreen(
                     requestToOpen = isDateOpened,
                     onOpen = setDateOpened,
                     onTextChanged = onDateChanged)
-                InputItem(
+                MoneyInputItem(
                     label = "금액",
                     value = amount,
-                    onTextChanged = onAmountChanged,
-                    numeric = true)
+                    onTextChanged = onAmountChanged)
                 if (isSelectedExpenses)
                     SpinnerItem(
                         label = "결제 수단",

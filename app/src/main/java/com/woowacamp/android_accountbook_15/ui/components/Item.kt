@@ -12,8 +12,10 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -71,7 +73,6 @@ fun DateSpinnerItem(
 fun InputItem(
     label: String,
     value: String,
-    numeric: Boolean = false,
     onTextChanged: (String) -> Unit
 ) {
     Row(modifier = Modifier
@@ -86,15 +87,7 @@ fun InputItem(
         BasicTextField(
             modifier = Modifier.weight(1f),
             value = value,
-            onValueChange = {
-                if (!numeric)
-                    onTextChanged(it)
-                else if (it.isEmpty())
-                    onTextChanged("0")
-                else if (it.length < 12) {
-                    onTextChanged(it.toMoneyInt().toMoneyString())
-                }
-            },
+            onValueChange = { onTextChanged(it) },
             singleLine = true,
             textStyle = TextStyle(color = Purple),
             decorationBox = { innerTextField ->
@@ -107,8 +100,51 @@ fun InputItem(
                     }
                 }
                 innerTextField()
+            })
+    }
+    Divider(color = Purple04, thickness = 1.dp, modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp))
+}
+
+@Composable
+fun MoneyInputItem(
+    label: String,
+    value: TextFieldValue,
+    onTextChanged: (TextFieldValue) -> Unit
+) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(0.dp, 8.dp)) {
+        Text(
+            modifier = Modifier
+                .align(CenterVertically)
+                .width(76.dp),
+            text = label,
+            fontSize = 14.sp)
+        BasicTextField(
+            modifier = Modifier.weight(1f),
+            value = value,
+            onValueChange = {
+                if (it.text.isEmpty())
+                    onTextChanged(TextFieldValue("0", selection = TextRange(1)))
+                else if (it.text.length < 12) {
+                    val moneyString = it.text.toMoneyInt().toMoneyString()
+                    onTextChanged(TextFieldValue(moneyString, selection = TextRange(moneyString.length)))
+                }
             },
-            keyboardOptions = KeyboardOptions(keyboardType = if (numeric) KeyboardType.Number else KeyboardType.Text))
+            singleLine = true,
+            textStyle = TextStyle(color = Purple),
+            decorationBox = { innerTextField ->
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    if (value.text.isEmpty()) {
+                        Text(
+                            text = "입력하세요",
+                            color = LightPurple,
+                            fontSize = 14.sp)
+                    }
+                }
+                innerTextField()
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
     }
     Divider(color = Purple04, thickness = 1.dp, modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp))
 }

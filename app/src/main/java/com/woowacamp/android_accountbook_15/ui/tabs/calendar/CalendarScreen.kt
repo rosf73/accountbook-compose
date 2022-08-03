@@ -2,11 +2,8 @@ package com.woowacamp.android_accountbook_15.ui.tabs.calendar
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
@@ -22,7 +19,6 @@ import com.woowacamp.android_accountbook_15.ui.theme.Blue
 import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple
 import com.woowacamp.android_accountbook_15.ui.theme.Red
-import com.woowacamp.android_accountbook_15.utils.getDaysOfMonth
 import com.woowacamp.android_accountbook_15.utils.getMonthAndYearKorean
 
 @Composable
@@ -72,14 +68,11 @@ fun CalendarScreen(
 
             val totalIncome = histories.values.sumOf { list -> list.sumOf { if (it.type == 1) it.amount else 0 } }
             val totalExpenses = histories.values.sumOf { list -> list.sumOf { if (it.type == 0) it.amount else 0 } }
-            StatisticsItem(label = "수입", amountColor = Blue,
-                amount = totalIncome)
+            StatisticsItem(label = "수입", amountColor = Blue, amount = totalIncome)
             Divider(modifier = Modifier.padding(16.dp, 0.dp), color = LightPurple, thickness = 1.dp)
-            StatisticsItem(label = "지출", amountColor = Red,
-                amount = totalExpenses*-1)
+            StatisticsItem(label = "지출", amountColor = Red, amount = totalExpenses*-1)
             Divider(modifier = Modifier.padding(16.dp, 0.dp), color = LightPurple, thickness = 1.dp)
-            StatisticsItem(label = "총합", amountColor = Purple,
-                amount = totalIncome-totalExpenses)
+            StatisticsItem(label = "총합", amountColor = Purple, amount = totalIncome-totalExpenses)
         }
     }
 
