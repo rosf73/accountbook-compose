@@ -33,8 +33,9 @@ fun AnimatedGraphCard(
     colors: List<Color>,
     modifier: Modifier = Modifier
 ) {
-    val animateFloat = remember { Animatable(0f) }
-    LaunchedEffect(animateFloat) {
+    var animateFloat = remember { Animatable(0f) }
+    LaunchedEffect(animateFloat, proportions) {
+        animateFloat = Animatable(0f)
         animateFloat.animateTo(
             targetValue = 1f,
             animationSpec = tween(durationMillis = 1000, easing = LinearEasing))
