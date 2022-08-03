@@ -20,7 +20,7 @@ const val SQL_CREATE_HISTORY =
             "${HistoryColumns.COLUMN_NAME_DATE} TEXT NOT NULL," +
             "${HistoryColumns.COLUMN_NAME_AMOUNT} INTEGER NOT NULL," +
             "${HistoryColumns.COLUMN_NAME_PAYMENT_ID} INTEGER," +
-            "${HistoryColumns.COLUMN_NAME_CATEGORY_ID} INTEGER," +
+            "${HistoryColumns.COLUMN_NAME_CATEGORY_ID} INTEGER NOT NULL," +
             "FOREIGN KEY(${HistoryColumns.COLUMN_NAME_PAYMENT_ID})" +
             "REFERENCES ${PaymentMethodColumns.TABLE_NAME} (${BaseColumns._ID})," +
             "FOREIGN KEY(${HistoryColumns.COLUMN_NAME_PAYMENT_ID})" +

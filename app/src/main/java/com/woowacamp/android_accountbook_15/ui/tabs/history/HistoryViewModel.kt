@@ -44,7 +44,7 @@ class HistoryViewModel @Inject constructor(
 
     fun insertHistory(history: History) {
         val res = repository.insertHistory(
-            history.type, history.content, history.date, history.amount, history.payment?.id, history.category?.id
+            history.type, history.content, history.date, history.amount, history.payment?.id, history.category.id
         ).getOrNull()
 
         if (res == null) {

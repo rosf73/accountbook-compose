@@ -13,7 +13,8 @@ interface AccountBookDataSource {
         date: String,
         amount: Int,
         paymentId: Long? = null,
-        categoryId: Long? = null): Long
+        categoryId: Long
+    ): Long
 
     fun createPaymentMethod(
         name: String

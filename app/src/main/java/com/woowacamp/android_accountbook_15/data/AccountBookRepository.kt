@@ -27,7 +27,7 @@ class AccountBookRepository @Inject constructor(
         date: String,
         amount: Int,
         paymentId: Long? = null,
-        categoryId: Long? = null
+        categoryId: Long
     ): Result<Long>
             = runCatching { dataSource.createHistory(type, content, date, amount, paymentId, categoryId) }
 

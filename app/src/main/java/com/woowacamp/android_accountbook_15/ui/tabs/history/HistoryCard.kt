@@ -71,9 +71,7 @@ private fun HistoryItem(
 ) {
     Column {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            history.category?.let {
-                CategoryView(color = it.color, name = it.name)
-            }
+            CategoryView(color = history.category.color, name = history.category.name)
             Spacer(modifier = Modifier.weight(1f))
             Text(text = history.payment?.name ?: "", fontSize = 10.sp)
         }
