@@ -23,10 +23,7 @@ import com.woowacamp.android_accountbook_15.data.model.History
 import com.woowacamp.android_accountbook_15.data.model.PaymentMethod
 import com.woowacamp.android_accountbook_15.ui.components.*
 import com.woowacamp.android_accountbook_15.ui.tabs.setting.SettingViewModel
-import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
-import com.woowacamp.android_accountbook_15.ui.theme.Purple
-import com.woowacamp.android_accountbook_15.ui.theme.White
-import com.woowacamp.android_accountbook_15.ui.theme.Yellow
+import com.woowacamp.android_accountbook_15.ui.theme.*
 import com.woowacamp.android_accountbook_15.utils.*
 
 @Composable
@@ -115,7 +112,7 @@ fun EditScreen(
                         )
                     )
                 },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Yellow),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Yellow, disabledBackgroundColor = Yellow05),
                 contentPadding = PaddingValues(16.dp),
                 enabled = date.isNotBlank() && amount.text.isNotBlank() && amount.text != "0" && (isSelectedIncome || paymentMethod.isNotBlank())
             ) {

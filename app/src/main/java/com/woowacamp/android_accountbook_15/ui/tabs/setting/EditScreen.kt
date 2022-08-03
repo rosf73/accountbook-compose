@@ -17,10 +17,7 @@ import com.woowacamp.android_accountbook_15.R
 import com.woowacamp.android_accountbook_15.ui.components.Header
 import com.woowacamp.android_accountbook_15.ui.components.InputItem
 import com.woowacamp.android_accountbook_15.ui.components.Palette
-import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
-import com.woowacamp.android_accountbook_15.ui.theme.Purple04
-import com.woowacamp.android_accountbook_15.ui.theme.White
-import com.woowacamp.android_accountbook_15.ui.theme.Yellow
+import com.woowacamp.android_accountbook_15.ui.theme.*
 
 @Composable
 fun EditScreen(
@@ -107,7 +104,7 @@ private fun EditScreen(
                 .align(Alignment.BottomCenter)
                 .padding(20.dp),
             onClick = onAddClick,
-            colors = ButtonDefaults.buttonColors(backgroundColor = Yellow),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Yellow, disabledBackgroundColor = Yellow05),
             contentPadding = PaddingValues(16.dp),
             enabled = text.isNotBlank()
         ) {
