@@ -17,6 +17,7 @@ import com.woowacamp.android_accountbook_15.ui.theme.*
 import com.woowacamp.android_accountbook_15.utils.getDaysOfMonth
 import com.woowacamp.android_accountbook_15.utils.getMonthAndDateKorean
 import com.woowacamp.android_accountbook_15.utils.isToday
+import com.woowacamp.android_accountbook_15.utils.toMoneyString
 import kotlin.math.ceil
 
 @Composable
@@ -51,12 +52,16 @@ fun CalendarCard(
                         else
                             0
                     CalendarItem(
-                        modifier = Modifier.weight(1f).height(80.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(80.dp),
                         isToday = isToday(year, curM, days[i]),
                         isTodayMonth = curM == month,
                         date = days[i],
                         totalIncome, totalExpenses)
-                    if ((i+1)%7>0) Divider(color = LightPurple, modifier = Modifier.height(80.dp).width(1.dp))
+                    if ((i+1)%7>0) Divider(color = LightPurple, modifier = Modifier
+                        .height(80.dp)
+                        .width(1.dp))
 
                     i++
                     if (i >= days.size) break
@@ -82,9 +87,9 @@ fun CalendarItem(
             .padding(4.dp)
     ) {
         Column(modifier = Modifier.align(Alignment.TopStart)) {
-            if (totalIncome != 0) Text(text = totalIncome.toString(), fontSize = 8.sp, color = Blue)
-            if (totalExpenses != 0) Text(text = "-$totalExpenses", fontSize = 8.sp, color = Red)
-            if (totalIncome != 0 || totalExpenses != 0) Text(text = (totalIncome-totalExpenses).toString(), fontSize = 8.sp)
+            if (totalIncome != 0) Text(text = totalIncome.toMoneyString(), fontSize = 8.sp, color = Blue)
+            if (totalExpenses != 0) Text(text = "-${totalExpenses.toMoneyString()}", fontSize = 8.sp, color = Red)
+            if (totalIncome != 0 || totalExpenses != 0) Text(text = (totalIncome-totalExpenses).toMoneyString(), fontSize = 8.sp)
         }
         Text(
             modifier = Modifier.align(Alignment.BottomEnd),
