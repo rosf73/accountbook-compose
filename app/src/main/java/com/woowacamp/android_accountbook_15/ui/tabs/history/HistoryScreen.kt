@@ -149,6 +149,7 @@ private fun HistoryScreen(
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth(),
+                selectMode = selectMode,
                 totalIncome = totalIncome,
                 totalExpenses = totalExpenses,
                 isSelectedIncome = isSelectedIncome,
@@ -208,6 +209,7 @@ private fun HistoryScreen(
 @Composable
 private fun TypeCheckBoxGroup(
     modifier: Modifier,
+    selectMode: Boolean,
     totalIncome: Int,
     totalExpenses: Int,
     isSelectedIncome: Boolean,
@@ -222,10 +224,11 @@ private fun TypeCheckBoxGroup(
         Row(
             modifier = Modifier
                 .weight(1f)
-                .background(if (isSelectedIncome) Purple else LightPurple)
+                .background(if (isSelectedIncome && !selectMode) Purple else LightPurple)
                 .padding(8.dp)
                 .clickable {
-                    onIncomeClick(!isSelectedIncome)
+                    if (!selectMode)
+                        onIncomeClick(!isSelectedIncome)
                 },
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
@@ -241,10 +244,11 @@ private fun TypeCheckBoxGroup(
         Row(
             modifier = Modifier
                 .weight(1f)
-                .background(if (isSelectedExpenses) Purple else LightPurple)
+                .background(if (isSelectedExpenses && !selectMode) Purple else LightPurple)
                 .padding(8.dp)
                 .clickable {
-                    onExpensesClick(!isSelectedExpenses)
+                    if (!selectMode)
+                        onExpensesClick(!isSelectedExpenses)
                 },
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
