@@ -46,13 +46,12 @@ fun EditScreen(
     ) }
 
     val (date, setDate) = remember { mutableStateOf(if (history != null) changeHyphenToKorean(history.date) else getTodayKorean()) }
-    val (amount, setAmount) = remember { mutableStateOf(history?.amount?.toString() ?: "") }
+    val (amount, setAmount) = remember { mutableStateOf(TextFieldValue(history?.amount?.toString() ?: "")) }
     val (paymentMethod, setPaymentMethod) = remember { mutableStateOf(history?.payment?.name ?: "") }
     val (category, setCategory) = remember { mutableStateOf(history?.category?.name ?: "") }
     val (paymentId, setPaymentId) = remember { mutableStateOf(history?.payment?.id ?: -1L) }
     val (categoryId, setCategoryId) = remember { mutableStateOf(history?.category?.id ?: -1L) }
     val (content, setContent) = remember { mutableStateOf(history?.content ?: "") }
-    val (money, setMoney) = remember { mutableStateOf(TextFieldValue(history?.amount?.toString() ?: "")) }
 
     val (isDateOpened, setDateOpened) = remember { mutableStateOf(false) }
     val (isPaymentOpened, setPaymentOpened) = remember { mutableStateOf(false) }
@@ -87,8 +86,8 @@ fun EditScreen(
                     .fillMaxWidth()
                     .weight(1f),
                 isSelectedExpenses = !isSelectedIncome,
-                date, money, paymentMethod, category, content,
-                setDate, setMoney, setPaymentMethod, setCategory, setPaymentId, setCategoryId, setContent,
+                date, amount, paymentMethod, category, content,
+                setDate, setAmount, setPaymentMethod, setCategory, setPaymentId, setCategoryId, setContent,
                 isDateOpened, isPaymentOpened, isCategoryOpened,
                 setDateOpened, setPaymentOpened, setCategoryOpened,
                 onAddPayment = { viewModel.insertPaymentMethod(it) },
@@ -109,7 +108,7 @@ fun EditScreen(
                             -1,
                             isIncome,
                             date = changeKoreanToHyphen(date),
-                            amount = amount.toMoneyInt(),
+                            amount = amount.text.toMoneyInt(),
                             payment = PaymentMethod(paymentId, paymentMethod),
                             category = Category(categoryId, isIncome, category, 0x0),
                             content = content
@@ -118,7 +117,7 @@ fun EditScreen(
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Yellow),
                 contentPadding = PaddingValues(16.dp),
-                enabled = date.isNotBlank() && amount.isNotBlank() && amount != "0" && (isSelectedIncome || paymentMethod.isNotBlank())
+                enabled = date.isNotBlank() && amount.text.isNotBlank() && amount.text != "0" && (isSelectedIncome || paymentMethod.isNotBlank())
             ) {
                 Text(text = "등록하기", color = White)
             }
