@@ -42,7 +42,7 @@ interface AccountBookDataSource {
         startYear: Int, startMonth: Int,
         endYear: Int, endMonth: Int,
         categoryId: Long
-    ): List<Pair<Int, Int>>
+    ): List<Pair<Int, Long>>
 
     fun readAllPaymentMethod(): List<PaymentMethod>
 

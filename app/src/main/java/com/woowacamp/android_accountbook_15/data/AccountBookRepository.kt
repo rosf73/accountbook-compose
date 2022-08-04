@@ -21,7 +21,7 @@ class AccountBookRepository @Inject constructor(
         endYear: Int,
         endMonth: Int,
         categoryId: Long
-    ): Result<List<Pair<Int, Int>>>
+    ): Result<List<Pair<Int, Long>>>
         = runCatching { dataSource.readMonthlyTotalAmount(startYear, startMonth, endYear, endMonth, categoryId) }
 
     fun readAllPaymentMethod(): Result<List<PaymentMethod>>

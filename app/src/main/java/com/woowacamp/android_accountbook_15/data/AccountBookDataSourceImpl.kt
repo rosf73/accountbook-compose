@@ -150,7 +150,7 @@ class AccountBookDataSourceImpl @Inject constructor(
         endYear: Int,
         endMonth: Int,
         categoryId: Long
-    ): List<Pair<Int, Int>>
+    ): List<Pair<Int, Long>>
         = readableDB.run {
             val cursor = rawQuery(SQL_SUM_MONTHLY_AMOUNTS, arrayOf(
                 getMonthAndYearHyphen(startYear, startMonth),
@@ -158,14 +158,12 @@ class AccountBookDataSourceImpl @Inject constructor(
                 categoryId.toString())
             )
 
-            var total = 0L
-            val res = mutableListOf<Pair<Int, Long>>().apply {
+            mutableListOf<Pair<Int, Long>>().apply {
                 with(cursor) {
                     var currentMonth = startMonth
                     while (moveToNext()) {
                         val date = getString(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_DATE))
                         val amount = getLong(getColumnIndexOrThrow("total_amount"))
-                        total += amount
 
                         val month = date.split("-")[1].toInt() // 2000-09 --> 9
                         while (month > currentMonth) { // 7~12월까지인데 10, 12월만 데이터가 있다면 7,8,9,11 월에는 0 넣기
@@ -178,10 +176,6 @@ class AccountBookDataSourceImpl @Inject constructor(
                 }
                 cursor.close()
             }
-
-            res.map {
-                Pair(it.first, (round(it.second.toDouble()/total*100)).toInt())
-            } // 백분율
         }
 
     override fun readAllPaymentMethod(): List<PaymentMethod>
