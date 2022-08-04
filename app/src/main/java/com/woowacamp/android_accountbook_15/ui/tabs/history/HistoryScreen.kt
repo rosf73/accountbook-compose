@@ -19,10 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.woowacamp.android_accountbook_15.R
 import com.woowacamp.android_accountbook_15.data.model.History
-import com.woowacamp.android_accountbook_15.ui.components.DatePicker
-import com.woowacamp.android_accountbook_15.ui.components.FloatingButton
-import com.woowacamp.android_accountbook_15.ui.components.Header
-import com.woowacamp.android_accountbook_15.ui.components.PurpleCheckBox
+import com.woowacamp.android_accountbook_15.ui.components.*
 import com.woowacamp.android_accountbook_15.ui.tabs.setting.SettingViewModel
 import com.woowacamp.android_accountbook_15.ui.theme.Grey1
 import com.woowacamp.android_accountbook_15.ui.theme.LightPurple

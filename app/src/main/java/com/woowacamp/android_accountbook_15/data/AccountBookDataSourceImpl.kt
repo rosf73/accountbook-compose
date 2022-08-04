@@ -8,6 +8,7 @@ import com.woowacamp.android_accountbook_15.data.model.PaymentMethod
 import com.woowacamp.android_accountbook_15.data.utils.*
 import com.woowacamp.android_accountbook_15.utils.getMonthAndYearHyphen
 import javax.inject.Inject
+import kotlin.math.round
 
 class AccountBookDataSourceImpl @Inject constructor(
     dbHelper: AccountBookHelper
@@ -68,7 +69,7 @@ class AccountBookDataSourceImpl @Inject constructor(
         month: Int
     ): Map<String, List<History>>
         = readableDB.run {
-            val cursor = rawQuery(SQL_SELECT_ALL_HISTORY, arrayOf(getMonthAndYearHyphen(year, month)))
+            val cursor = rawQuery(SQL_SELECT_MONTHLY_HISTORIES, arrayOf(getMonthAndYearHyphen(year, month)))
 
             mutableMapOf<String, MutableList<History>>().apply {
                 with(cursor) {
@@ -84,17 +85,93 @@ class AccountBookDataSourceImpl @Inject constructor(
                         val categoryType = getInt(getColumnIndexOrThrow("category_type"))
                         val categoryName = getString(getColumnIndexOrThrow("category_name"))
                         val categoryColor = getLong(getColumnIndexOrThrow("category_color"))
+
                         val history = History(
                             id, type, content, date, amount,
                             if (type == 1) null else PaymentMethod(paymentId, paymentName),
                             Category(categoryId, categoryType, categoryName, categoryColor)
                         )
+
                         val monthDay = history.date.substring(5)
                         if (containsKey(monthDay)) {
                             get(monthDay)?.add(history)
                         } else {
                             put(monthDay, mutableListOf(history))
                         }
+                    }
+                }
+                cursor.close()
+            }
+        }
+
+    override fun readHistoriesEachCategory(
+        year: Int,
+        month: Int,
+        categoryId: Long
+    ): Map<String, List<History>>
+        = readableDB.run {
+            val cursor = rawQuery(SQL_SELECT_CATEGORY_HISTORIES, arrayOf(getMonthAndYearHyphen(year, month), categoryId.toString()))
+
+            mutableMapOf<String, MutableList<History>>().apply {
+                with(cursor) {
+                    while (moveToNext()) {
+                        val id = getLong(getColumnIndexOrThrow(BaseColumns._ID))
+                        val type = getInt(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_TYPE))
+                        val content = getString(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_CONTENT))
+                        val date = getString(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_DATE))
+                        val amount = getInt(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_AMOUNT))
+                        val paymentId = getLong(getColumnIndexOrThrow("payment_id"))
+                        val paymentName = getString(getColumnIndexOrThrow("payment_name"))
+                        val categoryType = getInt(getColumnIndexOrThrow("category_type"))
+                        val categoryName = getString(getColumnIndexOrThrow("category_name"))
+                        val categoryColor = getLong(getColumnIndexOrThrow("category_color"))
+
+                        val history = History(
+                            id, type, content, date, amount,
+                            if (type == 1) null else PaymentMethod(paymentId, paymentName),
+                            Category(categoryId, categoryType, categoryName, categoryColor)
+                        )
+
+                        val monthDay = history.date.substring(5)
+                        if (containsKey(monthDay)) {
+                            get(monthDay)?.add(history)
+                        } else {
+                            put(monthDay, mutableListOf(history))
+                        }
+                    }
+                }
+                cursor.close()
+            }
+        }
+
+    override fun readMonthlyTotalAmount(
+        startYear: Int,
+        startMonth: Int,
+        endYear: Int,
+        endMonth: Int,
+        categoryId: Long
+    ): List<Pair<Int, Long>>
+        = readableDB.run {
+            val cursor = rawQuery(SQL_SUM_MONTHLY_AMOUNTS, arrayOf(
+                getMonthAndYearHyphen(startYear, startMonth),
+                getMonthAndYearHyphen(endYear, endMonth),
+                categoryId.toString())
+            )
+
+            mutableListOf<Pair<Int, Long>>().apply {
+                with(cursor) {
+                    var currentMonth = startMonth
+                    while (moveToNext()) {
+                        val date = getString(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_DATE))
+                        val amount = getLong(getColumnIndexOrThrow("total_amount"))
+
+                        val month = date.split("-")[1].toInt() // 2000-09 --> 9
+                        while (month != currentMonth) { // 7~12월까지인데 10, 12월만 데이터가 있다면 7,8,9,11 월에는 0 넣기
+                            add(Pair(currentMonth, 0L))
+                            if (currentMonth+1 > 12) currentMonth = 1 else currentMonth++
+                        }
+                        if (currentMonth+1 > 12) currentMonth = 1 else currentMonth++
+                        add(Pair(month, amount))
                     }
                 }
                 cursor.close()

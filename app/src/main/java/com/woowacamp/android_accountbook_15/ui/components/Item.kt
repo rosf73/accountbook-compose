@@ -14,12 +14,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.woowacamp.android_accountbook_15.R
+import com.woowacamp.android_accountbook_15.data.model.History
 import com.woowacamp.android_accountbook_15.ui.theme.*
 import com.woowacamp.android_accountbook_15.utils.getDayKorean
 import com.woowacamp.android_accountbook_15.utils.toMoneyInt
@@ -268,7 +270,6 @@ fun CheckableItem(
     Row(
         modifier = modifier
             .background(if (isChecked) White else OffWhite)
-            .padding(16.dp, 8.dp)
             .combinedClickable(
                 onClick = {
                     if (isSelectMode) {

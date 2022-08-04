@@ -6,3 +6,5 @@ import java.text.DecimalFormat
 fun Int.toMoneyString(): String = DecimalFormat("#,###").format(this)
 
 fun String.toMoneyInt(): Int = this.replace(",","").toInt()
+
+fun Long.toMoneyString(): String = DecimalFormat("#,###").format(this)
