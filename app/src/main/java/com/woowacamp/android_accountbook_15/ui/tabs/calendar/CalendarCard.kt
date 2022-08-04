@@ -10,6 +10,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.woowacamp.android_accountbook_15.data.model.History
@@ -35,6 +37,8 @@ fun CalendarCard(
 
     val scrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
+        DayCard()
+        Divider(color = LightPurple, thickness = 1.dp)
         repeat(rowCount) {
             Row {
                 for (j in 0 until 7) {
@@ -61,7 +65,9 @@ fun CalendarCard(
                         totalIncome, totalExpenses)
 
                     if ((i+1)%7>0)
-                        Divider(color = LightPurple, modifier = Modifier.height(80.dp).width(1.dp))
+                        Divider(color = LightPurple, modifier = Modifier
+                            .height(80.dp)
+                            .width(1.dp))
 
                     i++
                     if (i >= days.size) break
@@ -69,6 +75,30 @@ fun CalendarCard(
             }
             Divider(color = LightPurple, thickness = 1.dp)
         }
+    }
+}
+
+@Composable
+fun DayCard(
+    modifier: Modifier = Modifier
+) {
+    Row(modifier = modifier.height(IntrinsicSize.Min)) {
+        val textModifier = Modifier
+            .weight(1f)
+            .padding(4.dp)
+        Text(modifier = textModifier, text = "일", textAlign = TextAlign.Center, fontSize = 12.sp, color = Red)
+        Divider(color = LightPurple, modifier = Modifier.fillMaxHeight().width(1.dp))
+        Text(modifier = textModifier, text = "월", textAlign = TextAlign.Center, fontSize = 12.sp)
+        Divider(color = LightPurple, modifier = Modifier.fillMaxHeight().width(1.dp))
+        Text(modifier = textModifier, text = "화", textAlign = TextAlign.Center, fontSize = 12.sp)
+        Divider(color = LightPurple, modifier = Modifier.fillMaxHeight().width(1.dp))
+        Text(modifier = textModifier, text = "수", textAlign = TextAlign.Center, fontSize = 12.sp)
+        Divider(color = LightPurple, modifier = Modifier.fillMaxHeight().width(1.dp))
+        Text(modifier = textModifier, text = "목", textAlign = TextAlign.Center, fontSize = 12.sp)
+        Divider(color = LightPurple, modifier = Modifier.fillMaxHeight().width(1.dp))
+        Text(modifier = textModifier, text = "금", textAlign = TextAlign.Center, fontSize = 12.sp)
+        Divider(color = LightPurple, modifier = Modifier.fillMaxHeight().width(1.dp))
+        Text(modifier = textModifier, text = "토", textAlign = TextAlign.Center, fontSize = 12.sp, color = Blue)
     }
 }
 
@@ -97,4 +127,10 @@ fun CalendarItem(
             fontSize = 8.sp,
             color = if (isTodayMonth) Purple else LightPurple)
     }
+}
+
+@Preview
+@Composable
+fun TestDays() {
+    DayCard()
 }

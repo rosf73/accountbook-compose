@@ -116,8 +116,7 @@ fun getDayCount(year: Int, month: Int): Int
 
 fun getDaysOfMonth(year: Int, month: Int): List<Int> {
     val res = mutableListOf<Int>()
-    for (i in getDayCount(year, month) downTo 1)
-        res.add(i) // ex) [31, 30, 29, ..., 1]
+    res.addAll(getDayCount(year, month) downTo 1)
 
     var newY = if (month-1 > 0) year else year-1
     var newM = if (month-1 > 0) month-1 else 12
