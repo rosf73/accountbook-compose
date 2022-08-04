@@ -4,13 +4,17 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -75,35 +79,44 @@ fun GraphScreen(
         }
 
         Column {
-            Box(modifier = Modifier.padding(24.dp)) {
-                AnimatedGraphCard(
-                    historiesEachCategory.values.toList(),
-                    historiesEachCategory.keys.map { Color(it.color) }.toList(),
-                    Modifier
-                        .height(300.dp)
-                        .align(Alignment.Center)
+            if (historiesEachCategory.isEmpty()) {
+                Box(modifier = Modifier.weight(1f)) {
+                    Text(modifier = Modifier
                         .fillMaxWidth()
-                )
-                Column(modifier = Modifier.align(Alignment.Center)) {
-                    Text(
-                        text = "어디에 가장 많이 썼을까요?",
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        fontWeight = FontWeight(700)
-                    )
-                    Spacer(modifier = Modifier.size(16.dp))
-                    Text(
-                        text = historiesEachCategory.values.sum().toInt().toMoneyString()+" 원 지출",
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        color = Red,
-                        fontSize = 24.sp
-                    )
+                        .align(Center),
+                        text = "지출 내역이 없습니다", textAlign = TextAlign.Center, fontSize = 14.sp)
                 }
-            }
+            } else {
+                Box(modifier = Modifier.padding(24.dp)) {
+                    AnimatedGraphCard(
+                        historiesEachCategory.values.toList(),
+                        historiesEachCategory.keys.map { Color(it.color) }.toList(),
+                        Modifier
+                            .height(300.dp)
+                            .align(Center)
+                            .fillMaxWidth()
+                    )
+                    Column(modifier = Modifier.align(Center)) {
+                        Text(
+                            text = "어디에 가장 많이 썼을까요?",
+                            modifier = Modifier.align(CenterHorizontally),
+                            fontWeight = FontWeight(700)
+                        )
+                        Spacer(modifier = Modifier.size(16.dp))
+                        Text(
+                            text = historiesEachCategory.values.sum().toInt().toMoneyString()+" 원 지출",
+                            modifier = Modifier.align(CenterHorizontally),
+                            color = Red,
+                            fontSize = 24.sp
+                        )
+                    }
+                }
 
-            ExpensesCard(
-                modifier = Modifier.padding(16.dp),
-                expenses = historiesEachCategory)
-            Divider(color = Purple, thickness = 1.dp)
+                ExpensesCard(
+                    modifier = Modifier.padding(16.dp),
+                    expenses = historiesEachCategory)
+                Divider(color = Purple, thickness = 1.dp)
+            }
         }
     }
 
