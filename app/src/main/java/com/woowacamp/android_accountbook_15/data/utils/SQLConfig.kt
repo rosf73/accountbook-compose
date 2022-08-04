@@ -84,7 +84,7 @@ const val SQL_INSERT_INCOME_CATEGORY_3 = "INSERT INTO ${CategoryColumns.TABLE_NA
 /**
  * Select Rows
  */
-const val SQL_SELECT_ALL_HISTORY =
+const val SQL_SELECT_MONTHLY_HISTORIES =
     "SELECT " +
             "${HistoryColumns.TABLE_NAME}.${BaseColumns._ID}," +
             "${HistoryColumns.TABLE_NAME}.${HistoryColumns.COLUMN_NAME_TYPE}," +
@@ -126,4 +126,14 @@ const val SQL_SELECT_CATEGORY_HISTORIES =
     " LEFT JOIN ${CategoryColumns.TABLE_NAME}" +
             " ON ${HistoryColumns.TABLE_NAME}.${HistoryColumns.COLUMN_NAME_CATEGORY_ID} = ${CategoryColumns.TABLE_NAME}.${BaseColumns._ID}" +
     " WHERE substr(${HistoryColumns.COLUMN_NAME_DATE}, 1, 7) = ? AND ${HistoryColumns.COLUMN_NAME_CATEGORY_ID} = ?" + // 2001-01-30 이면 2001-01 까지 가져온다.
+    " ORDER BY ${HistoryColumns.COLUMN_NAME_DATE} ASC"
+
+const val SQL_SUM_MONTHLY_AMOUNTS =
+    "SELECT " +
+            "sum(${HistoryColumns.COLUMN_NAME_AMOUNT}) total_amount," +
+            HistoryColumns.COLUMN_NAME_DATE +
+    " FROM ${HistoryColumns.TABLE_NAME}" +
+    " WHERE substr(${HistoryColumns.COLUMN_NAME_DATE}, 1, 7) BETWEEN ? AND ?" +
+    " AND ${HistoryColumns.COLUMN_NAME_CATEGORY_ID} = ?" +
+    " GROUP BY substr(${HistoryColumns.COLUMN_NAME_DATE}, 1, 7)" +
     " ORDER BY ${HistoryColumns.COLUMN_NAME_DATE} ASC"

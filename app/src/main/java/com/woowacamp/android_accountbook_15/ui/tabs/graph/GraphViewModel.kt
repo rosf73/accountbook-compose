@@ -16,7 +16,13 @@ class GraphViewModel @Inject constructor(
     private val _historiesEachCategory = MutableStateFlow(mapOf<String, List<History>>())
     val historiesEachCategory: StateFlow<Map<String, List<History>>> get() = _historiesEachCategory
 
+    private val _monthlyTotalAmountEachCategory = MutableStateFlow(listOf<Pair<Int, Int>>())
+    val monthlyTotalAmountEachCategory: StateFlow<List<Pair<Int, Int>>> get() = _monthlyTotalAmountEachCategory
+
     fun setHistories(year: Int, month: Int, categoryId: Long) {
+        val startYear = if (month-5 > 0) year else year-1
+        val startMonth = if (month-5 > 0) month-5 else month+12-5
         _historiesEachCategory.value = repository.readHistoriesEachCategory(year, month, categoryId).getOrThrow()
+        _monthlyTotalAmountEachCategory.value = repository.readMonthlyTotalAmount(startYear, startMonth, year, month, categoryId).getOrThrow()
     }
 }

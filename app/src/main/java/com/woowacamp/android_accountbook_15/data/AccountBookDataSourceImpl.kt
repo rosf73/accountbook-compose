@@ -8,6 +8,7 @@ import com.woowacamp.android_accountbook_15.data.model.PaymentMethod
 import com.woowacamp.android_accountbook_15.data.utils.*
 import com.woowacamp.android_accountbook_15.utils.getMonthAndYearHyphen
 import javax.inject.Inject
+import kotlin.math.round
 
 class AccountBookDataSourceImpl @Inject constructor(
     dbHelper: AccountBookHelper
@@ -68,7 +69,7 @@ class AccountBookDataSourceImpl @Inject constructor(
         month: Int
     ): Map<String, List<History>>
         = readableDB.run {
-            val cursor = rawQuery(SQL_SELECT_ALL_HISTORY, arrayOf(getMonthAndYearHyphen(year, month)))
+            val cursor = rawQuery(SQL_SELECT_MONTHLY_HISTORIES, arrayOf(getMonthAndYearHyphen(year, month)))
 
             mutableMapOf<String, MutableList<History>>().apply {
                 with(cursor) {
@@ -141,6 +142,40 @@ class AccountBookDataSourceImpl @Inject constructor(
                 }
                 cursor.close()
             }
+        }
+
+    override fun readMonthlyTotalAmount(
+        startYear: Int,
+        startMonth: Int,
+        endYear: Int,
+        endMonth: Int,
+        categoryId: Long
+    ): List<Pair<Int, Int>>
+        = readableDB.run {
+            val cursor = rawQuery(SQL_SUM_MONTHLY_AMOUNTS, arrayOf(
+                getMonthAndYearHyphen(startYear, startMonth),
+                getMonthAndYearHyphen(endYear, endMonth),
+                categoryId.toString())
+            )
+
+            var total = 0L
+            val res = mutableListOf<Pair<Int, Long>>().apply {
+                with(cursor) {
+                    while (moveToNext()) {
+                        val date = getString(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_DATE))
+                        val amount = getLong(getColumnIndexOrThrow("total_amount"))
+                        total += amount
+
+                        val month = date.split("-")[1] // 2000-01 --> "01"
+                        add(Pair(month.toInt(), amount))
+                    }
+                }
+                cursor.close()
+            }
+
+            res.map {
+                Pair(it.first, (round(it.second.toDouble()/total*100)).toInt())
+            } // 백분율
         }
 
     override fun readAllPaymentMethod(): List<PaymentMethod>

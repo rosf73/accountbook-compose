@@ -15,6 +15,15 @@ class AccountBookRepository @Inject constructor(
     fun readHistoriesEachCategory(year: Int, month: Int, categoryId: Long): Result<Map<String, List<History>>>
         = runCatching { dataSource.readHistoriesEachCategory(year, month, categoryId) }
 
+    fun readMonthlyTotalAmount(
+        startYear: Int,
+        startMonth: Int,
+        endYear: Int,
+        endMonth: Int,
+        categoryId: Long
+    ): Result<List<Pair<Int, Int>>>
+        = runCatching { dataSource.readMonthlyTotalAmount(startYear, startMonth, endYear, endMonth, categoryId) }
+
     fun readAllPaymentMethod(): Result<List<PaymentMethod>>
         = runCatching { dataSource.readAllPaymentMethod() }
 
