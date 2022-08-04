@@ -1,12 +1,13 @@
 package com.woowacamp.android_accountbook_15.ui.tabs.graph
 
+import android.R.attr.text
+import android.graphics.Rect
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
-import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,7 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -25,8 +29,10 @@ import com.woowacamp.android_accountbook_15.data.model.Category
 import com.woowacamp.android_accountbook_15.ui.components.CategoryView
 import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple
+import com.woowacamp.android_accountbook_15.ui.theme.PurpleLong
 import com.woowacamp.android_accountbook_15.utils.toMoneyString
 import kotlin.math.round
+
 
 @Composable
 fun AnimatedGraphCard(
@@ -101,37 +107,76 @@ fun ExpensesCard(
 
 @Composable
 fun ChartCard(
-    amounts: List<Pair<Int, Int>>,
+    amounts: List<Pair<Int, Long>>,
     modifier: Modifier = Modifier
 ) {
+    val total = amounts.sumOf { it.second }
+    val amountsPercentage = amounts.map { Pair(it.first, (round(it.second.toDouble()/total*100)).toInt()) }
+    val monthCount = amountsPercentage.size
+
     Canvas(modifier = modifier
-        .fillMaxWidth()
-        .height(200.dp)
-        .padding(24.dp, 16.dp)
+        .height(160.dp)
+        .padding(16.dp, 32.dp)
     ) {
         val height = size.height
         val width = size.width
-        var x = 0f
-        var prev = amounts[0]
-        for (i in 1 until amounts.size) {
+        val space = width/(monthCount*2)
+
+        val textPaint = Paint().asFrameworkPaint().apply { // Canvas 위에 쓰기 위한 글씨
+            isAntiAlias = true
+            textSize = 12.sp.toPx()
+            color = PurpleLong.toInt()
+        }
+
+        val prevAmount = amounts[0].second.toMoneyString()
+        var prev = amountsPercentage[0]
+        var prevX = space
+        var prevY = height - height/100 * prev.second
+        drawIntoCanvas { // 첫 번째 달의 amount 출력
+            val rect = Rect() // text 의 크기
+            textPaint.getTextBounds(prevAmount, 0, prevAmount.length, rect)
+
+            it.nativeCanvas.drawText(prevAmount,
+                prevX - rect.width().toFloat()/2,
+                prevY + 16.dp.toPx() + rect.height().toFloat(),
+                textPaint)
+        }
+
+        for (i in 1 until monthCount) { // 선과 글씨를 동시에 그리기
+            val curr = amountsPercentage[i]
+            val currAmount = amounts[i].second.toMoneyString()
+
+            prevY = height - height/100 * prev.second
+            val currX = prevX + space*2
+            val currY = height - height/100 * curr.second
             drawLine(
-                start = Offset(x = x, y = height - height/100*prev.second),
-                end = Offset(x = x + width/(amounts.size-1), y = height - height/100*amounts[i].second),
+                start = Offset(x = prevX, y = prevY),
+                end = Offset(x = currX, y = currY),
                 color = Purple,
                 strokeWidth = 3.0f
             )
-            x += width/(amounts.size-1)
-            prev = amounts[i]
+
+            drawIntoCanvas {
+                val rect = Rect() // text 의 크기
+                textPaint.getTextBounds(currAmount, 0, currAmount.length, rect)
+                val textX = currX - rect.width().toFloat()/2
+                val textY =
+                    if (prev.second < curr.second) currY - 16.dp.toPx()
+                    else currY + 16.dp.toPx() + rect.height().toFloat()
+                it.nativeCanvas.drawText(currAmount, textX, textY, textPaint)
+            }
+
+            prevX += space*2
+            prev = curr
         }
     }
 
-    Row(
-        modifier = modifier.fillMaxWidth().padding(24.dp, 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+    Row( // 마지막 x 좌표 그리기
+        modifier = modifier.padding(16.dp, 8.dp)
     ) {
-        for (e in amounts) {
-            Text(text = "${e.first}", textAlign = TextAlign.Center, fontSize = 14.sp)
-        }
+        for (e in amountsPercentage)
+            Text(text = "${e.first}", textAlign = TextAlign.Center, fontSize = 14.sp,
+                modifier = Modifier.weight(1f))
     }
 
     Divider(color = Purple, thickness = 1.dp)

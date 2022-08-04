@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -22,7 +23,7 @@ import com.woowacamp.android_accountbook_15.utils.getDayKoreanWithoutYear
 @Composable
 fun DetailScreen(
     year: Int,
-    amounts: List<Pair<Int, Int>>,
+    amounts: List<Pair<Int, Long>>,
     histories: Map<String, List<History>>,
     onBackClick: () -> Unit
 ) {
@@ -40,7 +41,7 @@ fun DetailScreen(
         }
 
         Column() {
-            ChartCard(amounts = amounts, modifier = Modifier.background(White))
+            ChartCard(amounts = amounts, modifier = Modifier.background(White).fillMaxWidth())
 
             LazyColumn {
                 item {
