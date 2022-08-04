@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.NativePaint
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
@@ -30,6 +31,7 @@ import com.woowacamp.android_accountbook_15.ui.components.CategoryView
 import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
 import com.woowacamp.android_accountbook_15.ui.theme.Purple
 import com.woowacamp.android_accountbook_15.ui.theme.PurpleLong
+import com.woowacamp.android_accountbook_15.utils.getRect
 import com.woowacamp.android_accountbook_15.utils.toMoneyString
 import kotlin.math.round
 
@@ -105,6 +107,11 @@ fun ExpensesCard(
     }
 }
 
+/**
+ * [ 최근 6개월 지출 직선 그래프 ]
+ * 처음 점을 찍은 후 나머지 점을 잇는다.
+ * 동시에 총 지출 금액을 표기한다.
+ */
 @Composable
 fun ChartCard(
     amounts: List<Pair<Int, Long>>,
@@ -128,20 +135,20 @@ fun ChartCard(
             color = PurpleLong.toInt()
         }
 
+        /** First Month */
         val prevAmount = amounts[0].second.toMoneyString()
         var prev = amountsPercentage[0]
         var prevX = space
         var prevY = height - height/100 * prev.second
-        drawIntoCanvas { // 첫 번째 달의 amount 출력
-            val rect = Rect() // text 의 크기
-            textPaint.getTextBounds(prevAmount, 0, prevAmount.length, rect)
-
+        drawIntoCanvas {
+            val (textWidth, textHeight) = getRect(textPaint, prevAmount)
             it.nativeCanvas.drawText(prevAmount,
-                prevX - rect.width().toFloat()/2,
-                prevY + 16.dp.toPx() + rect.height().toFloat(),
+                prevX - textWidth.toFloat()/2,
+                prevY + 16.dp.toPx() + textHeight.toFloat(),
                 textPaint)
         }
 
+        /** Remaining Month */
         for (i in 1 until monthCount) { // 선과 글씨를 동시에 그리기
             val curr = amountsPercentage[i]
             val currAmount = amounts[i].second.toMoneyString()
@@ -157,12 +164,11 @@ fun ChartCard(
             )
 
             drawIntoCanvas {
-                val rect = Rect() // text 의 크기
-                textPaint.getTextBounds(currAmount, 0, currAmount.length, rect)
-                val textX = currX - rect.width().toFloat()/2
+                val (textWidth, textHeight) = getRect(textPaint, currAmount)
+                val textX = currX - textWidth.toFloat()/2
                 val textY =
                     if (prev.second < curr.second) currY - 16.dp.toPx()
-                    else currY + 16.dp.toPx() + rect.height().toFloat()
+                    else currY + 16.dp.toPx() + textHeight.toFloat()
                 it.nativeCanvas.drawText(currAmount, textX, textY, textPaint)
             }
 
@@ -171,7 +177,8 @@ fun ChartCard(
         }
     }
 
-    Row( // 마지막 x 좌표 그리기
+    /** X Coordinate (Month) */
+    Row(
         modifier = modifier.padding(16.dp, 8.dp)
     ) {
         for (e in amountsPercentage)
