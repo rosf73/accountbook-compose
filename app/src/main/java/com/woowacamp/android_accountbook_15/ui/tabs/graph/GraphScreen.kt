@@ -50,6 +50,7 @@ fun GraphScreen(
                 setScreenState(ScreenType.DETAIL_GRAPH)
             })
         ScreenType.DETAIL_GRAPH -> DetailScreen(
+            year,
             graphViewModel.historiesEachCategory.collectAsState().value,
             onBackClick = {
                 setCircleGraphState(!circleGraphState)

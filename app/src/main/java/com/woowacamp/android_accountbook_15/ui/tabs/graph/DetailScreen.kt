@@ -1,18 +1,26 @@
 package com.woowacamp.android_accountbook_15.ui.tabs.graph
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import com.woowacamp.android_accountbook_15.R
 import com.woowacamp.android_accountbook_15.data.model.History
 import com.woowacamp.android_accountbook_15.ui.components.Header
+import com.woowacamp.android_accountbook_15.ui.components.HistoryCard
+import com.woowacamp.android_accountbook_15.utils.getDayKoreanWithoutYear
 
 @Composable
 fun DetailScreen(
-    histories: List<History>,
+    year: Int,
+    histories: Map<String, List<History>>,
     onBackClick: () -> Unit
 ) {
     Scaffold(
@@ -28,6 +36,26 @@ fun DetailScreen(
             onBackClick()
         }
 
-        Text(text = histories.toString())
+        Column() {
+            ChartCard()
+
+            LazyColumn {
+                item {
+                    histories.forEach { (key, value) ->
+                        val splitDate = key.split("-").map { it.toInt() }
+                        HistoryCard(
+                            date = getDayKoreanWithoutYear(year, splitDate[0], splitDate[1]),
+                            list = value)
+                    }
+                }
+            }
+        }
     }
+}
+
+@Composable
+fun ChartCard(
+    modifier: Modifier = Modifier
+) {
+
 }
