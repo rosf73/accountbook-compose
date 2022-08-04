@@ -104,3 +104,26 @@ const val SQL_SELECT_ALL_HISTORY =
             " ON ${HistoryColumns.TABLE_NAME}.${HistoryColumns.COLUMN_NAME_CATEGORY_ID} = ${CategoryColumns.TABLE_NAME}.${BaseColumns._ID}" +
     " WHERE substr(${HistoryColumns.COLUMN_NAME_DATE}, 1, 7) = ?" + // 2001-01-30 이면 2001-01 까지 가져온다.
     " ORDER BY ${HistoryColumns.COLUMN_NAME_DATE} ASC"
+
+/**
+ * Select Rows
+ */
+const val SQL_SELECT_CATEGORY_HISTORIES =
+    "SELECT " +
+            "${HistoryColumns.TABLE_NAME}.${BaseColumns._ID}," +
+            "${HistoryColumns.TABLE_NAME}.${HistoryColumns.COLUMN_NAME_TYPE}," +
+            "${HistoryColumns.COLUMN_NAME_CONTENT}," +
+            "${HistoryColumns.COLUMN_NAME_DATE}," +
+            "${HistoryColumns.COLUMN_NAME_AMOUNT}," +
+            "${PaymentMethodColumns.TABLE_NAME}.${BaseColumns._ID} payment_id," +
+            "${PaymentMethodColumns.TABLE_NAME}.${PaymentMethodColumns.COLUMN_NAME_NAME} payment_name," +
+            "${CategoryColumns.TABLE_NAME}.${CategoryColumns.COLUMN_NAME_TYPE} category_type," +
+            "${CategoryColumns.TABLE_NAME}.${CategoryColumns.COLUMN_NAME_NAME} category_name," +
+            "${CategoryColumns.COLUMN_NAME_COLOR} category_color" +
+    " FROM ${HistoryColumns.TABLE_NAME}" +
+    " LEFT JOIN ${PaymentMethodColumns.TABLE_NAME}" +
+            " ON ${HistoryColumns.TABLE_NAME}.${HistoryColumns.COLUMN_NAME_PAYMENT_ID} = ${PaymentMethodColumns.TABLE_NAME}.${BaseColumns._ID}" +
+    " LEFT JOIN ${CategoryColumns.TABLE_NAME}" +
+            " ON ${HistoryColumns.TABLE_NAME}.${HistoryColumns.COLUMN_NAME_CATEGORY_ID} = ${CategoryColumns.TABLE_NAME}.${BaseColumns._ID}" +
+    " WHERE substr(${HistoryColumns.COLUMN_NAME_DATE}, 1, 7) = ? AND ${HistoryColumns.COLUMN_NAME_CATEGORY_ID} = ?" + // 2001-01-30 이면 2001-01 까지 가져온다.
+    " ORDER BY ${HistoryColumns.COLUMN_NAME_DATE} ASC"

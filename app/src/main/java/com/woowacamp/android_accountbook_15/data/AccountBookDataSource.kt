@@ -32,6 +32,12 @@ interface AccountBookDataSource {
         month: Int
     ): Map<String, List<History>>
 
+    fun readHistoriesEachCategory(
+        year: Int,
+        month: Int,
+        categoryId: Long
+    ): List<History>
+
     fun readAllPaymentMethod(): List<PaymentMethod>
 
     fun readAllExpensesCategory(): List<Category>

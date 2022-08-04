@@ -84,17 +84,54 @@ class AccountBookDataSourceImpl @Inject constructor(
                         val categoryType = getInt(getColumnIndexOrThrow("category_type"))
                         val categoryName = getString(getColumnIndexOrThrow("category_name"))
                         val categoryColor = getLong(getColumnIndexOrThrow("category_color"))
+
                         val history = History(
                             id, type, content, date, amount,
                             if (type == 1) null else PaymentMethod(paymentId, paymentName),
                             Category(categoryId, categoryType, categoryName, categoryColor)
                         )
+
                         val monthDay = history.date.substring(5)
                         if (containsKey(monthDay)) {
                             get(monthDay)?.add(history)
                         } else {
                             put(monthDay, mutableListOf(history))
                         }
+                    }
+                }
+                cursor.close()
+            }
+        }
+
+    override fun readHistoriesEachCategory(
+        year: Int,
+        month: Int,
+        categoryId: Long
+    ): List<History>
+        = readableDB.run {
+            val cursor = rawQuery(SQL_SELECT_CATEGORY_HISTORIES, arrayOf(getMonthAndYearHyphen(year, month), categoryId.toString()))
+
+            mutableListOf<History>().apply {
+                with(cursor) {
+                    while (moveToNext()) {
+                        val id = getLong(getColumnIndexOrThrow(BaseColumns._ID))
+                        val type = getInt(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_TYPE))
+                        val content = getString(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_CONTENT))
+                        val date = getString(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_DATE))
+                        val amount = getInt(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_AMOUNT))
+                        val paymentId = getLong(getColumnIndexOrThrow("payment_id"))
+                        val paymentName = getString(getColumnIndexOrThrow("payment_name"))
+                        val categoryType = getInt(getColumnIndexOrThrow("category_type"))
+                        val categoryName = getString(getColumnIndexOrThrow("category_name"))
+                        val categoryColor = getLong(getColumnIndexOrThrow("category_color"))
+
+                        val history = History(
+                            id, type, content, date, amount,
+                            if (type == 1) null else PaymentMethod(paymentId, paymentName),
+                            Category(categoryId, categoryType, categoryName, categoryColor)
+                        )
+
+                        add(history)
                     }
                 }
                 cursor.close()
