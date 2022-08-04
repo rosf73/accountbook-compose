@@ -44,7 +44,7 @@ fun GraphScreen(
                         temp[history.category] = history.amount.toFloat()
             }
         }
-        historiesEachCategory = temp
+        historiesEachCategory = temp.toList().sortedByDescending { it.second }.toMap()
     }
 
     val (isDateOpened, setDateOpened) = remember { mutableStateOf(false) }
