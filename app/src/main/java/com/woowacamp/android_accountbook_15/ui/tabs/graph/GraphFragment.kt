@@ -17,7 +17,8 @@ class GraphFragment : Fragment() {
     private var _binding: FragmentGraphBinding? = null
     private val binding: FragmentGraphBinding get() = requireNotNull(_binding)
 
-    private val viewModel: HistoryViewModel by activityViewModels()
+    private val historyViewModel: HistoryViewModel by activityViewModels()
+    private val graphViewModel: GraphViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,7 +32,7 @@ class GraphFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.composeGraph.setContent {
             AndroidAccountBook15Theme {
-                GraphScreen(viewModel) {
+                GraphScreen(historyViewModel, graphViewModel) {
                     (activity as MainActivity).backToMain()
                 }
             }

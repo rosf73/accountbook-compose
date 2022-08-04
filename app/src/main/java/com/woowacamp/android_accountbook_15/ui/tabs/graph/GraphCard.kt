@@ -2,6 +2,7 @@ package com.woowacamp.android_accountbook_15.ui.tabs.graph
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -29,12 +30,13 @@ import kotlin.math.round
 
 @Composable
 fun AnimatedGraphCard(
+    graphState: Boolean,
     proportions: List<Float>,
     colors: List<Color>,
     modifier: Modifier = Modifier
 ) {
     var animateFloat = remember { Animatable(0f) }
-    LaunchedEffect(animateFloat, proportions) {
+    LaunchedEffect(animateFloat, graphState) {
         animateFloat = Animatable(0f)
         animateFloat.animateTo(
             targetValue = 1f,
@@ -70,14 +72,19 @@ fun AnimatedGraphCard(
 @Composable
 fun ExpensesCard(
     expenses: Map<Category, Float>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: (Long) -> Unit
 ) {
     val totalExpenses = expenses.values.sum()
     LazyColumn(modifier = modifier) {
         item {
             expenses.forEach { (key, value) ->
                 Row(
-                    modifier = Modifier.padding(0.dp, 8.dp),
+                    modifier = Modifier
+                        .padding(0.dp, 8.dp)
+                        .clickable {
+                            onClick(key.id)
+                        },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     CategoryView(color = key.color, name = key.name)

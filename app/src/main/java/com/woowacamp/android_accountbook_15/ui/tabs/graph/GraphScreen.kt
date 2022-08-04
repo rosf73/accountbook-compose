@@ -4,10 +4,8 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -30,12 +28,46 @@ import com.woowacamp.android_accountbook_15.utils.toMoneyString
 
 @Composable
 fun GraphScreen(
-    viewModel: HistoryViewModel = hiltViewModel(),
+    historyViewModel: HistoryViewModel = hiltViewModel(),
+    graphViewModel: GraphViewModel = hiltViewModel(),
     backToMain: () -> Unit
 ) {
-    val year by viewModel.currentYear.collectAsState()
-    val month by viewModel.currentMonth.collectAsState()
+    val (screenState, setScreenState) = remember { mutableStateOf(ScreenType.GRAPH) }
+    val (circleGraphState, setCircleGraphState) = remember { mutableStateOf(true) }
 
+    val year by historyViewModel.currentYear.collectAsState()
+    val month by historyViewModel.currentMonth.collectAsState()
+
+    when (screenState) {
+        ScreenType.GRAPH -> GraphScreen(
+            historyViewModel,
+            circleGraphState,
+            year, month,
+            setGraphState = setCircleGraphState,
+            backToMain = backToMain,
+            onItemClick = { categoryId ->
+                graphViewModel.setHistories(year, month, categoryId)
+                setScreenState(ScreenType.DETAIL_GRAPH)
+            })
+        ScreenType.DETAIL_GRAPH -> DetailScreen(
+            graphViewModel.historiesEachCategory.collectAsState().value,
+            onBackClick = {
+                setCircleGraphState(!circleGraphState)
+                setScreenState(ScreenType.GRAPH)
+            })
+    }
+}
+
+@Composable
+private fun GraphScreen(
+    viewModel: HistoryViewModel,
+    graphState: Boolean,
+    year: Int,
+    month: Int,
+    setGraphState: (Boolean) -> Unit,
+    backToMain: () -> Unit,
+    onItemClick: (Long) -> Unit
+) {
     var historiesEachCategory by remember { mutableStateOf(mapOf<Category, Float>()) }
     LaunchedEffect(month) {
         val temp = mutableMapOf<Category, Float>()
@@ -49,6 +81,7 @@ fun GraphScreen(
             }
         }
         historiesEachCategory = temp.toList().sortedByDescending { it.second }.toMap()
+        setGraphState(!graphState)
     }
 
     val (isDateOpened, setDateOpened) = remember { mutableStateOf(false) }
@@ -89,6 +122,7 @@ fun GraphScreen(
             } else {
                 Box(modifier = Modifier.padding(24.dp)) {
                     AnimatedGraphCard(
+                        graphState,
                         historiesEachCategory.values.toList(),
                         historiesEachCategory.keys.map { Color(it.color) }.toList(),
                         Modifier
@@ -114,7 +148,8 @@ fun GraphScreen(
 
                 ExpensesCard(
                     modifier = Modifier.padding(16.dp),
-                    expenses = historiesEachCategory)
+                    expenses = historiesEachCategory,
+                    onClick = { id -> onItemClick(id) })
                 Divider(color = Purple, thickness = 1.dp)
             }
         }
@@ -129,4 +164,8 @@ fun GraphScreen(
                 viewModel.setCurrentDate(newY, newM)
             })
     }
+}
+
+enum class ScreenType {
+    GRAPH, DETAIL_GRAPH
 }
