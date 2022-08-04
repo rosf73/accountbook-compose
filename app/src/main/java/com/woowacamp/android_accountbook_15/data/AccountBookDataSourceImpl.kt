@@ -166,11 +166,11 @@ class AccountBookDataSourceImpl @Inject constructor(
                         val amount = getLong(getColumnIndexOrThrow("total_amount"))
 
                         val month = date.split("-")[1].toInt() // 2000-09 --> 9
-                        while (month > currentMonth) { // 7~12월까지인데 10, 12월만 데이터가 있다면 7,8,9,11 월에는 0 넣기
+                        while (month != currentMonth) { // 7~12월까지인데 10, 12월만 데이터가 있다면 7,8,9,11 월에는 0 넣기
                             add(Pair(currentMonth, 0L))
-                            currentMonth++
+                            if (currentMonth+1 > 12) currentMonth = 1 else currentMonth++
                         }
-                        currentMonth++
+                        if (currentMonth+1 > 12) currentMonth = 1 else currentMonth++
                         add(Pair(month, amount))
                     }
                 }
