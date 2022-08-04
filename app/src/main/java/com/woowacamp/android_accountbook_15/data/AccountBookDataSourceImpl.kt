@@ -107,11 +107,11 @@ class AccountBookDataSourceImpl @Inject constructor(
         year: Int,
         month: Int,
         categoryId: Long
-    ): List<History>
+    ): Map<String, List<History>>
         = readableDB.run {
             val cursor = rawQuery(SQL_SELECT_CATEGORY_HISTORIES, arrayOf(getMonthAndYearHyphen(year, month), categoryId.toString()))
 
-            mutableListOf<History>().apply {
+            mutableMapOf<String, MutableList<History>>().apply {
                 with(cursor) {
                     while (moveToNext()) {
                         val id = getLong(getColumnIndexOrThrow(BaseColumns._ID))
@@ -131,7 +131,12 @@ class AccountBookDataSourceImpl @Inject constructor(
                             Category(categoryId, categoryType, categoryName, categoryColor)
                         )
 
-                        add(history)
+                        val monthDay = history.date.substring(5)
+                        if (containsKey(monthDay)) {
+                            get(monthDay)?.add(history)
+                        } else {
+                            put(monthDay, mutableListOf(history))
+                        }
                     }
                 }
                 cursor.close()
