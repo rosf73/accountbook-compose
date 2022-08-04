@@ -292,6 +292,7 @@ fun CheckableItem(
     ) {
         if (isSelectMode)
             Icon(
+                modifier = Modifier.align(CenterVertically).padding(16.dp),
                 painter =
                 if (isChecked) painterResource(id = R.drawable.ic_checkedbox)
                 else painterResource(id = R.drawable.ic_checkbox),
