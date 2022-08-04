@@ -1,6 +1,7 @@
 package com.woowacamp.android_accountbook_15.ui.tabs.graph
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -15,11 +16,13 @@ import com.woowacamp.android_accountbook_15.R
 import com.woowacamp.android_accountbook_15.data.model.History
 import com.woowacamp.android_accountbook_15.ui.components.Header
 import com.woowacamp.android_accountbook_15.ui.components.HistoryCard
+import com.woowacamp.android_accountbook_15.ui.theme.White
 import com.woowacamp.android_accountbook_15.utils.getDayKoreanWithoutYear
 
 @Composable
 fun DetailScreen(
     year: Int,
+    amounts: List<Pair<Int, Int>>,
     histories: Map<String, List<History>>,
     onBackClick: () -> Unit
 ) {
@@ -37,7 +40,7 @@ fun DetailScreen(
         }
 
         Column() {
-            ChartCard()
+            ChartCard(amounts = amounts, modifier = Modifier.background(White))
 
             LazyColumn {
                 item {
@@ -51,11 +54,4 @@ fun DetailScreen(
             }
         }
     }
-}
-
-@Composable
-fun ChartCard(
-    modifier: Modifier = Modifier
-) {
-
 }

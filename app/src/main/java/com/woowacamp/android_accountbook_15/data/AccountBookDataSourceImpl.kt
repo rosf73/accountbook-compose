@@ -161,13 +161,19 @@ class AccountBookDataSourceImpl @Inject constructor(
             var total = 0L
             val res = mutableListOf<Pair<Int, Long>>().apply {
                 with(cursor) {
+                    var currentMonth = startMonth
                     while (moveToNext()) {
                         val date = getString(getColumnIndexOrThrow(HistoryColumns.COLUMN_NAME_DATE))
                         val amount = getLong(getColumnIndexOrThrow("total_amount"))
                         total += amount
 
-                        val month = date.split("-")[1] // 2000-01 --> "01"
-                        add(Pair(month.toInt(), amount))
+                        val month = date.split("-")[1].toInt() // 2000-09 --> 9
+                        while (month > currentMonth) { // 7~12월까지인데 10, 12월만 데이터가 있다면 7,8,9,11 월에는 0 넣기
+                            add(Pair(currentMonth, 0L))
+                            currentMonth++
+                        }
+                        currentMonth++
+                        add(Pair(month, amount))
                     }
                 }
                 cursor.close()

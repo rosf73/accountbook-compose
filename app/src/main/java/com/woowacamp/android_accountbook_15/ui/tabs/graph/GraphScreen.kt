@@ -51,6 +51,7 @@ fun GraphScreen(
             })
         ScreenType.DETAIL_GRAPH -> DetailScreen(
             year,
+            graphViewModel.monthlyTotalAmountEachCategory.collectAsState().value,
             graphViewModel.historiesEachCategory.collectAsState().value,
             onBackClick = {
                 setCircleGraphState(!circleGraphState)
@@ -75,9 +76,10 @@ private fun GraphScreen(
         viewModel.monthlyHistories.value.forEach { (_, value) ->
             value.forEach { history ->
                 if (history.type != 1)
-                    if (temp.containsKey(history.category))
-                        temp[history.category]?.plus(history.amount)
-                    else
+                    if (temp.containsKey(history.category) && temp[history.category] != null) {
+                        val amount = temp[history.category]!!.toFloat()
+                        temp[history.category] = amount + history.amount.toFloat()
+                    } else
                         temp[history.category] = history.amount.toFloat()
             }
         }

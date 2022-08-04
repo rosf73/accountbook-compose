@@ -3,12 +3,10 @@ package com.woowacamp.android_accountbook_15.ui.tabs.graph
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
+import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,11 +18,13 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.woowacamp.android_accountbook_15.data.model.Category
 import com.woowacamp.android_accountbook_15.ui.components.CategoryView
 import com.woowacamp.android_accountbook_15.ui.theme.LightPurple
+import com.woowacamp.android_accountbook_15.ui.theme.Purple
 import com.woowacamp.android_accountbook_15.utils.toMoneyString
 import kotlin.math.round
 
@@ -97,4 +97,42 @@ fun ExpensesCard(
             }
         }
     }
+}
+
+@Composable
+fun ChartCard(
+    amounts: List<Pair<Int, Int>>,
+    modifier: Modifier = Modifier
+) {
+    Canvas(modifier = modifier
+        .fillMaxWidth()
+        .height(200.dp)
+        .padding(24.dp, 16.dp)
+    ) {
+        val height = size.height
+        val width = size.width
+        var x = 0f
+        var prev = amounts[0]
+        for (i in 1 until amounts.size) {
+            drawLine(
+                start = Offset(x = x, y = height - height/100*prev.second),
+                end = Offset(x = x + width/(amounts.size-1), y = height - height/100*amounts[i].second),
+                color = Purple,
+                strokeWidth = 3.0f
+            )
+            x += width/(amounts.size-1)
+            prev = amounts[i]
+        }
+    }
+
+    Row(
+        modifier = modifier.fillMaxWidth().padding(24.dp, 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        for (e in amounts) {
+            Text(text = "${e.first}", textAlign = TextAlign.Center, fontSize = 14.sp)
+        }
+    }
+
+    Divider(color = Purple, thickness = 1.dp)
 }
